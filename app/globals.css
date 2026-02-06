@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-200;
+  }
+}
+
+.dashed-underline {
+  border-bottom: 2px dashed #CBD5E1;
+}
+.dark .dashed-underline {
+  border-bottom-color: #334155;
+}
+
+.dashed-border {
+  border-bottom: 2px dashed #e2e8f0;
+}
+.dark .dashed-border {
+  border-bottom: 2px dashed #334155;
+}
+
+.dotted-line {
+  border-bottom: 1px dotted #94a3b8;
+  height: 1.5rem;
+  flex-grow: 1;
+  margin-left: 0.5rem;
+}
+
+.form-input-clean {
+  border: none;
+  border-bottom: 1px dotted #94a3b8;
+  background: transparent;
+  padding: 0 0.5rem;
+  width: 100%;
+}
+.form-input-clean:focus {
+  outline: none;
+  border-bottom: 2px solid #A4C615;
+  ring: 0;
+}
+
+@media print {
+  body { background: white; }
+  .max-w-4xl { box-shadow: none; margin: 0; width: 100%; }
+  .print\:hidden { display: none; }
+  .bg-\[\#fffde0\] { background-color: #fffde0 !important; -webkit-print-color-adjust: exact; }
+  .bg-primary { background-color: #a4c615 !important; -webkit-print-color-adjust: exact; }
+}
