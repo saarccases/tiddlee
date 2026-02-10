@@ -70,6 +70,9 @@ export async function POST(request: Request) {
         const values: any[] = [];
 
         allFields.forEach(key => {
+            // Handle admission_date explicitly after the loop
+            if (key === 'admission_date') return;
+
             if (Object.prototype.hasOwnProperty.call(body, key)) {
                 fields.push(key);
                 placeholders.push('?');
@@ -89,13 +92,16 @@ export async function POST(request: Request) {
         placeholders.push('?');
         values.push(today);
 
-        // Auto-set admission_date to today if not already provided
-        if (!body.admission_date || body.admission_date === '') {
-            fields.push('admission_date');
-            placeholders.push('?');
-            values.push(today);
+        // Handle admission_date: Use provided one or auto-set to today
+        let finalAdmissionDate = body.admission_date;
+        if (!finalAdmissionDate || finalAdmissionDate === '') {
+            finalAdmissionDate = today;
             console.log('[Submit] Auto-setting admission_date to:', today);
         }
+
+        fields.push('admission_date');
+        placeholders.push('?');
+        values.push(finalAdmissionDate);
 
         const query = `INSERT INTO admissions (${fields.join(', ')}) VALUES (${placeholders.join(', ')})`;
         const [result] = await db.query<ResultSetHeader>(query, values);

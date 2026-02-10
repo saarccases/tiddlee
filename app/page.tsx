@@ -152,7 +152,7 @@ export default function Home() {
             father_cell_phone: '',
             father_relationship: '',
             unique_id: '',
-            admission_date: ''
+            admission_date: '02/02/2026'
         });
         setShowResumePrompt(false);
     };
@@ -353,7 +353,6 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="text-center md:text-right">
-                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Admission Form & Policy</h2>
                         <p className="text-slate-500 dark:text-slate-400">Preschool with Daycare Program</p>
                     </div>
                 </div>
