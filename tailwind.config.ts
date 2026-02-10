@@ -21,6 +21,8 @@ const config: Config = {
                 display: ["Outfit", "sans-serif"],
                 body: ["Quicksand", "sans-serif"],
                 inter: ["Inter", "sans-serif"],
+                quicksand: ["Quicksand", "sans-serif"],
+                outfit: ["Outfit", "sans-serif"],
             },
             borderRadius: {
                 DEFAULT: "0.75rem",
