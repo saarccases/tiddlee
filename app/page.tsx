@@ -373,7 +373,7 @@ export default function Home() {
                     </div>
                     <div className="text-center">
                         <div className="w-24 h-24 rounded-full bg-pink-100 dark:bg-pink-900 flex items-center justify-center border-4 border-white dark:border-slate-800 shadow-lg overflow-hidden">
-                            <img alt="Cute girl cartoon" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqh3CI7aiEhZTt9XWKsSwxVj8KqofC_RgJUzXxkgc4s-BDb70mPxxhYjkGbLo-KLSeqx6SMmGjTRCWdry-VXqQs7fFww9qbFi7ssh4ilPfug-JM0J64-FCSgGc4QWs5WIQmEwITBW_1j46obulzaT2hLOuTFC14xLBYQFNQSRCm1ZSlT9yk2ERyc12EkO63lDSQSrU1-zveZSkTU4Z1vqQVfSCdOwuNvhyc-DOmkz-R8srBQSOiYJDZcClW-4tbavoqTBFbZQNM3k" />
+                            <img alt="Cute girl cartoon" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqh3CI7aiEhZTt9XWKsSwxVj8KqofC_RgJUzXxkgc4s-BDb70mPxxhYjkGbLo-KLSeqx6SMmGjTRCWdry-VXqQs7fFww9qbFi7ssh4ilPfug-JM0J64-FCSgGc4QWs5WIQmEwITBW_1j46obulzaT2hLOuTFC14xLBYQFNQSRCm1ZSlT9yk2ERyc12EkO63lDSQSrU1-zveZSkTU4Z1vqQVfSCdOwuNvhyc-DOmkz-R8srBQSOiYJDZcClV-4tbavoqTBFbZQNM3k" />
                         </div>
                     </div>
                     <div className="text-center">
