@@ -1,9 +1,21 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 export default function AdmissionsManagement() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary"></div>
+            </div>
+        }>
+            <AdmissionsContent />
+        </Suspense>
+    );
+}
+
+function AdmissionsContent() {
     const searchParams = useSearchParams();
     const [admissions, setAdmissions] = useState<any[]>([]);
     const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -79,8 +91,8 @@ export default function AdmissionsManagement() {
                                 key={f}
                                 onClick={() => setFilter(f)}
                                 className={`flex-1 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] transition-all ${filter === f
-                                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                        : 'bg-slate-50 dark:bg-zinc-800 text-slate-400 hover:text-primary hover:bg-slate-100'
+                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                    : 'bg-slate-50 dark:bg-zinc-800 text-slate-400 hover:text-primary hover:bg-slate-100'
                                     }`}
                             >
                                 {f}
@@ -100,8 +112,8 @@ export default function AdmissionsManagement() {
                                 key={app.id}
                                 onClick={() => setSelectedId(app.id)}
                                 className={`p-6 rounded-3xl cursor-pointer transition-all duration-300 group border-2 ${selectedId === app.id
-                                        ? 'bg-white dark:bg-zinc-800 border-primary shadow-xl shadow-primary/5 ring-4 ring-primary/5'
-                                        : 'bg-slate-50/50 dark:bg-zinc-800/30 border-transparent hover:border-slate-200 dark:hover:border-zinc-700'
+                                    ? 'bg-white dark:bg-zinc-800 border-primary shadow-xl shadow-primary/5 ring-4 ring-primary/5'
+                                    : 'bg-slate-50/50 dark:bg-zinc-800/30 border-transparent hover:border-slate-200 dark:hover:border-zinc-700'
                                     }`}
                             >
                                 <div className="flex justify-between items-start mb-4">
@@ -109,8 +121,8 @@ export default function AdmissionsManagement() {
                                         {app.child_name.charAt(0)}
                                     </div>
                                     <span className={`text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest ${app.status === 'approved' ? 'bg-emerald-50 text-emerald-600' :
-                                            app.status === 'rejected' ? 'bg-red-50 text-red-600' :
-                                                'bg-amber-50 text-amber-600'
+                                        app.status === 'rejected' ? 'bg-red-50 text-red-600' :
+                                            'bg-amber-50 text-amber-600'
                                         }`}>
                                         {app.status}
                                     </span>
@@ -142,8 +154,8 @@ export default function AdmissionsManagement() {
                                     <div className="flex items-center gap-4">
                                         <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">{selectedApp.child_name}</h2>
                                         <span className={`text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-[0.2em] border ${selectedApp.status === 'approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
-                                                selectedApp.status === 'rejected' ? 'bg-red-50 text-red-600 border-red-100' :
-                                                    'bg-amber-50 text-amber-600 border-amber-100'
+                                            selectedApp.status === 'rejected' ? 'bg-red-50 text-red-600 border-red-100' :
+                                                'bg-amber-50 text-amber-600 border-amber-100'
                                             }`}>
                                             {selectedApp.status}
                                         </span>
