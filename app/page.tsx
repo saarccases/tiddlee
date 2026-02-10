@@ -152,7 +152,7 @@ export default function Home() {
             father_cell_phone: '',
             father_relationship: '',
             unique_id: '',
-            admission_date: '02/02/2026'
+            admission_date: ''
         });
         setShowResumePrompt(false);
     };
@@ -705,7 +705,7 @@ export default function Home() {
             </div>
 
             <footer className="max-w-5xl mx-auto px-4 mt-16 text-center text-slate-400 text-sm pb-12">
-                <p>© 2024 TIDDLEE Learning Center. All rights reserved.</p>
+                <p>© {new Date().getFullYear()} TIDDLEE Pre-School. All rights reserved.</p>
                 <p className="mt-1">Nurturing curiosity, one step at a time.</p>
             </footer>
 

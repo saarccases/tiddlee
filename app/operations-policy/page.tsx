@@ -163,7 +163,7 @@ export default function OperationsPolicy() {
                     <Link href="/biting-policy" className="px-6 py-2 border border-gray-300 text-gray-600 font-semibold rounded-full hover:bg-gray-50 transition-colors">
                         Back
                     </Link>
-                    <span className="text-gray-400 text-sm hidden md:block">© 2024 Preschool &amp; Daycare Policies</span>
+                    <span className="text-gray-400 text-sm hidden md:block">© {new Date().getFullYear()} Preschool & Daycare Policies</span>
                     <Link href="/common-policies" className="px-6 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all">
                         Save &amp; Continue
                     </Link>

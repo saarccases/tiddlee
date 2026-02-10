@@ -339,7 +339,7 @@ export default function CareRoutines() {
 
             <footer className="max-w-4xl mx-auto mt-12 text-center">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em]">Section 06 • Care Routines & Potty Training</p>
-                <p className="text-slate-400 text-[10px] mt-2 italic">© 2024 TIDDLEE Learning Center. All rights reserved.</p>
+                <p className="text-slate-400 text-[10px] mt-2 italic">© {new Date().getFullYear()} TIDDLEE Pre-School. All rights reserved.</p>
             </footer>
         </main>
     );

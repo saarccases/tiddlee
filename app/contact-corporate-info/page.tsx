@@ -132,7 +132,7 @@ export default function ContactCorporateInfo() {
                     </div>
 
                     <div className="mt-12 pt-6 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center text-[11px] text-slate-400 uppercase tracking-widest font-semibold">
-                        <p>© 2024 TIDDLERS Education Services Pvt. Ltd.</p>
+                        <p>© {new Date().getFullYear()} TIDDLERS Education Services Pvt. Ltd.</p>
                         <div className="flex space-x-6 mt-4 md:mt-0">
                             <a className="hover:text-primary" href="#">Privacy Policy</a>
                             <a className="hover:text-primary" href="#">Terms &amp; Conditions</a>

@@ -570,7 +570,7 @@ export default function ParentInfo() {
 
             <footer className="mt-20 py-10 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                 <div className="max-w-5xl mx-auto px-6 text-center">
-                    <p className="text-slate-400 text-sm">© 2024 TIDDLEE Preschool & Daycare. All Rights Reserved.</p>
+                    <p className="text-slate-400 text-sm">© {new Date().getFullYear()} TIDDLEE Preschool & Daycare. All Rights Reserved.</p>
                 </div>
             </footer>
         </main>
