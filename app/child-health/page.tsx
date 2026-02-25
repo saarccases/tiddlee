@@ -13,10 +13,8 @@ export default function ChildHealth() {
         id: '',
         child_name: '',
         blood_group: '',
-        physician_name: '',
-        physician_phone: '',
-        physician_address: '',
-        backup_physician_allowed: '',
+        current_height: '',
+        current_weight: '',
         allergies_reactions: '',
         past_illnesses: '',
         other_health_info: '',
@@ -37,11 +35,9 @@ export default function ChildHealth() {
                             id: storedId,
                             child_name: data.child_name || '',
                             blood_group: data.blood_group || '',
-                            physician_name: data.physician_name || '',
-                            physician_phone: data.physician_phone || '',
-                            physician_address: data.physician_address || '',
-                            backup_physician_allowed: data.backup_physician_allowed || '',
-                            allergies_reactions: data.allergies_reactions || '',
+                            current_height: data.current_height || '',
+                            current_weight: data.current_weight || '',
+                            allergies_reactions: data.allergies_reactions || data.allergies || '',
                             past_illnesses: data.past_illnesses || '',
                             other_health_info: data.other_health_info || '',
                             unique_id: data.unique_id || '',
@@ -150,69 +146,28 @@ export default function ChildHealth() {
                         </div>
                     </div>
 
-                    <div className="space-y-6 pt-4">
-                        <h2 className="text-xl font-bold text-primary flex items-center font-display uppercase tracking-tight">
-                            <span className="material-icons mr-2">medical_services</span>
-                            Family Physician Details
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Physician Name</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    type="text"
-                                    name="physician_name"
-                                    value={formData.physician_name}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Phone Number</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    type="tel"
-                                    name="physician_phone"
-                                    value={formData.physician_phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6">
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Height (cm)</label>
+                            <input
+                                className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
+                                placeholder="e.g. 100"
+                                type="text"
+                                name="current_height"
+                                value={formData.current_height}
+                                onChange={handleChange}
+                            />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Address</label>
-                            <textarea
-                                className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium resize-none"
-                                rows={2}
-                                name="physician_address"
-                                value={formData.physician_address}
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Weight (kg)</label>
+                            <input
+                                className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
+                                placeholder="e.g. 15"
+                                type="text"
+                                name="current_weight"
+                                value={formData.current_weight}
                                 onChange={handleChange}
-                            ></textarea>
-                        </div>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-primary/5 dark:bg-primary/10 p-4 rounded-xl border border-primary/10">
-                            <p className="font-medium text-slate-800 dark:text-slate-200 flex-grow">If Primary Doctor is not available, may we use another?</p>
-                            <div className="flex gap-6">
-                                <label className="flex items-center space-x-2 cursor-pointer group">
-                                    <input
-                                        className="w-5 h-5 text-primary border-slate-300 dark:border-zinc-700 focus:ring-primary dark:bg-zinc-800"
-                                        name="backup_physician_allowed"
-                                        type="radio"
-                                        value="yes"
-                                        checked={formData.backup_physician_allowed === 'yes'}
-                                        onChange={handleChange}
-                                    />
-                                    <span className="dark:text-slate-300 font-bold">Yes</span>
-                                </label>
-                                <label className="flex items-center space-x-2 cursor-pointer group">
-                                    <input
-                                        className="w-5 h-5 text-primary border-slate-300 dark:border-zinc-700 focus:ring-primary dark:bg-zinc-800"
-                                        name="backup_physician_allowed"
-                                        type="radio"
-                                        value="no"
-                                        checked={formData.backup_physician_allowed === 'no'}
-                                        onChange={handleChange}
-                                    />
-                                    <span className="dark:text-slate-300 font-bold">No</span>
-                                </label>
-                            </div>
+                            />
                         </div>
                     </div>
 

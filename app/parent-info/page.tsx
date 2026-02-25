@@ -4,12 +4,13 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import PhotoUpload from '../components/PhotoUpload';
-import SignaturePad from '../components/SignaturePad';
+
 
 export default function ParentInfo() {
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
+    const [isDaycare, setIsDaycare] = useState(false);
     const [formData, setFormData] = useState({
         id: '',
         child_attended_school: 'no',
@@ -28,10 +29,21 @@ export default function ParentInfo() {
         mother_email: '',
         mother_relationship: '',
         mother_photo: '',
+        father_name: '',
+        father_residence_address: '',
+        father_employer: '',
+        father_employer_address: '',
+        father_work_phone: '',
+        father_cell_phone: '',
+        father_email: '',
+        father_relationship: '',
+        father_photo: '',
         unique_id: '',
-        admission_date: '',
+        admission_date: new Date().toISOString().split('T')[0],
         mother_signature: '',
         mother_signature_date: '',
+        father_signature: '',
+        father_signature_date: '',
         // Sync fields
         emergency_contact1_name: '',
         emergency_contact1_phone: '',
@@ -43,6 +55,12 @@ export default function ParentInfo() {
 
     useEffect(() => {
         const storedId = localStorage.getItem('currentAdmissionId');
+        const programType = localStorage.getItem('selectedProgramType');
+
+        if (programType === 'daycare' || programType === 'both') {
+            setIsDaycare(true);
+        }
+
         console.log('[ParentInfo] currentAdmissionId:', storedId);
 
         if (storedId) {
@@ -54,6 +72,10 @@ export default function ParentInfo() {
                         const data = await response.json();
                         console.log('[ParentInfo] Received data:', data);
 
+                        if (Array.isArray(data.programs_selected) && data.programs_selected.includes('Daycare')) {
+                            setIsDaycare(true);
+                        }
+
                         // JIT Sync
                         let mName = data.mother_name || '';
                         let mPhone = data.mother_cell_phone || '';
@@ -64,6 +86,17 @@ export default function ParentInfo() {
                         if (!mPhone) {
                             if (data.emergency_contact1_relation === 'Mother') mPhone = data.emergency_contact1_phone || '';
                             else if (data.emergency_contact2_relation === 'Mother') mPhone = data.emergency_contact2_phone || '';
+                        }
+
+                        let fName = data.father_name || '';
+                        let fPhone = data.father_cell_phone || '';
+                        if (!fName) {
+                            if (data.emergency_contact1_relation === 'Father') fName = data.emergency_contact1_name || '';
+                            else if (data.emergency_contact2_relation === 'Father') fName = data.emergency_contact2_name || '';
+                        }
+                        if (!fPhone) {
+                            if (data.emergency_contact1_relation === 'Father') fPhone = data.emergency_contact1_phone || '';
+                            else if (data.emergency_contact2_relation === 'Father') fPhone = data.emergency_contact2_phone || '';
                         }
 
                         setFormData({
@@ -84,10 +117,21 @@ export default function ParentInfo() {
                             mother_email: data.mother_email || '',
                             mother_relationship: data.mother_relationship || 'Mother',
                             mother_photo: data.mother_photo || '',
+                            father_name: fName,
+                            father_residence_address: data.father_residence_address || '',
+                            father_employer: data.father_employer || '',
+                            father_employer_address: data.father_employer_address || '',
+                            father_work_phone: data.father_work_phone || '',
+                            father_cell_phone: fPhone,
+                            father_email: data.father_email || '',
+                            father_relationship: data.father_relationship || 'Father',
+                            father_photo: data.father_photo || '',
                             unique_id: data.unique_id || '',
-                            admission_date: data.admission_date || '',
+                            admission_date: data.admission_date || new Date().toISOString().split('T')[0],
                             mother_signature: data.mother_signature || '',
                             mother_signature_date: data.mother_signature_date || '',
+                            father_signature: data.father_signature || '',
+                            father_signature_date: data.father_signature_date || '',
                             emergency_contact1_name: data.emergency_contact1_name || '',
                             emergency_contact1_phone: data.emergency_contact1_phone || '',
                             emergency_contact1_relation: data.emergency_contact1_relation || '',
@@ -138,8 +182,40 @@ export default function ParentInfo() {
                 return { ...prev, ...updates };
             });
         }
+        else if (name === 'father_name') {
+            setFormData(prev => {
+                const updates: any = { [name]: value };
+                if (prev.emergency_contact1_relation === 'Father') updates.emergency_contact1_name = value;
+                if (prev.emergency_contact2_relation === 'Father') updates.emergency_contact2_name = value;
+                return { ...prev, ...updates };
+            });
+        }
+        else if (name === 'father_cell_phone') {
+            setFormData(prev => {
+                const updates: any = { [name]: value };
+                if (prev.emergency_contact1_relation === 'Father') updates.emergency_contact1_phone = value;
+                if (prev.emergency_contact2_relation === 'Father') updates.emergency_contact2_phone = value;
+                return { ...prev, ...updates };
+            });
+        }
+        else if (name === 'father_relationship') {
+            setFormData(prev => {
+                const updates: any = { [name]: value };
+                if (prev.emergency_contact1_relation === 'Father') updates.emergency_contact1_relation = value;
+                if (prev.emergency_contact2_relation === 'Father') updates.emergency_contact2_relation = value;
+                return { ...prev, ...updates };
+            });
+        }
         else {
             setFormData(prev => ({ ...prev, [name]: value }));
+        }
+    };
+
+    const handleSameAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.checked) {
+            setFormData(prev => ({ ...prev, father_residence_address: prev.mother_residence_address }));
+        } else {
+            setFormData(prev => ({ ...prev, father_residence_address: '' }));
         }
     };
 
@@ -165,7 +241,7 @@ export default function ParentInfo() {
                     localStorage.setItem('currentAdmissionId', data.id.toString());
                     setFormData(prev => ({ ...prev, id: data.id.toString() }));
                 }
-                router.push('/guardian-info');
+                router.push('/child-health');
             } else {
                 alert('Failed to save data');
             }
@@ -289,29 +365,46 @@ export default function ParentInfo() {
                             <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Father</span>
                         </div>
                     </div>
-                    <PhotoUpload
-                        onPhotoUploaded={async (url) => {
-                            setFormData(prev => ({ ...prev, mother_photo: url }));
-
-                            // Auto-save photo to database immediately
-                            const currentId = formData.id || localStorage.getItem('currentAdmissionId');
-                            if (currentId) {
-                                try {
-                                    await fetch('/api/submit-admission', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                                            id: currentId,
-                                            mother_photo: url
-                                        }),
-                                    });
-                                } catch (error) {
-                                    console.error('Error auto-saving mother photo:', error);
-                                }
-                            }
-                        }}
-                        currentPhotoUrl={formData.mother_photo}
-                    />
+                    <div className="flex gap-4">
+                        <div className="flex flex-col items-center">
+                            <span className="text-[10px] font-bold uppercase mb-1 text-slate-400">Mother/Guardian 1</span>
+                            <PhotoUpload
+                                onPhotoUploaded={async (url) => {
+                                    setFormData(prev => ({ ...prev, mother_photo: url }));
+                                    const currentId = formData.id || localStorage.getItem('currentAdmissionId');
+                                    if (currentId) {
+                                        try {
+                                            await fetch('/api/submit-admission', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ id: currentId, mother_photo: url }),
+                                            });
+                                        } catch (error) { console.error('Error auto-saving mother photo:', error); }
+                                    }
+                                }}
+                                currentPhotoUrl={formData.mother_photo}
+                            />
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <span className="text-[10px] font-bold uppercase mb-1 text-slate-400">Father/Guardian 2</span>
+                            <PhotoUpload
+                                onPhotoUploaded={async (url) => {
+                                    setFormData(prev => ({ ...prev, father_photo: url }));
+                                    const currentId = formData.id || localStorage.getItem('currentAdmissionId');
+                                    if (currentId) {
+                                        try {
+                                            await fetch('/api/submit-admission', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ id: currentId, father_photo: url }),
+                                            });
+                                        } catch (error) { console.error('Error auto-saving father photo:', error); }
+                                    }
+                                }}
+                                currentPhotoUrl={formData.father_photo}
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 <form className="space-y-8" onSubmit={handleSubmit}>
@@ -327,213 +420,312 @@ export default function ParentInfo() {
 
 
 
-                    <section className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
-                        <div className="flex items-center gap-3 mb-6">
-                            <span className="material-icons text-primary">school</span>
-                            <h3 className="text-xl font-bold text-slate-800 dark:text-white font-display">Previous School Details</h3>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-semibold mb-3 text-slate-600 dark:text-slate-400">Does the Child attend/attended school (nursery/play school, etc.)?</label>
-                                <div className="flex gap-6">
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            className="w-5 h-5 text-primary border-slate-300 dark:border-slate-700 focus:ring-primary"
-                                            name="child_attended_school"
-                                            type="radio"
-                                            value="yes"
-                                            checked={formData.child_attended_school === 'yes'}
-                                            onChange={handleChange}
-                                        />
-                                        <span className="font-medium">Yes</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            className="w-5 h-5 text-primary border-slate-300 dark:border-slate-700 focus:ring-primary"
-                                            name="child_attended_school"
-                                            type="radio"
-                                            value="no"
-                                            checked={formData.child_attended_school === 'no'}
-                                            onChange={handleChange}
-                                        />
-                                        <span className="font-medium">No</span>
-                                    </label>
+                    {isDaycare && (
+                        <section className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                            <div className="flex items-center gap-3 mb-6">
+                                <span className="material-icons text-primary origin-left scale-150">school</span>
+                                <h3 className="text-xl font-bold text-slate-800 dark:text-white font-display ml-2">Previous School Details (For Daycare)</h3>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-semibold mb-3 text-slate-600 dark:text-slate-400">Does the Child attend/attended school (nursery/play school, etc.)?</label>
+                                    <div className="flex gap-6">
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                            <input
+                                                className="w-5 h-5 text-primary border-slate-300 dark:border-slate-700 focus:ring-primary"
+                                                name="child_attended_school"
+                                                type="radio"
+                                                value="yes"
+                                                checked={formData.child_attended_school === 'yes'}
+                                                onChange={handleChange}
+                                            />
+                                            <span className="font-medium">Yes</span>
+                                        </label>
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                            <input
+                                                className="w-5 h-5 text-primary border-slate-300 dark:border-slate-700 focus:ring-primary"
+                                                name="child_attended_school"
+                                                type="radio"
+                                                value="no"
+                                                checked={formData.child_attended_school === 'no'}
+                                                onChange={handleChange}
+                                            />
+                                            <span className="font-medium">No</span>
+                                        </label>
+                                    </div>
                                 </div>
+                                {formData.child_attended_school === 'yes' && (
+                                    <>
+                                        <div className="md:col-span-2">
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Name of the School/Play School/Nursery</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
+                                                placeholder="Enter school name"
+                                                type="text"
+                                                name="prev_school_name"
+                                                value={formData.prev_school_name}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Address</label>
+                                            <textarea
+                                                className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium resize-none"
+                                                placeholder="Enter school address"
+                                                rows={2}
+                                                name="prev_school_address"
+                                                value={formData.prev_school_address}
+                                                onChange={handleChange}
+                                            ></textarea>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Phone Number</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
+                                                placeholder="School contact number"
+                                                type="tel"
+                                                name="prev_school_phone"
+                                                value={formData.prev_school_phone}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Class and Division</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
+                                                placeholder="e.g. Nursery - A"
+                                                type="text"
+                                                name="prev_school_class"
+                                                value={formData.prev_school_class}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="md:col-span-2 grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Timings From</label>
+                                                <input
+                                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
+                                                    type="time"
+                                                    name="prev_school_timings_from"
+                                                    value={formData.prev_school_timings_from}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Timings To</label>
+                                                <input
+                                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
+                                                    type="time"
+                                                    name="prev_school_timings_to"
+                                                    value={formData.prev_school_timings_to}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Name of the School/Play School/Nursery</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    placeholder="Enter school name"
-                                    type="text"
-                                    name="prev_school_name"
-                                    value={formData.prev_school_name}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Address</label>
-                                <textarea
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium resize-none"
-                                    placeholder="Enter school address"
-                                    rows={2}
-                                    name="prev_school_address"
-                                    value={formData.prev_school_address}
-                                    onChange={handleChange}
-                                ></textarea>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Phone Number</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    placeholder="School contact number"
-                                    type="tel"
-                                    name="prev_school_phone"
-                                    value={formData.prev_school_phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Class and Division</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    placeholder="e.g. Nursery - A"
-                                    type="text"
-                                    name="prev_school_class"
-                                    value={formData.prev_school_class}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="md:col-span-2 grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Timings From</label>
-                                    <input
-                                        className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                        type="time"
-                                        name="prev_school_timings_from"
-                                        value={formData.prev_school_timings_from}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Timings To</label>
-                                    <input
-                                        className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                        type="time"
-                                        name="prev_school_timings_to"
-                                        value={formData.prev_school_timings_to}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+                        </section>
+                    )}
 
                     <section className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
-                        <div className="flex items-center gap-3 mb-6">
-                            <span className="material-icons text-primary">person</span>
-                            <h3 className="text-xl font-bold text-slate-800 dark:text-white font-display">Mother's or Guardian 1 Information</h3>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    placeholder="Name as per legal documents"
-                                    type="text"
-                                    name="mother_name"
-                                    value={formData.mother_name}
-                                    onChange={handleChange}
-                                />
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                            {/* Mother / Guardian 1 Column */}
+                            <div className="space-y-6">
+                                <div className="flex items-center space-x-3 border-b-2 border-primary pb-2 mb-6">
+                                    <span className="material-icons text-primary">person</span>
+                                    <h2 className="text-xl font-bold text-slate-800 dark:text-white uppercase tracking-tight">Mother / Guardian 1</h2>
+                                </div>
+                                <div className="space-y-4">
+                                    <div className="flex flex-col">
+                                        <label className="text-xs font-bold text-gray-500 uppercase">Name</label>
+                                        <input
+                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                            placeholder="Full Name"
+                                            type="text"
+                                            name="mother_name"
+                                            value={formData.mother_name}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <label className="text-xs font-bold text-gray-500 uppercase">Residence Address</label>
+                                        <input
+                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                            placeholder="Street Address, City"
+                                            type="text"
+                                            name="mother_residence_address"
+                                            value={formData.mother_residence_address}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="flex flex-col">
+                                            <label className="text-xs font-bold text-gray-500 uppercase">Employed by</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                                placeholder="Company"
+                                                type="text"
+                                                name="mother_employer"
+                                                value={formData.mother_employer}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <label className="text-xs font-bold text-gray-500 uppercase">Area of Employment</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                                placeholder="Sector/Address"
+                                                type="text"
+                                                name="mother_employer_address"
+                                                value={formData.mother_employer_address}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="flex flex-col">
+                                            <label className="text-xs font-bold text-gray-500 uppercase">Cell Phone</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                                placeholder="+1 000-0000"
+                                                type="tel"
+                                                name="mother_cell_phone"
+                                                value={formData.mother_cell_phone}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <label className="text-xs font-bold text-gray-500 uppercase">Email</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                                placeholder="email@example.com"
+                                                type="email"
+                                                name="mother_email"
+                                                value={formData.mother_email}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <label className="text-xs font-bold text-gray-500 uppercase">Relationship to child</label>
+                                        <input
+                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                            placeholder="Mother / Step-mother / Guardian"
+                                            type="text"
+                                            name="mother_relationship"
+                                            value={formData.mother_relationship}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Residence Address</label>
-                                <textarea
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium resize-none"
-                                    placeholder="Your home address"
-                                    rows={2}
-                                    name="mother_residence_address"
-                                    value={formData.mother_residence_address}
-                                    onChange={handleChange}
-                                ></textarea>
-                            </div>
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Employed by (Company/Organization)</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    placeholder="Organization name"
-                                    type="text"
-                                    name="mother_employer"
-                                    value={formData.mother_employer}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="md:col-span-2">
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Address of Employment</label>
-                                <textarea
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium resize-none"
-                                    placeholder="Office/Work address"
-                                    rows={2}
-                                    name="mother_employer_address"
-                                    value={formData.mother_employer_address}
-                                    onChange={handleChange}
-                                ></textarea>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Work Phone</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    placeholder="Landline or extension"
-                                    type="tel"
-                                    name="mother_work_phone"
-                                    value={formData.mother_work_phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Cell Phone</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    placeholder="Mobile number"
-                                    type="tel"
-                                    name="mother_cell_phone"
-                                    value={formData.mother_cell_phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    placeholder="example@email.com"
-                                    type="email"
-                                    name="mother_email"
-                                    value={formData.mother_email}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Relationship to Child</label>
-                                <input
-                                    className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                    placeholder="e.g. Mother, Grandmother, Guardian"
-                                    type="text"
-                                    name="mother_relationship"
-                                    value={formData.mother_relationship}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="md:col-span-2 mt-8">
-                                <SignaturePad
-                                    label="Mother's Signature"
-                                    onSave={handleSignatureSave}
-                                    savedSignatureUrl={formData.mother_signature}
-                                />
-                                <div className="mt-2 text-[10px] text-slate-400 font-bold uppercase tracking-tight">
-                                    Date: {formatDate(formData.mother_signature_date)}
+
+                            {/* Father / Guardian 2 Column */}
+                            <div className="space-y-6">
+                                <div className="flex items-center space-x-3 border-b-2 border-primary pb-2 mb-6">
+                                    <span className="material-icons text-primary">person</span>
+                                    <h2 className="text-xl font-bold text-slate-800 dark:text-white uppercase tracking-tight">Father / Guardian 2</h2>
+                                </div>
+                                <div className="space-y-4">
+                                    <div className="flex flex-col">
+                                        <label className="text-xs font-bold text-gray-500 uppercase">Name</label>
+                                        <input
+                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                            placeholder="Full Name"
+                                            type="text"
+                                            name="father_name"
+                                            value={formData.father_name}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <div className="flex justify-between items-center mb-1">
+                                            <label className="text-xs font-bold text-gray-500 uppercase">Residence Address</label>
+                                            <label className="flex items-center space-x-2 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    className="rounded border-gray-300 text-primary focus:ring-primary h-3 w-3"
+                                                    onChange={handleSameAddress}
+                                                />
+                                                <span className="text-[10px] font-bold text-gray-400 uppercase">Same as Mother</span>
+                                            </label>
+                                        </div>
+                                        <input
+                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                            placeholder="Street Address, City"
+                                            type="text"
+                                            name="father_residence_address"
+                                            value={formData.father_residence_address}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="flex flex-col">
+                                            <label className="text-xs font-bold text-gray-500 uppercase">Employed by</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                                placeholder="Company"
+                                                type="text"
+                                                name="father_employer"
+                                                value={formData.father_employer}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <label className="text-xs font-bold text-gray-500 uppercase">Address of Employment</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                                placeholder="Sector/Address"
+                                                type="text"
+                                                name="father_employer_address"
+                                                value={formData.father_employer_address}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="flex flex-col">
+                                            <label className="text-xs font-bold text-gray-500 uppercase">Cell Phone</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                                placeholder="+1 000-0000"
+                                                type="tel"
+                                                name="father_cell_phone"
+                                                value={formData.father_cell_phone}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <label className="text-xs font-bold text-gray-500 uppercase">Email</label>
+                                            <input
+                                                className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                                placeholder="email@example.com"
+                                                type="email"
+                                                name="father_email"
+                                                value={formData.father_email}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <label className="text-xs font-bold text-gray-500 uppercase">Relationship to child</label>
+                                        <input
+                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
+                                            placeholder="Father / Step-father / Guardian"
+                                            type="text"
+                                            name="father_relationship"
+                                            value={formData.father_relationship}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+
                     </section>
 
                     <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100 dark:border-slate-800">
@@ -573,6 +765,6 @@ export default function ParentInfo() {
                     <p className="text-slate-400 text-sm">© {new Date().getFullYear()} TIDDLEE Preschool & Daycare. All Rights Reserved.</p>
                 </div>
             </footer>
-        </main>
+        </main >
     );
 }

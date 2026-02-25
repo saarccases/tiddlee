@@ -13,12 +13,12 @@ export async function POST(request: Request) {
         // List of all possible fields in the table
         const allFields = [
             'child_name', 'child_nickname', 'child_dob', 'child_age', 'child_gender', 'child_photo', 'child_residence_address',
-            'emergency_contact1_name', 'emergency_contact1_phone', 'emergency_contact1_relation',
-            'emergency_contact2_name', 'emergency_contact2_phone', 'emergency_contact2_relation',
-            'programs_selected', 'languages_spoken', 'media_consent',
+            'emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_relation',
+            'programs_selected', 'daycare_time_opted', 'languages_spoken', 'allergies', 'media_consent',
             'child_attended_school', 'prev_school_name', 'prev_school_address', 'prev_school_phone', 'prev_school_class', 'prev_school_timings_from', 'prev_school_timings_to',
             'mother_name', 'mother_residence_address', 'mother_employer', 'mother_employer_address', 'mother_work_phone', 'mother_cell_phone', 'mother_email', 'mother_relationship', 'mother_photo',
-            'father_name', 'father_employer', 'father_employer_address', 'father_work_phone', 'father_cell_phone', 'father_email', 'father_relationship', 'father_photo',
+            'father_name', 'father_residence_address', 'father_employer', 'father_employer_address', 'father_work_phone', 'father_cell_phone', 'father_email', 'father_relationship', 'father_photo',
+            'guardian_name', 'guardian_phone', 'guardian_relationship',
             'unique_id', 'admission_date', 'mother_signature', 'mother_signature_date', 'father_signature', 'father_signature_date',
             'blood_group', 'physician_name', 'physician_phone', 'physician_address', 'backup_physician_allowed', 'allergies_reactions', 'past_illnesses', 'other_health_info',
             'immunization_records', 'current_height', 'current_weight',
