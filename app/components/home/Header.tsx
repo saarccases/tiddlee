@@ -4,17 +4,13 @@ export function HomeHeader() {
     return (
         <header className="relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between relative z-10">
-                <div className="flex items-center space-x-4 mb-6 md:mb-0">
-                    <div className="bg-white p-2 rounded-xl shadow-md">
-                        <div className="w-16 h-16 bg-primary flex items-center justify-center rounded-lg text-white">
-                            <span className="material-icons text-4xl">flutter_dash</span>
-                        </div>
-                    </div>
-                    <div>
-                        <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">TIDDLEE</h1>
-                        <p className="text-sm font-medium text-primary mt-1">Technology unplugged, Childhood plugged-in</p>
-                    </div>
-                </div>
+                <Link href="/" className="flex items-center mb-6 md:mb-0 group transition-all duration-300">
+                    <img
+                        src="/logo.svg"
+                        alt="TIDDLEE Logo"
+                        className="h-16 md:h-24 w-auto object-contain transform group-hover:scale-105 transition-transform duration-300"
+                    />
+                </Link>
                 <div className="text-center md:text-right">
                     <p className="text-slate-500 dark:text-slate-400 font-medium">Preschool with Daycare Program</p>
                 </div>

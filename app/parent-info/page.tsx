@@ -323,15 +323,13 @@ export default function ParentInfo() {
         <main className="font-body bg-slate-50 dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-300 pb-12">
             <header className="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50">
                 <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <Link href="/" className="flex items-center gap-3">
-                            <div className="w-12 h-12 flex items-center justify-center">
-                                <span className="material-icons text-4xl text-primary">flutter_dash</span>
-                            </div>
-                            <div>
-                                <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white uppercase leading-none font-display">TIDDLEE</h1>
-                                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Technology unplugged, Childhood plugged-in</p>
-                            </div>
+                    <div className="flex items-center">
+                        <Link href="/" className="flex items-center group transition-all duration-300">
+                            <img
+                                src="/logo.svg"
+                                alt="TIDDLEE Logo"
+                                className="h-14 w-auto object-contain transform group-hover:scale-105 transition-transform"
+                            />
                         </Link>
                     </div>
                     <div className="flex items-center gap-4">

@@ -42,11 +42,15 @@ export default function AdminLogin() {
                     <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
                     <div className="absolute bottom-0 left-0 -ml-8 -mb-8 w-32 h-32 bg-black/10 rounded-full blur-2xl"></div>
 
-                    <div className="relative z-10">
-                        <div className="inline-flex items-center justify-center size-16 bg-white rounded-2xl shadow-lg mb-4 text-primary">
-                            <span className="material-icons text-4xl">child_care</span>
+                    <div className="relative z-10 flex flex-col items-center">
+                        <div className="bg-white p-4 rounded-3xl shadow-lg mb-6 inline-block transform -rotate-2 hover:rotate-0 transition-transform duration-300">
+                            <img
+                                src="/logo.svg"
+                                alt="TIDDLEE"
+                                className="h-16 w-auto object-contain"
+                            />
                         </div>
-                        <h1 className="text-2xl font-black text-white uppercase tracking-tighter">Tiddlee Admin</h1>
+                        <h1 className="text-2xl font-black text-white uppercase tracking-tighter">Admin Login</h1>
                         <p className="text-white/80 text-xs font-bold uppercase tracking-widest mt-1">Management Portal</p>
                     </div>
                 </div>

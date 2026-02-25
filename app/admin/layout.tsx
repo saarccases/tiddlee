@@ -34,11 +34,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <aside className="w-72 bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 flex flex-col z-30 transition-all duration-300">
                 <div className="p-8">
                     <div className="flex items-center gap-4">
-                        <div className="size-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/20 transform rotate-3">
-                            <span className="material-icons text-3xl font-bold">child_care</span>
-                        </div>
+                        <img
+                            src="/logo.svg"
+                            alt="TIDDLEE"
+                            className="h-12 w-auto object-contain"
+                        />
                         <div className="flex flex-col">
-                            <h1 className="text-2xl font-black tracking-tighter text-slate-800 dark:text-white leading-none">TIDDLEE</h1>
                             <p className="text-[10px] uppercase tracking-[0.3em] font-black text-primary mt-1">Admin Portal</p>
                         </div>
                     </div>
@@ -52,8 +53,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                                 key={item.label}
                                 href={item.href}
                                 className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 group ${isActive
-                                        ? 'bg-primary text-white shadow-xl shadow-primary/20 scale-[1.02] font-black'
-                                        : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-zinc-800 hover:text-primary'
+                                    ? 'bg-primary text-white shadow-xl shadow-primary/20 scale-[1.02] font-black'
+                                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-zinc-800 hover:text-primary'
                                     }`}
                             >
                                 <span className={`material-icons ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-primary transition-colors'}`}>
