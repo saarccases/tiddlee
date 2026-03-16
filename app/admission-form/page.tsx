@@ -369,7 +369,13 @@ export default function AdmissionForm() {
                                             checked={formData.programs_selected.includes(program)}
                                             onChange={handleCheckboxChange}
                                         />
-                                        <span className="font-bold text-sm tracking-wide">{program}</span>
+                                        <div className="flex flex-col items-center">
+                                            <span className="font-bold text-sm tracking-wide">{program}</span>
+                                            {program === 'Toddlers' && <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">(Playgroup)</span>}
+                                            {program === 'Kamblee' && <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">(Nursery)</span>}
+                                            {program === 'Pupalee' && <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">(Jr KG)</span>}
+                                            {program === 'Tiddlee' && <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">(Sr KG)</span>}
+                                        </div>
                                     </label>
                                 ))}
 

@@ -11,6 +11,8 @@ export default function CareRoutines() {
     const [formData, setFormData] = useState({
         id: '',
         child_name: '',
+        child_age: '',
+        allergies_reactions: '',
         food_allergies: '',
         likes: '',
         dislikes: '',
@@ -35,6 +37,8 @@ export default function CareRoutines() {
                         setFormData({
                             id: storedId,
                             child_name: data.child_name || '',
+                            child_age: data.child_age || '',
+                            allergies_reactions: data.allergies_reactions || '',
                             food_allergies: data.food_allergies || '',
                             likes: data.likes || '',
                             dislikes: data.dislikes || '',
@@ -150,6 +154,9 @@ export default function CareRoutines() {
                                 className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
                                 placeholder="Years/Months"
                                 type="text"
+                                name="child_age"
+                                value={formData.child_age}
+                                readOnly
                             />
                         </div>
                     </div>
@@ -163,7 +170,7 @@ export default function CareRoutines() {
                                     placeholder="..."
                                     type="text"
                                     name="food_allergies"
-                                    value={formData.food_allergies}
+                                    value={formData.food_allergies || formData.allergies_reactions}
                                     onChange={handleChange}
                                 />
                             </div>

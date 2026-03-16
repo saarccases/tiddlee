@@ -1,0 +1,115 @@
+import { NextResponse } from 'next/server';
+import { getDb } from '@/lib/db';
+
+export async function POST() {
+    try {
+        const db = getDb();
+
+        // Drop the existing table
+        await db.query('DROP TABLE IF EXISTS admissions');
+
+        // Recreate with the correct schema
+        await db.query(`
+            CREATE TABLE admissions (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+
+                -- Child Information
+                child_name VARCHAR(255),
+                child_nickname VARCHAR(100),
+                child_dob DATE,
+                child_age VARCHAR(50),
+                child_gender VARCHAR(20),
+                child_photo VARCHAR(500),
+                child_residence_address TEXT,
+
+                -- Emergency Contacts
+                emergency_contact_name VARCHAR(255),
+                emergency_contact_phone VARCHAR(50),
+                emergency_contact_relation VARCHAR(100),
+
+                -- Program Selection
+                programs_selected TEXT,
+                daycare_time_opted VARCHAR(100),
+                languages_spoken TEXT,
+                allergies TEXT,
+                media_consent VARCHAR(10),
+
+                -- Previous School Details
+                child_attended_school VARCHAR(10),
+                prev_school_name VARCHAR(255),
+                prev_school_address TEXT,
+                prev_school_phone VARCHAR(50),
+                prev_school_class VARCHAR(50),
+                prev_school_timings_from TIME,
+                prev_school_timings_to TIME,
+
+                -- Mother/Guardian 1 Information
+                mother_name VARCHAR(255),
+                mother_residence_address TEXT,
+                mother_employer VARCHAR(255),
+                mother_employer_address TEXT,
+                mother_work_phone VARCHAR(50),
+                mother_cell_phone VARCHAR(50),
+                mother_email VARCHAR(255),
+                mother_relationship VARCHAR(100),
+                mother_photo VARCHAR(500),
+
+                -- Father/Guardian 2 Information
+                father_name VARCHAR(255),
+                father_residence_address TEXT,
+                father_employer VARCHAR(255),
+                father_employer_address TEXT,
+                father_work_phone VARCHAR(50),
+                father_cell_phone VARCHAR(50),
+                father_email VARCHAR(255),
+                father_relationship VARCHAR(100),
+                father_photo VARCHAR(500),
+
+                -- Guardian Information
+                guardian_name VARCHAR(255),
+                guardian_phone VARCHAR(50),
+                guardian_relationship VARCHAR(100),
+
+                -- Health Information
+                blood_group VARCHAR(20),
+                physician_name VARCHAR(255),
+                physician_phone VARCHAR(50),
+                physician_address TEXT,
+                backup_physician_allowed VARCHAR(10),
+                allergies_reactions TEXT,
+                past_illnesses TEXT,
+                other_health_info TEXT,
+                immunization_records TEXT,
+                current_height VARCHAR(20),
+                current_weight VARCHAR(20),
+
+                -- Child Preferences & Habits
+                food_allergies TEXT,
+                likes TEXT,
+                dislikes TEXT,
+                sleep_routines TEXT,
+                playtime_activities TEXT,
+                is_potty_trained VARCHAR(10),
+                redirection_techniques TEXT,
+                additional_comments TEXT,
+
+                -- Meta
+                unique_id VARCHAR(50) UNIQUE,
+                admission_date DATE,
+                submission_date DATE COMMENT 'Date when form was submitted or last edited',
+                mother_signature VARCHAR(255),
+                mother_signature_date DATE,
+                father_signature VARCHAR(255),
+                father_signature_date DATE,
+
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+
+        return NextResponse.json({ message: 'Database setup complete. Table recreated successfully.' }, { status: 200 });
+    } catch (error) {
+        console.error('[Setup DB] Error:', error);
+        return NextResponse.json({ message: 'Database setup failed', error: (error as Error).message }, { status: 500 });
+    }
+}

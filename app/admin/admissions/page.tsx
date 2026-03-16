@@ -118,7 +118,7 @@ function AdmissionsContent() {
                             >
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="size-12 bg-white dark:bg-zinc-800 rounded-2xl flex items-center justify-center text-slate-400 font-black shadow-sm group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-6">
-                                        {app.child_name.charAt(0)}
+                                        {app.child_name?.charAt(0) || '?'}
                                     </div>
                                     <span className={`text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-widest ${app.status === 'approved' ? 'bg-emerald-50 text-emerald-600' :
                                         app.status === 'rejected' ? 'bg-red-50 text-red-600' :
@@ -127,7 +127,7 @@ function AdmissionsContent() {
                                         {app.status}
                                     </span>
                                 </div>
-                                <h3 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight mb-1">{app.child_name}</h3>
+                                <h3 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight mb-1">{app.child_name || 'Anonymous'}</h3>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
                                     Submitted: {formatDate(app.created_at)}
                                 </p>
@@ -152,7 +152,7 @@ function AdmissionsContent() {
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-4">
-                                        <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">{selectedApp.child_name}</h2>
+                                        <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">{selectedApp.child_name || 'Anonymous'}</h2>
                                         <span className={`text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-[0.2em] border ${selectedApp.status === 'approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
                                             selectedApp.status === 'rejected' ? 'bg-red-50 text-red-600 border-red-100' :
                                                 'bg-amber-50 text-amber-600 border-amber-100'
@@ -194,7 +194,13 @@ function AdmissionsContent() {
                                     {selectedApp.programs_selected?.map((prog: string) => (
                                         <div key={prog} className="px-6 py-4 bg-primary/5 border border-primary/20 rounded-2xl flex items-center gap-3">
                                             <span className="material-icons text-primary text-xl">verified</span>
-                                            <span className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-tight">{prog}</span>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-tight">{prog}</span>
+                                                {prog === 'Toddlers' && <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">(Playgroup)</span>}
+                                                {prog === 'Kamblee' && <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">(Nursery)</span>}
+                                                {prog === 'Pupalee' && <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">(Jr KG)</span>}
+                                                {prog === 'Tiddlee' && <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">(Sr KG)</span>}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

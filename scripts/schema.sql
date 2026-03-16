@@ -14,17 +14,15 @@ CREATE TABLE IF NOT EXISTS admissions (
     child_residence_address TEXT,
     
     -- Emergency Contacts
-    emergency_contact1_name VARCHAR(255),
-    emergency_contact1_phone VARCHAR(50),
-    emergency_contact1_relation VARCHAR(100),
-    
-    emergency_contact2_name VARCHAR(255),
-    emergency_contact2_phone VARCHAR(50),
-    emergency_contact2_relation VARCHAR(100),
-    
+    emergency_contact_name VARCHAR(255),
+    emergency_contact_phone VARCHAR(50),
+    emergency_contact_relation VARCHAR(100),
+
     -- Program Selection
     programs_selected TEXT,
+    daycare_time_opted VARCHAR(100),
     languages_spoken TEXT,
+    allergies TEXT,
     media_consent VARCHAR(10),
 
     -- Previous School Details
@@ -49,6 +47,7 @@ CREATE TABLE IF NOT EXISTS admissions (
     
     -- Father/Guardian 2 Information
     father_name VARCHAR(255),
+    father_residence_address TEXT,
     father_employer VARCHAR(255),
     father_employer_address TEXT,
     father_work_phone VARCHAR(50),
@@ -56,7 +55,35 @@ CREATE TABLE IF NOT EXISTS admissions (
     father_email VARCHAR(255),
     father_relationship VARCHAR(100),
     father_photo VARCHAR(500), -- Full CDN URL from Cloudinary
-    
+
+    -- Guardian Information
+    guardian_name VARCHAR(255),
+    guardian_phone VARCHAR(50),
+    guardian_relationship VARCHAR(100),
+
+    -- Health Information
+    blood_group VARCHAR(20),
+    physician_name VARCHAR(255),
+    physician_phone VARCHAR(50),
+    physician_address TEXT,
+    backup_physician_allowed VARCHAR(10),
+    allergies_reactions TEXT,
+    past_illnesses TEXT,
+    other_health_info TEXT,
+    immunization_records TEXT,
+    current_height VARCHAR(20),
+    current_weight VARCHAR(20),
+
+    -- Child Preferences & Habits
+    food_allergies TEXT,
+    likes TEXT,
+    dislikes TEXT,
+    sleep_routines TEXT,
+    playtime_activities TEXT,
+    is_potty_trained VARCHAR(10),
+    redirection_techniques TEXT,
+    additional_comments TEXT,
+
     -- Meta
     unique_id VARCHAR(50) UNIQUE,
     admission_date DATE,

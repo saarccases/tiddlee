@@ -151,9 +151,9 @@ export default function AdminDashboard() {
                                         <td className="px-8 py-6">
                                             <div className="flex items-center gap-4">
                                                 <div className="size-10 bg-slate-100 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-slate-400 font-black">
-                                                    {app.child_name.charAt(0)}
+                                                    {app.child_name?.charAt(0) || '?'}
                                                 </div>
-                                                <span className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-tight">{app.child_name}</span>
+                                                <span className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-tight">{app.child_name || 'Anonymous'}</span>
                                             </div>
                                         </td>
                                         <td className="px-8 py-6">
