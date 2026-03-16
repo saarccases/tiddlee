@@ -269,7 +269,7 @@ function AdmissionsContent() {
                                                 <span className="text-xs font-black uppercase tracking-widest">Food Allergies</span>
                                             </div>
                                             <p className="text-sm font-black text-slate-800 dark:text-white uppercase leading-relaxed">
-                                                {selectedApp.food_allergies || 'NONE REPORTED'}
+                                                {selectedApp.food_allergies || selectedApp.allergies_reactions || 'NONE REPORTED'}
                                             </p>
                                         </div>
                                         <div className="space-y-2">

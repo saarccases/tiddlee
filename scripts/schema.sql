@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS admissions (
     additional_comments TEXT,
 
     -- Meta
+    status VARCHAR(20) DEFAULT 'pending',
     unique_id VARCHAR(50) UNIQUE,
     admission_date DATE,
     submission_date DATE COMMENT 'Date when form was submitted or last edited',
