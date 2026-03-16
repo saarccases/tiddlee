@@ -105,7 +105,7 @@ export default function ChildHealth() {
                         <img
                             alt="Health Illustrations"
                             className="max-w-full h-auto max-h-48 object-contain"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhPQm5NPyBYXhEJomXAV7mSjIL6rpYD-maC-vQDRL1VXHNUoHnCCEN2ZxN1pe3ZvLbVEnsWuqA-X0S-POdVa5VcqKCtKIeIW_RQnMBuFYZLefhQspAgG18YryKLoTU0XrUU-W_94LlL_ufMNh36IvmSmZup3BdyCFYZ3h8CnH2bLoGVrnE_-4QHb0DPqYyCwDZ7IHOR_O9vgyqZErePWmg0R8wEv1f0WiRm7cCGdqI5z0gv5DXDR1XAHqH_BdCwUSBB3jwZdrbcv8"
+                            src="/images/health-1.png"
                         />
                     </div>
                     <div className="w-full bg-primary text-white py-4 px-8 text-center rounded-lg shadow-md">

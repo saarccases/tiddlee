@@ -63,9 +63,9 @@ export default function AdmissionForm() {
                 {/* Decorative Illustrations */}
                 <div className="flex justify-center space-x-8 mb-8">
                     {[
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuCKDc-46ZYKifEmrTfmzILDma3UgR82cCouJChL6IAi2xrH1UD-yQHsSDMosTaXjxUHoAYbvT1UBtOz_upbDEHA-vpm_l4FLWDIn-2VlAd89x3kDDgeIwyLQEQLzxm4Q-ruulwjmxNybyMguXED5CrHTcU6Jy-CgFr65LY2jvefD2JDTeOVytA1_OSiwrWIJQj3WTZLGtrl8TYR3HnA7WWB8tSU9KsakKtOPx0xtjYK1L9j9qLpxhQ-LmTYscJ4dhE_yW0Hjp83XlA",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuCqh3CI7aiEhZTt9XWKsSwxVj8KqofC_RgJUzXxkgc4s-BDb70mPxxhYjkGbLo-KLSeqx6SMmGjTRCWdry-VXqQs7fFww9qbFi7ssh4ilPfug-JM0J64-FCSgGc4QWs5WIQmEwITBW_1j46obulzaT2hLOuTFC14xLBYQFNQSRCm1ZSlT9yk2ERyc12EkO63lDSQSrU1-zveZSkTU4Z1vqQVfSCdOwuNvhyc-DOmkz-R8srBQSOiYJDZcClW-4tbavoqTBFbZQNM3k",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuCwdFFeCqYKpUsVXET_Y9Z5JryunkLmAA0g0osMl11PEGUAeVLvtwNH8E-2fN-nRQYY8ootdepMFSYdQbInam42W3dgjHHen16zJtz97Gb1uqUkrCod53hfAdPXC7N10XjwxNdohkizL0jVVVcsVgGha0WpsUH1GU2g4yEfAPHujM9RXdyFVw_yC3EKzmp6J3Zb9wDtyB_RKmoV-UVIpR6054VgNi5IvRQi56ZvA4lzNDEvaBr1lb5-cZ2IoEfNv6MYoDklLGqYrgU"
+                        "/images/admission-1.png",
+                        "/images/admission-2.png",
+                        "/images/admission-3.png"
                     ].map((url, i) => (
                         <div key={i} className={`w-24 h-24 rounded-full flex items-center justify-center border-4 border-white dark:border-slate-800 shadow-lg overflow-hidden ${i === 0 ? 'bg-blue-100 dark:bg-blue-900' : i === 1 ? 'bg-pink-100 dark:bg-pink-900' : 'bg-teal-100 dark:bg-teal-900'}`}>
                             <img alt="Cartoon kid" className="w-full h-full object-cover" src={url} />

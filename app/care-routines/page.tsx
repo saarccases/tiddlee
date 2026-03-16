@@ -127,9 +127,9 @@ export default function CareRoutines() {
 
             <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 shadow-2xl rounded-3xl overflow-hidden border border-slate-100 dark:border-zinc-800">
                 <div className="bg-white dark:bg-zinc-800 p-8 flex justify-center items-center gap-8 md:gap-16 border-b-8 border-primary overflow-x-auto">
-                    <img alt="Children eating" className="h-24 md:h-32 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvMy--RDjtZHLzfBnYHwty_x-JMEWjzwRrasiIP3vV4tSAqBD3OvP1MChLBm0xiy2NRn9QwrSWsDrvtnXSulTfyJAdg0z6sm60Sodu55doAwKuoJpVwxmtbdkHE99vx7aA4pavf4Ojr9_Ai3ADgjBcS81Vy3qXkQbjsRnzKQWeEl7_DIQjzvz7U0qwiM8NBDyR3kz78QQJNofTCwqe4TcaO6Fb-IP5IpwbLh3xyyhNaHBMD6a3CStGFCvKs7-SqnsPKkFkciFvU2U" />
-                    <img alt="Children playing" className="h-24 md:h-32 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpN1PgFKgDI2jpws2ZwJt5_TeBXx7s2M_jsPZXWBmX-b_cKIS8W93MSPo914wg2HI1nZoIX3jEVdE0GPu_mpx5aRPc2xLRibCxu0nhitgTYDBG7VOpxdkLDb0jj09gvga7v_2s_QXkPVtJ7gXw67J9mqwfgC3QazHgGwumzQO9hqK7o0hF5cWfscr6WH_zf1pH8_Z4zkLP1yju5QsrnY7SyoJI1QDo0ufYLSMK7TJk9oKEgzqxmNgxGH2fN5FPPi0bZOkl5FFQTlo" />
-                    <img alt="Child sleeping" className="h-24 md:h-32 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeGVehOjeOqKk0WeGyS57LbjrCyeQRsT3ICAQSgti6Nb72e2YtHacMKV7znZJSS-LkARCihbgjOg00IzhLN2329WC_a4whHCJta0wzzsIR6fA_2gzgICvF7B9qjL9kWPi0ycnRyvSXyyUN4pqa8VS-l9pkcVIltqwDrP4maElhHP2p1KkA_BXTaVykKny2EDLkhWHwCwpVKXYI92Rp_WNdZ4RCshVNYKJup0Z2_DMLkO1LLmKXRh_lwOO9uM4nDRzCv8PbWdP-hCI" />
+                    <img alt="Children eating" className="h-24 md:h-32 object-contain" src="/images/care-1.png" />
+                    <img alt="Children playing" className="h-24 md:h-32 object-contain" src="/images/care-2.png" />
+                    <img alt="Child sleeping" className="h-24 md:h-32 object-contain" src="/images/care-3.png" />
                 </div>
                 <div className="bg-primary py-5 px-8 text-center shadow-lg">
                     <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-[0.2em] font-display">Child Care Information Sheet</h2>

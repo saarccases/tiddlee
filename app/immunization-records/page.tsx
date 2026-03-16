@@ -120,7 +120,7 @@ export default function ImmunizationRecords() {
                     <img
                         alt="Immunization Illustration"
                         className="h-64 object-contain mb-8"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx5ICZOBDyQv1boeZBRl4Yuug3SCPdCvTNUjpSnGdodq48F0nG1C9txKN9ftrIhNtoeFZ7e2T_UAC1t8WzzOKsGJxvaD_PehK-1-odZgvCKfx_99zN9z6cXHyN-rEYyhiRWsenTeJNkDFqoMjNaD6pGPZyywmE9JxyikaEL-afAM8ScYWdaBYfj6kJGOtgw9JhoVhTCadkcn0t6IJX7iaYxD3GheDilbv8SHfhE_k4JWhc0WIPqpJ9wXVlvPLSLJQ9FFPY1wGffdw"
+                        src="/images/immunization-1.png"
                     />
                     <div className="w-full bg-primary py-4 px-8 text-center shadow-md">
                         <h1 className="text-3xl font-bold text-white uppercase tracking-wide font-display">Child Medical Information Sheet</h1>

@@ -45,14 +45,14 @@ export default function AdmissionEntry() {
                         <img
                             alt="Tiddlee Character 1"
                             className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKKQ_-RLNKYFvZdZjz4rTRKlJPdN_S64DrXqUH-1kemjP4ARS39j43awrHHQ_OrVxZajbnq95klaOtC6cEBl1FwVg-lgZmeNeF6Poe6C1Y3IlHY-C_7AJh0YWKlghDI50zO_2xVSapM1b70KNsUOnXQux8IpW10YMqYzHgAhd22OsYai0ayrlfVGkBqYsUTBNSlX4xwaBqylip1vYdjwGivFHoX5JkPFCXFxt2GMYfQV2CzwszN8RgYUJkeoQwEqUgFiG9f4RULzY"
+                            src="/images/home-1.png"
                         />
                     </div>
                     <div className="relative">
                         <img
                             alt="Tiddlee Character 2"
                             className="w-32 h-32 rounded-full border-4 border-primary shadow-xl object-cover"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrJVJkI2y1HmM_pfqWlUS3bCWyntT-3WZBoqgwMcSZdEd5rE1H8_LIj2lJwh3VOeXjTmlz9m5EVguaOH1x_JM2tbdQ2vRkJW5bGtGtVJgXDxbPPjuSPLWs9QfeUwYdLYPnWYI2bFAP1Dygh6sBtoUQSikYSmwUVIHGS4cwTYlylu9ZYcaXFn7akCwn52PNpONHlDGpXxroOgi-6Ta8_t8Coknsfed0zMlGdIYACyHL9L7J1oTVVNFaLu34eS6KAKRMAuaC35pleUI"
+                            src="/images/home-2.png"
                         />
                         <div className="absolute -bottom-2 -right-2 text-yellow-400">
                             <span className="material-icons text-3xl">star</span>
@@ -65,7 +65,7 @@ export default function AdmissionEntry() {
                         <img
                             alt="Tiddlee Character 3"
                             className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5FQG61Un2r7ffDzxXi0Al7CTc5QdftSVD9Zfc918dUZxDveNBd16FoQ_N1fzre_J2xIVgIEHLlVu6buq6tN9jPsWKOwmVNHztUZ3rsc3ytWTQ_0pPKAuvKq_44tzaTl_XL9D1-ARL22EjU3Ug_SHGJ0i40sKjrreMlpKFn3BvE6xKLT1D6S4-0oVymmi9xh-uFN921RnsMEzWqtZKwZJNw45d7MgaiXZfOjtM_DJ8TVKAUy7b-L3C2HzgP1nqYxifBkwidOaSE0M"
+                            src="/images/home-3.png"
                         />
                     </div>
                 </div>

@@ -346,19 +346,19 @@ export default function ParentInfo() {
                     <div className="flex gap-4 items-end">
                         <div className="text-center group">
                             <div className="w-24 h-24 rounded-full border-4 border-secondary overflow-hidden bg-yellow-50 dark:bg-slate-800 mb-2 shadow-lg transition-transform group-hover:scale-105">
-                                <img alt="Mother Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMG-ef9a4K7Hcot5tiWg8jVHTszYBugPeocQ8h7wXDZ9SQk2J5m2OPoGiUr7uwrUn-IXwemKQyOopEWAA8DETpx2PjxCgEsAQdr6Yi7Ctk4k1vAhL9Pp3Uq1XEu_0YXdVmsSH56q64Yzl6gbQU2juZa7DJSVI9LzQk67PC51NVLUTRymR5JXBNDass1bdOLD_tfF1BKLbzJBKPpk-k7Em5smo8O__0XmTxZVR1TTITNNNJAlizseidb-365oXw8RqjPSOSXn3eZLA" />
+                                <img alt="Mother Avatar" src="/images/parent-1.png" />
                             </div>
                             <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Mother</span>
                         </div>
                         <div className="text-center group">
                             <div className="w-20 h-20 rounded-full border-4 border-primary overflow-hidden bg-green-50 dark:bg-slate-800 mb-2 shadow-lg transition-transform group-hover:scale-105">
-                                <img alt="Child Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDcFm0sEbfMIT-5PbneD017NCZx8KvsBTEj1lPOo0V3XIQE2bNq5HgnAn76G-MGDjBr9eyQR15R6ZhwXx2mUZXs_oq3bAKu7ezmnBDZGbzLon214gmCv0TCzyM0_3JJTg3_JnjaM819CFHobCN7a8eIOQ-gIrWhSHCsoHjPIyxA5OVKbtKM4aMQGXg-Om7UCpc-rH2vPaMbXp01GYHy7lacmkhlDhEK3eujorHcdEGzvT4-HbGTiAjvuOeieuBTHEBYQPhmZT8CnM" />
+                                <img alt="Child Avatar" src="/images/parent-2.png" />
                             </div>
                             <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Child</span>
                         </div>
                         <div className="text-center group">
                             <div className="w-24 h-24 rounded-full border-4 border-secondary overflow-hidden bg-yellow-50 dark:bg-slate-800 mb-2 shadow-lg transition-transform group-hover:scale-105">
-                                <img alt="Father Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFYYnEE30Fqth1IITfdDUUo2S3BEmaxK4AphzDtKl57X3DQTHtQ8CJBU-31KGmUCD0m9YlYX_v8pmIS0jktuKtbiDCENm4J1ybXTpt8hGhspfMKCiJBV0obEdbVdTMeuZ-J9d4eLJ3b37TihBiVpEE5Loh9jKeiEUPEOtphCWbzn4c5dqs8oBukUg5VqZ36VwcihqQG-GFmo4y4nrT8DOLh63264PZgwkLEgYIu9SoCTcgsOqYHT-xhNTyCiX2zqNwaMyfootHRWg" />
+                                <img alt="Father Avatar" src="/images/parent-3.png" />
                             </div>
                             <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Father</span>
                         </div>
