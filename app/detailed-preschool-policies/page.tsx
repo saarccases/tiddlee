@@ -129,7 +129,7 @@ export default function DetailedPreschoolPolicies() {
                         <button className="px-6 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition-colors flex items-center gap-2">
                             <span className="material-icons-outlined text-sm">print</span> Print
                         </button>
-                        <Link href="/daycare-policies" className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20">
+                        <Link href="/biting-policy" className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20">
                             Save &amp; Continue <span className="material-icons-outlined text-sm">arrow_forward</span>
                         </Link>
                     </div>

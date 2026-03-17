@@ -46,10 +46,10 @@ export default function PreschoolPolicies() {
             <div className="max-w-4xl mx-auto bg-white shadow-2xl overflow-hidden rounded-xl border border-gray-200">
 
                 {/* Header Illustration Area */}
-                <div className="relative w-full aspect-[16/7] bg-white flex items-center justify-center p-6 border-b border-gray-100">
-                    <div className="flex items-center justify-center h-full w-full bg-slate-50 rounded-lg">
-                        <span className="text-gray-400 italic">Teacher & Children Illustration</span>
-                    </div>
+                <div className="w-full bg-white flex items-center justify-center gap-6 md:gap-12 py-8 px-8 border-b border-gray-100">
+                    <img alt="Children at preschool" className="h-28 md:h-40 object-contain" src="/images/home-1.png" />
+                    <img alt="Children learning" className="h-32 md:h-44 object-contain" src="/images/home-2.png" />
+                    <img alt="Children playing" className="h-28 md:h-40 object-contain" src="/images/home-3.png" />
                 </div>
 
                 <div className="bg-primary py-4 px-8 text-center">
@@ -113,7 +113,7 @@ export default function PreschoolPolicies() {
 
 
                 <div className="px-8 py-6 bg-gray-50 flex justify-between items-center border-t border-gray-200">
-                    <Link href="/medical-authorization" className="px-6 py-2 border border-gray-300 text-gray-600 font-semibold rounded-full hover:bg-gray-100 transition-colors">
+                    <Link href="/care-routines" className="px-6 py-2 border border-gray-300 text-gray-600 font-semibold rounded-full hover:bg-gray-100 transition-colors">
                         Back
                     </Link>
                     <Link href="/detailed-preschool-policies" className="px-6 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all">

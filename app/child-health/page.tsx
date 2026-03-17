@@ -70,7 +70,7 @@ export default function ChildHealth() {
             });
 
             if (response.ok) {
-                router.push('/immunization-records');
+                router.push('/care-routines');
             } else {
                 alert('Failed to save data');
             }
@@ -110,7 +110,7 @@ export default function ChildHealth() {
                     </div>
                     <div className="w-full bg-primary text-white py-4 px-8 text-center rounded-lg shadow-md">
                         <h1 className="text-3xl font-bold tracking-tight font-display uppercase">Child HEALTH Information Sheet</h1>
-                        <p className="text-sm opacity-90 mt-1 uppercase tracking-widest font-bold">Section 4 of 7</p>
+                        <p className="text-sm opacity-90 mt-1 uppercase tracking-widest font-bold">Section 4 of 5</p>
                     </div>
                 </header>
 

@@ -103,7 +103,7 @@ export default function ConsentIntroduction() {
 
 
                 <div className="bg-white p-6 flex justify-between items-center border-t border-slate-100">
-                    <Link href="/health-hygiene-policies" className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-slate-50 transition-colors">
+                    <Link href="/common-policies" className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-slate-50 transition-colors">
                         Back
                     </Link>
                     <Link href="/media-consent-choice" className="px-8 py-3 bg-primary hover:bg-opacity-90 text-white font-bold rounded-full transition-all shadow-lg flex items-center space-x-2">

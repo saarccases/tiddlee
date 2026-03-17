@@ -333,7 +333,7 @@ export default function ParentInfo() {
                         </Link>
                     </div>
                     <div className="flex items-center gap-4">
-                        <span className="text-sm font-semibold text-primary px-3 py-1 bg-primary/10 rounded-full">Section 2 of 7</span>
+                        <span className="text-sm font-semibold text-primary px-3 py-1 bg-primary/10 rounded-full">Section 2 of 5</span>
                         <button className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onClick={toggleDarkMode}>
                             <span className="material-icons text-slate-600 dark:text-slate-300">dark_mode</span>
                         </button>

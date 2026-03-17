@@ -12,15 +12,11 @@ export default function CareRoutines() {
         id: '',
         child_name: '',
         child_age: '',
+        father_name: '',
         allergies_reactions: '',
         food_allergies: '',
         likes: '',
         dislikes: '',
-        sleep_routines: '',
-        playtime_activities: '',
-        is_potty_trained: '',
-        redirection_techniques: '',
-        additional_comments: '',
         unique_id: '',
         admission_date: ''
     });
@@ -38,15 +34,11 @@ export default function CareRoutines() {
                             id: storedId,
                             child_name: data.child_name || '',
                             child_age: data.child_age || '',
+                            father_name: data.father_name || '',
                             allergies_reactions: data.allergies_reactions || '',
                             food_allergies: data.food_allergies || '',
                             likes: data.likes || '',
                             dislikes: data.dislikes || '',
-                            sleep_routines: data.sleep_routines || '',
-                            playtime_activities: data.playtime_activities || '',
-                            is_potty_trained: data.is_potty_trained || '',
-                            redirection_techniques: data.redirection_techniques || '',
-                            additional_comments: data.additional_comments || '',
                             unique_id: data.unique_id || '',
                             admission_date: data.admission_date || ''
                         });
@@ -77,7 +69,12 @@ export default function CareRoutines() {
             });
 
             if (response.ok) {
-                router.push('/medical-authorization');
+                const programType = localStorage.getItem('selectedProgramType');
+                if (programType === 'daycare') {
+                    router.push('/daycare-policies');
+                } else {
+                    router.push('/preschool-policies');
+                }
             } else {
                 alert('Failed to save data');
             }
@@ -90,7 +87,7 @@ export default function CareRoutines() {
     };
 
     const handleBack = () => {
-        router.push('/immunization-records');
+        router.push('/child-health');
     };
 
     const formatDate = (dateStr: string) => {
@@ -112,13 +109,13 @@ export default function CareRoutines() {
                         <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
                             <span className="material-icons text-3xl">child_care</span>
                         </div>
-                        <h1 className="text-3xl font-black text-slate-800 dark:text-white font-display tracking-tight">Care & Potty Training</h1>
+                        <h1 className="text-3xl font-black text-slate-800 dark:text-white font-display tracking-tight">Child Care & Medical Authorization</h1>
                     </div>
                     <div className="flex flex-col items-end">
-                        <span className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] font-display">Section 6 of 7</span>
+                        <span className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] font-display">Section 5 of 5</span>
                         <div className="flex gap-1 mt-1">
-                            {[1, 2, 3, 4, 5, 6, 0, 0].map((_, i) => (
-                                <div key={i} className={`h-1.5 w-6 rounded-full ${i < 6 ? 'bg-primary' : 'bg-slate-200 dark:bg-zinc-800'}`}></div>
+                            {[1, 2, 3, 4, 5].map((_, i) => (
+                                <div key={i} className={`h-1.5 w-6 rounded-full bg-primary`}></div>
                             ))}
                         </div>
                     </div>
@@ -132,7 +129,7 @@ export default function CareRoutines() {
                     <img alt="Child sleeping" className="h-24 md:h-32 object-contain" src="/images/care-3.png" />
                 </div>
                 <div className="bg-primary py-5 px-8 text-center shadow-lg">
-                    <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-[0.2em] font-display">Child Care Information Sheet</h2>
+                    <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-[0.2em] font-display">Child Care & Medical Authorization</h2>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-10 space-y-10">
@@ -199,111 +196,46 @@ export default function CareRoutines() {
                         </div>
                     </div>
 
+                    {/* Medical Authorization Section */}
                     <div className="pt-8 border-t border-slate-100 dark:border-zinc-800 space-y-6">
-                        <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mt-1">
-                                <span className="material-icons">hotel</span>
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-black text-slate-900 dark:text-white font-display uppercase tracking-tight">Rest Time</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 italic">We do "rest time" after lunch. Children are encouraged to sit quietly and try to sleep.</p>
-                            </div>
-                        </div>
-                        <div className="space-y-2 pl-14">
-                            <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Sleep time routines or tricks:</label>
-                            <textarea
-                                className="w-full bg-white dark:bg-zinc-800 rounded-xl border-slate-200 dark:border-zinc-700 focus:border-primary focus:ring-primary p-4 text-slate-800 dark:text-slate-100 font-medium transition-all"
-                                placeholder="e.g. favorite blanket, specific song..."
-                                rows={2}
-                                name="sleep_routines"
-                                value={formData.sleep_routines}
-                                onChange={handleChange}
-                            ></textarea>
-                        </div>
-                    </div>
-
-                    <div className="pt-8 border-t border-slate-100 dark:border-zinc-800 space-y-6">
-                        <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mt-1">
-                                <span className="material-icons">celebration</span>
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-black text-slate-900 dark:text-white font-display uppercase tracking-tight">Playtime</h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 italic">Various activities are performed throughout the day.</p>
-                            </div>
-                        </div>
-                        <div className="space-y-2 pl-14">
-                            <label className="block text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Favorite playtime activities:</label>
-                            <textarea
-                                className="w-full bg-white dark:bg-zinc-800 rounded-xl border-slate-200 dark:border-zinc-700 focus:border-primary focus:ring-primary p-4 text-slate-800 dark:text-slate-100 font-medium transition-all"
-                                placeholder="e.g. drawing, blocks, outdoor play..."
-                                rows={2}
-                                name="playtime_activities"
-                                value={formData.playtime_activities}
-                                onChange={handleChange}
-                            ></textarea>
-                        </div>
-                    </div>
-
-                    <div className="pt-8 border-t border-slate-100 dark:border-zinc-800 space-y-8">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50 dark:bg-zinc-800/50 p-6 rounded-2xl border border-slate-100 dark:border-zinc-800">
-                            <label className="text-xl font-black text-slate-900 dark:text-white font-display uppercase tracking-tight">Is your child Potty Trained?</label>
-                            <div className="flex items-center gap-8">
-                                <label className="flex items-center gap-3 cursor-pointer group">
-                                    <input
-                                        className="text-primary focus:ring-primary h-6 w-6 border-slate-300 dark:border-zinc-600 dark:bg-zinc-700"
-                                        name="is_potty_trained"
-                                        type="radio"
-                                        value="yes"
-                                        checked={formData.is_potty_trained === 'yes'}
-                                        onChange={handleChange}
-                                    />
-                                    <span className="text-lg font-bold text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">Yes</span>
-                                </label>
-                                <label className="flex items-center gap-3 cursor-pointer group">
-                                    <input
-                                        className="text-primary focus:ring-primary h-6 w-6 border-slate-300 dark:border-zinc-600 dark:bg-zinc-700"
-                                        name="is_potty_trained"
-                                        type="radio"
-                                        value="no"
-                                        checked={formData.is_potty_trained === 'no'}
-                                        onChange={handleChange}
-                                    />
-                                    <span className="text-lg font-bold text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">No</span>
-                                </label>
-                            </div>
+                        <div className="flex items-center gap-3">
+                            <span className="material-icons text-primary text-3xl">medical_services</span>
+                            <h3 className="text-xl font-black text-slate-900 dark:text-white font-display uppercase tracking-tight">Medical Authorization</h3>
                         </div>
 
-                        <div className="bg-primary/5 dark:bg-primary/10 p-6 rounded-2xl border-l-4 border-primary">
-                            <p className="text-sm font-bold text-slate-700 dark:text-slate-200 italic leading-relaxed">
-                                *We will try to encourage training through our facility, but training is best started in your home.
+                        <div className="space-y-4 text-slate-700 dark:text-slate-300 leading-relaxed text-sm md:text-base">
+                            <div className="flex flex-wrap items-center gap-2 font-medium">
+                                I, <input
+                                    className="border-b border-dashed border-slate-300 bg-transparent flex-1 min-w-[200px] outline-none px-2 py-1 text-primary font-bold"
+                                    placeholder="Full Name of Parent/Guardian"
+                                    type="text"
+                                    value={formData.father_name}
+                                    readOnly
+                                />
+                                parent/guardian of
+                                <input
+                                    className="border-b border-dashed border-slate-300 bg-transparent flex-1 min-w-[200px] outline-none px-2 py-1 text-primary font-bold"
+                                    placeholder="Name of Child"
+                                    type="text"
+                                    value={formData.child_name}
+                                    readOnly
+                                />
+                            </div>
+                            <p>
+                                do hereby authorize <span className="font-bold text-primary">TIDDLEE</span> to administer medical treatment on my child. I understand every effort will be made to contact parent/guardian or emergency contact before treatment is administered.
+                            </p>
+                            <p>
+                                I further authorise <span className="font-bold text-primary">TIDDLEE</span> to administer emergency care/treatment as needed until medical assistance is available. This includes allowing <span className="font-bold text-primary">TIDDLEE</span> to make decisions regarding medications if parent/guardian or emergency contact is not available.
+                            </p>
+                            <p>
+                                I agree to pay all costs resulting from emergency medical care and/or treatment for my child as secured or authorized under this consent.
+                            </p>
+                            <p>
+                                I understand in absence of the medical history, the medical professionals may not be able to provide appropriate medical care in emergency.
                             </p>
                         </div>
 
-                        <div className="space-y-6">
-                            <div className="space-y-4">
-                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center mb-1">Preferred Redirection Techniques</label>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 italic -mt-2">Techniques used when the child is upset or showing challenging behavior.</p>
-                                <textarea
-                                    className="w-full bg-slate-50/50 dark:bg-zinc-800 shadow-inner rounded-xl border border-slate-100 dark:border-zinc-800 p-4 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 transition-all"
-                                    rows={3}
-                                    name="redirection_techniques"
-                                    value={formData.redirection_techniques}
-                                    onChange={handleChange}
-                                ></textarea>
-                            </div>
 
-                            <div className="space-y-4">
-                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center mb-1">Additional Comments</label>
-                                <textarea
-                                    className="w-full bg-slate-50/50 dark:bg-zinc-800 shadow-inner rounded-xl border border-slate-100 dark:border-zinc-800 p-4 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 transition-all"
-                                    rows={2}
-                                    name="additional_comments"
-                                    value={formData.additional_comments}
-                                    onChange={handleChange}
-                                ></textarea>
-                            </div>
-                        </div>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100 dark:border-zinc-800">
@@ -345,8 +277,8 @@ export default function CareRoutines() {
             </div>
 
             <footer className="max-w-4xl mx-auto mt-12 text-center">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em]">Section 06 • Care Routines & Potty Training</p>
-                <p className="text-slate-400 text-[10px] mt-2 italic">© {new Date().getFullYear()} TIDDLEE Pre-School. All rights reserved.</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em]">Section 05 • Child Care & Medical Authorization</p>
+                <p className="text-slate-400 text-[10px] mt-2 italic">&copy; {new Date().getFullYear()} TIDDLEE Pre-School. All rights reserved.</p>
             </footer>
         </main>
     );

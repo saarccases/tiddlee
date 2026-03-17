@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function BitingPolicy() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         unique_id: '',
         admission_date: ''
@@ -49,17 +51,10 @@ export default function BitingPolicy() {
                 <div className="text-center pt-8 pb-4 font-quicksand">
                     <h2 className="text-xl font-bold text-slate-700 uppercase tracking-widest mb-4">Preschool &amp; Daycare Common Policies</h2>
 
-                    {/* Circular Illustrations Area */}
-                    <div className="flex justify-center gap-6 mb-6">
-                        <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center border-2 border-primary/20">
-                            <span className="material-icons-outlined text-4xl text-slate-300">face</span>
-                        </div>
-                        <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center border-2 border-primary/20">
-                            <span className="material-icons-outlined text-4xl text-slate-300">psychology</span>
-                        </div>
-                        <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center border-2 border-primary/20">
-                            <span className="material-icons-outlined text-4xl text-slate-300">mood_bad</span>
-                        </div>
+                    <div className="flex justify-center items-center gap-6 mb-6">
+                        <img alt="Child care" className="w-24 h-24 rounded-full border-2 border-primary/20 object-cover" src="/images/home-1.png" />
+                        <img alt="Children" className="w-24 h-24 rounded-full border-2 border-primary/20 object-cover" src="/images/home-2.png" />
+                        <img alt="Child behavior" className="w-24 h-24 rounded-full border-2 border-primary/20 object-cover" src="/images/home-3.png" />
                     </div>
 
                     <div className="bg-[#99cc00] py-3 px-10 inline-block rounded-r-full rounded-l-full shadow-md">
@@ -74,7 +69,7 @@ export default function BitingPolicy() {
                             <span className="material-icons text-sm">circle</span> Biting Policy Tenets
                         </h3>
                         <p className="text-slate-600 leading-relaxed pl-6 font-medium">
-                            Biting is a common developmental stage that many children go through. It is usually a temporary condition that is most common between thirteen and twenty-four months of age. The safety of the children at the center is our primary concern. The center's biting policy addresses the actions the staff will take if a biting incident occurs.
+                            Biting is unfortunately not unexpected behavior for toddlers. Some children and many toddlers communicate through this behavior. However, biting can be harmful to other children and to staff. This biting policy has been developed with both of these ideas in mind and is a part of our care setting. Our goal is to help identify what is causing the biting and resolve these issues.
                         </p>
                     </section>
 
@@ -82,36 +77,48 @@ export default function BitingPolicy() {
                         <h3 className="text-lg font-bold text-primary mb-3 flex items-center gap-2">
                             <span className="material-icons text-sm">circle</span> For the child that bit
                         </h3>
-                        <ul className="list-disc list-inside space-y-2 text-slate-600 pl-6 marker:text-primary font-medium">
-                            <li>The child will be immediately removed from the situation.</li>
-                            <li>The child will be told firmly, "No biting, biting hurts."</li>
-                            <li>The child will be redirected to another activity.</li>
-                            <li>The parents will be notified of the incident.</li>
-                        </ul>
+                        <p className="text-slate-600 leading-relaxed pl-6 font-medium">
+                            She will firmly tell the child &ldquo;NO! DO NOT BITE!&rdquo;
+                        </p>
+                        <p className="text-slate-600 leading-relaxed pl-6 font-medium mt-2">
+                            The child will be placed in time out for no longer than five minutes. The Parents are notified.
+                        </p>
                     </section>
 
                     <section>
                         <h3 className="text-lg font-bold text-primary mb-3 flex items-center gap-2">
                             <span className="material-icons text-sm">circle</span> When biting continues
                         </h3>
-                        <p className="text-slate-600 leading-relaxed pl-6 mb-3 font-medium">
-                            If the child continues to bite, the following procedures will be followed:
+                        <p className="text-slate-600 leading-relaxed pl-6 font-medium">
+                            The child will be shadowed to help prevent any biting incidents. The child will be observed by the classroom staff to determine what is causing.
                         </p>
-                        <ul className="list-disc list-inside space-y-2 text-slate-600 pl-6 marker:text-primary font-medium">
-                            <li>The child will be shadowed by a staff member to prevent further incidents.</li>
-                            <li>The staff will observe the child to determine what triggers the biting.</li>
-                            <li>A conference will be scheduled with the parents to discuss a plan of action.</li>
-                        </ul>
                     </section>
 
-                    <section>
-                        <h3 className="text-lg font-bold text-primary mb-3 flex items-center gap-2">
-                            <span className="material-icons text-sm">circle</span> Excessive Biting
-                        </h3>
-                        <p className="text-slate-600 leading-relaxed pl-6 font-medium">
-                            If a child bites excessively, meaning 3 or more times in one day, the parent will be called to pick up the child for the remainder of the day. This is for the safety of the other children in the class. If the biting behavior persists and threatens the safety of other children, the center reserves the right to terminate enrollment.
-                        </p>
-                    </section>
+                    {/* When biting becomes excessive - detailed section */}
+                    <div className="pt-8 border-t-4 border-primary space-y-6">
+                        <h2 className="text-xl font-bold text-slate-800">Biting Policy</h2>
+
+                        <section>
+                            <h3 className="font-bold text-slate-800 mb-3">When biting becomes excessive:</h3>
+                            <div className="space-y-4 text-slate-600 leading-relaxed font-medium">
+                                <p>
+                                    If a child inflicts 3 bites in a one week period (5 weekdays) in which the skin of another child or staff member is broken or bruised or the bite leaves a significant mark, a conference will be held with the parents to discuss the child&apos;s behaviour and how the behaviour may be modified.
+                                </p>
+                                <p>
+                                    If the child again inflicts 3 bites in a one week period (5 weekdays) in which the skin of another child or staff member is broken or bruised or the bite leaves a significant mark, the child will be suspended for 2 days.
+                                </p>
+                                <p>
+                                    If a child, who has been through steps 1 and/or 2, goes 3 weeks (15 business days) without biting, we will go back to step 1 if the child bites again.
+                                </p>
+                                <p>
+                                    If a child bites twice in a 4 hour period, the child will be required to be picked up from day care for the remainder of the day.
+                                </p>
+                                <p>
+                                    We may have to look at strict action and even dismissal in case we are unable to control biting incidents and it persists. This step will only be taken after all remedial action has failed and after repeated incidents or parents non-support to help reduce biting as we have to think of safety of all other students.
+                                </p>
+                            </div>
+                        </section>
+                    </div>
 
                     <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100">
                         <div className="flex-1">
@@ -132,9 +139,19 @@ export default function BitingPolicy() {
 
 
                 <div className="p-4 bg-slate-100 flex justify-between items-center px-8 border-t border-slate-200 font-quicksand">
-                    <Link href="/daycare-policies" className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-white transition-colors">
+                    <button
+                        onClick={() => {
+                            const programType = localStorage.getItem('selectedProgramType');
+                            if (programType === 'daycare') {
+                                router.push('/daycare-policies');
+                            } else {
+                                router.push('/detailed-preschool-policies');
+                            }
+                        }}
+                        className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-white transition-colors"
+                    >
                         Back
-                    </Link>
+                    </button>
                     <div className="text-[10px] text-slate-400 uppercase font-bold tracking-widest hidden md:block">
                         Section 11 | Tiddlee Preschool
                     </div>

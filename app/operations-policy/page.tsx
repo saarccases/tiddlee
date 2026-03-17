@@ -44,11 +44,10 @@ export default function OperationsPolicy() {
     return (
         <div className="bg-gray-50 min-h-screen py-8 font-inter text-gray-800">
             <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
-                <div className="p-8 pb-0 flex justify-center bg-white">
-                    {/* Illustration Placeholder */}
-                    <div className="h-48 w-full bg-slate-50 flex items-center justify-center rounded-lg mb-6">
-                        <span className="text-slate-400 italic">Teacher interacting with child & parent illustration</span>
-                    </div>
+                <div className="p-8 pb-0 flex justify-center items-center gap-6 md:gap-12 bg-white mb-6">
+                    <img alt="Parent and child" className="h-28 md:h-36 object-contain" src="/images/parent-1.png" />
+                    <img alt="Family interaction" className="h-28 md:h-36 object-contain" src="/images/parent-2.png" />
+                    <img alt="Teacher with child" className="h-28 md:h-36 object-contain" src="/images/parent-3.png" />
                 </div>
 
                 <div className="bg-primary px-8 py-4">
