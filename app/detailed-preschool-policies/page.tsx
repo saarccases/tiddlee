@@ -54,7 +54,7 @@ export default function DetailedPreschoolPolicies() {
                 <div className="p-8 space-y-10 text-slate-700">
                     <div className="flex gap-6">
                         <div className="flex-shrink-0">
-                            <span className="material-icons-outlined text-4xl text-slate-400">school</span>
+                            <span className="material-icons text-4xl text-slate-400">school</span>
                         </div>
                         <div className="space-y-4">
                             <p><strong className="text-slate-900">Arrival:</strong> Prompt arrival at the given time is encouraged to ensure each class is able to begin the day as scheduled.</p>
@@ -67,7 +67,7 @@ export default function DetailedPreschoolPolicies() {
 
                     <div className="flex gap-6">
                         <div className="flex-shrink-0">
-                            <span className="material-icons-outlined text-4xl text-slate-400">schedule</span>
+                            <span className="material-icons text-4xl text-slate-400">schedule</span>
                         </div>
                         <div>
                             <p><strong className="text-slate-900">Departure:</strong> Children must be picked up at 11:20 AM or 2:35 PM, and no later than 11:30 AM or 2:45 pm. Please carry and present your pick-up/drop card when requested, as it ensures your child's safety. If someone else is picking up or dropping off your child, kindly share their name and contact number in advance to inform the teacher about the authorised person.</p>
@@ -76,7 +76,7 @@ export default function DetailedPreschoolPolicies() {
 
                     <div className="flex gap-6">
                         <div className="flex-shrink-0">
-                            <span className="material-icons-outlined text-4xl text-slate-400">groups</span>
+                            <span className="material-icons text-4xl text-slate-400">groups</span>
                         </div>
                         <div>
                             <p><strong className="text-slate-900">Meeting with Teacher:</strong> If you would like to meet your child's teacher, please connect with the Centre In-charge to schedule an appointment usually arranged for a Saturday. In special cases, meetings may be scheduled on select weekdays between 3:00 pm and 3:30 pm. Kindly note that regular PTMs should not be missed.</p>
@@ -85,7 +85,7 @@ export default function DetailedPreschoolPolicies() {
 
                     <div className="flex gap-6">
                         <div className="flex-shrink-0">
-                            <span className="material-icons-outlined text-4xl text-slate-400">checkroom</span>
+                            <span className="material-icons text-4xl text-slate-400">checkroom</span>
                         </div>
                         <div>
                             <p><strong className="text-slate-900">Dress Code:</strong> Children should come in TIDDLEE uniform compulsorily.</p>
@@ -94,12 +94,13 @@ export default function DetailedPreschoolPolicies() {
 
                     <div className="flex gap-6">
                         <div className="flex-shrink-0">
-                            <span className="material-icons-outlined text-4xl text-slate-400">payments</span>
+                            <span className="material-icons text-4xl text-slate-400">payments</span>
                         </div>
                         <div className="space-y-2">
                             <p><strong className="text-slate-900">Fee Policy:</strong> Fees once paid are non-refundable.</p>
                             <p>Registration fee for seat booking is non-refundable.</p>
                             <p>Security deposit is refundable only if the original receipt is retained and submitted.</p>
+                            <p className="mt-2"><strong className="text-slate-900">Note:</strong> Security deposit shall be consumed in part or whole in the event of Medical emergency, Fee default, and/or Damage to property.</p>
                         </div>
                     </div>
 
@@ -119,18 +120,16 @@ export default function DetailedPreschoolPolicies() {
                     </div>
                 </div>
 
-
-
                 <div className="p-8 flex justify-between gap-4 no-print bg-white border-t border-gray-100">
-                    <Link href="/preschool-policies" className="px-6 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+                    <Link href="/preschool-policies" className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2">
                         Back
                     </Link>
                     <div className="flex gap-4">
-                        <button className="px-6 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition-colors flex items-center gap-2">
-                            <span className="material-icons-outlined text-sm">print</span> Print
+                        <button className="px-6 py-2 bg-slate-200 text-slate-700 rounded-full hover:bg-slate-300 transition-colors flex items-center gap-2">
+                            <span className="material-icons text-sm">print</span> Print
                         </button>
-                        <Link href="/biting-policy" className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20">
-                            Save &amp; Continue <span className="material-icons-outlined text-sm">arrow_forward</span>
+                        <Link href="/detailed-daycare-policies" className="px-6 py-2 bg-primary text-white font-bold rounded-full hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20">
+                            Save &amp; Continue <span className="material-icons text-sm">arrow_forward</span>
                         </Link>
                     </div>
                 </div>

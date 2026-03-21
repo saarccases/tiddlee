@@ -229,10 +229,6 @@ export default function ImmunizationRecords() {
                         </button>
                     </div>
                 </form>
-
-                <footer className="bg-slate-50 dark:bg-zinc-950 p-8 text-center text-[10px] text-slate-400 font-bold uppercase tracking-[0.3em]">
-                    TIDDLEE Preschool • Child Medical Information • Form MED-05
-                </footer>
             </div>
         </main>
     );

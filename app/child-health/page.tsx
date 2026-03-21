@@ -83,7 +83,7 @@ export default function ChildHealth() {
     };
 
     const handleBack = () => {
-        router.push('/guardian-info');
+        router.push('/parent-info');
     };
 
     const formatDate = (dateStr: string) => {
@@ -248,10 +248,6 @@ export default function ChildHealth() {
                         </button>
                     </div>
                 </form>
-
-                <footer className="bg-slate-50 dark:bg-zinc-950 p-6 text-center text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">
-                    Preschool Admission Form • Confidential Document • Section 04
-                </footer>
             </div>
         </main>
     );

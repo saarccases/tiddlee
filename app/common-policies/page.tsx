@@ -42,95 +42,88 @@ export default function CommonPolicies() {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen font-quicksand transition-colors duration-200 py-8">
-            <div className="max-w-4xl mx-auto bg-white shadow-2xl overflow-hidden border border-gray-200">
-
-                <div className="p-8 text-center bg-white">
-                    <div className="flex justify-center items-center gap-6 md:gap-12 mb-6">
-                        <img alt="Children at school" className="h-28 md:h-36 object-contain" src="/images/admission-1.png" />
-                        <img alt="Children learning" className="h-28 md:h-36 object-contain" src="/images/admission-2.png" />
-                        <img alt="Children playing" className="h-28 md:h-36 object-contain" src="/images/admission-3.png" />
-                    </div>
-                </div>
-
-                <div className="bg-primary py-4 px-8 shadow-inner">
-                    <h1 className="text-white text-2xl md:text-3xl font-bold text-center tracking-wide">
-                        Preschool &amp; Daycare Common Policies
+        <div className="bg-slate-50 min-h-screen py-10 px-4 font-quicksand text-slate-800">
+            <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
+                <div className="p-8 border-b border-primary">
+                    <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
+                        <span className="text-primary font-bold">Preschool &amp; Daycare Common Policies</span>
                     </h1>
+                    <div className="h-1.5 w-full bg-primary mt-4 rounded-full"></div>
                 </div>
 
-                <div className="p-10 space-y-8">
-                    <section>
-                        <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
-                            <span className="material-icons text-primary">restaurant</span>
-                            Meals
-                        </h2>
-                        <p className="text-gray-700 leading-relaxed font-medium">
-                            <span className="font-bold">TIDDLEE</span> will provide healthy food and snack based on the package opted. A meal schedule for every week will be provided beforehand. Incase of any food Allergy please notify us in advance. Outside/home food will not be allowed.
-                        </p>
-                    </section>
+                <div className="p-8 space-y-10 text-slate-700">
 
-                    <section>
-                        <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
-                            <span className="material-icons text-primary">cake</span>
-                            Birthday Celebrations
-                        </h2>
-                        <p className="text-gray-700 leading-relaxed font-medium">
-                            You may celebrate your child&apos;s birthday at <span className="font-bold">TIDDLEE</span>. We request for only egg less cake or cup cakes for the celebration (Cake without icing). Returns gifts of any kind are not allowed.
-                        </p>
-                    </section>
+                    <div className="flex gap-6">
+                        <div className="flex-shrink-0">
+                            <span className="material-icons text-4xl text-slate-400">restaurant</span>
+                        </div>
+                        <div className="space-y-2">
+                            <p><strong className="text-slate-900">Meals:</strong> TIDDLEE will provide healthy food and snack based on the package opted. A meal schedule for every week will be provided beforehand. Incase of any food Allergy please notify us in advance. Outside/home food will not be allowed.</p>
+                        </div>
+                    </div>
 
-                    <section>
-                        <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
-                            <span className="material-icons text-primary">checkroom</span>
-                            Clothing Policy
-                        </h2>
-                        <p className="text-gray-700 leading-relaxed font-medium">
-                            Please dress your children appropriately. Please remember that we spend a majority of the day playing, coloring, painting, etc. and clothes may come home colorful. Please dress your children comfortably. <span className="font-bold">Parents are also requested to send an extra pairs of clothes in the bag everyday.</span>
-                        </p>
-                    </section>
+                    <div className="flex gap-6">
+                        <div className="flex-shrink-0">
+                            <span className="material-icons text-4xl text-slate-400">cake</span>
+                        </div>
+                        <div className="space-y-2">
+                            <p><strong className="text-slate-900">Birthday Celebrations:</strong> You may celebrate your child&apos;s birthday at TIDDLEE. We request for only egg less cake or cup cakes for the celebration (Cake without icing). Returns gifts of any kind are not allowed.</p>
+                        </div>
+                    </div>
 
-                    {/* Additional Common Policies */}
-                    <div className="pt-8 border-t-4 border-primary space-y-8">
-                        <h2 className="text-xl font-bold text-slate-800">Preschool &amp; Daycare Common Policies</h2>
+                    <div className="flex gap-6">
+                        <div className="flex-shrink-0">
+                            <span className="material-icons text-4xl text-slate-400">checkroom</span>
+                        </div>
+                        <div className="space-y-2">
+                            <p><strong className="text-slate-900">Clothing Policy:</strong> Please dress your children appropriately. Please remember that we spend a majority of the day playing, coloring, painting, etc. and clothes may come home colorful. Please dress your children comfortably. <strong>Parents are also requested to send an extra pairs of clothes in the bag everyday.</strong></p>
+                        </div>
+                    </div>
 
-                        <section>
-                            <h3 className="font-bold text-slate-800 mb-2">Clothing Label:</h3>
-                            <p className="text-gray-700 leading-relaxed font-medium">
-                                We request you to label the clothing so as to avoid the confusion and mismatch.
-                            </p>
-                        </section>
+                    <div className="flex gap-6">
+                        <div className="flex-shrink-0">
+                            <span className="material-icons text-4xl text-slate-400">label</span>
+                        </div>
+                        <div className="space-y-2">
+                            <p><strong className="text-slate-900">Clothing Label:</strong> We request you to label the clothing so as to avoid the confusion and mismatch.</p>
+                        </div>
+                    </div>
 
-                        <section>
-                            <h3 className="font-bold text-slate-800 mb-2">Plastic Bags:</h3>
-                            <p className="text-gray-700 leading-relaxed font-medium">
-                                We request to provide with 2 plastic bags in the main bags duly labeled if possible, to keep the soiled clothes, which are to be taken back every day.
-                            </p>
-                        </section>
+                    <div className="flex gap-6">
+                        <div className="flex-shrink-0">
+                            <span className="material-icons text-4xl text-slate-400">shopping_bag</span>
+                        </div>
+                        <div className="space-y-2">
+                            <p><strong className="text-slate-900">Plastic Bags:</strong> We request to provide with 2 plastic bags in the main bags duly labeled if possible, to keep the soiled clothes, which are to be taken back every day.</p>
+                        </div>
+                    </div>
 
-                        <section>
-                            <h3 className="font-bold text-slate-800 mb-2">Toys/Eatables Policy:</h3>
-                            <p className="text-gray-700 leading-relaxed font-medium">
-                                We ask that children do not bring toy/any eatables from home to the facility. We are not responsible for any items brought into the facility.
-                            </p>
-                        </section>
+                    <div className="flex gap-6">
+                        <div className="flex-shrink-0">
+                            <span className="material-icons text-4xl text-slate-400">toys</span>
+                        </div>
+                        <div className="space-y-2">
+                            <p><strong className="text-slate-900">Toys/Eatables Policy:</strong> We ask that children do not bring toy/any eatables from home to the facility. We are not responsible for any items brought into the facility.</p>
+                        </div>
+                    </div>
 
-                        <section>
-                            <h3 className="font-bold text-slate-800 mb-2">Sick Policy:</h3>
-                            <p className="text-gray-700 leading-relaxed font-medium">
-                                For the safety of all of our children, if children are running a fever, vomiting or carrying a contagious disease should not report to the facility for 24 hours. If your child becomes sick while in our care, under our discretion, we will notify the parent and the child must be picked up immediately.
-                            </p>
-                        </section>
+                    <div className="flex gap-6">
+                        <div className="flex-shrink-0">
+                            <span className="material-icons text-4xl text-slate-400">sick</span>
+                        </div>
+                        <div className="space-y-2">
+                            <p><strong className="text-slate-900">Sick Policy:</strong> For the safety of all of our children, if children are running a fever, vomiting or carrying a contagious disease they should not report to the facility for 24 hours. If your child becomes sick while in our care, under our discretion, we will notify the parent and the child must be picked up immediately.</p>
+                        </div>
+                    </div>
 
-                        <section>
-                            <h3 className="font-bold text-slate-800 mb-2">Head Lice:</h3>
-                            <p className="text-gray-700 leading-relaxed font-medium">
-                                If Head Lice are detected on a child whilst at the Preschool/Daycare the Center will immediately contact the Parent or emergency contact person. The child will be segregated from other children until someone arrives to collect him/her. A child cannot return to the facility until treated and all head lice are removed.
-                            </p>
-                            <p className="text-red-600 font-bold mt-4 uppercase text-sm">
-                                ILLNESS SPREADS EASILY AMONG THIS AGE GROUP AND WE ASK FOR YOUR FULL COOPERATION REGARDING THIS POLICY.
-                            </p>
-                        </section>
+                    <div className="flex gap-6">
+                        <div className="flex-shrink-0">
+                            <span className="material-icons text-4xl text-slate-400">bug_report</span>
+                        </div>
+                        <div className="space-y-2">
+                            <p><strong className="text-slate-900">Head Lice:</strong> If Head Lice are detected on a child whilst at the Preschool/Daycare the Center will immediately contact the Parent or emergency contact person. The child will be segregated from other children until someone arrives to collect him/her. A child cannot return to the facility until treated and all head lice are removed.</p>
+                            <p className="text-red-600 font-bold uppercase text-sm mt-3">ILLNESS SPREADS EASILY AMONG THIS AGE GROUP AND WE ASK FOR YOUR FULL COOPERATION REGARDING THIS POLICY.</p>
+                        </div>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100">
@@ -149,13 +142,18 @@ export default function CommonPolicies() {
                     </div>
                 </div>
 
-                <div className="p-8 bg-slate-50 flex justify-between items-center border-t border-primary/20">
-                    <Link href="/operations-policy" className="px-6 py-2 border border-primary/30 text-primary font-semibold rounded-full hover:bg-white transition-colors">
+                <div className="p-8 flex justify-between gap-4 no-print bg-white border-t border-gray-100">
+                    <Link href="/detailed-daycare-policies" className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2">
                         Back
                     </Link>
-                    <Link href="/consent-introduction" className="px-6 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all">
-                        Save &amp; Next
-                    </Link>
+                    <div className="flex gap-4">
+                        <button className="px-6 py-2 bg-slate-200 text-slate-700 rounded-full hover:bg-slate-300 transition-colors flex items-center gap-2">
+                            <span className="material-icons text-sm">print</span> Print
+                        </button>
+                        <Link href="/biting-policy" className="px-6 py-2 bg-primary text-white font-bold rounded-full hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20">
+                            Save &amp; Continue <span className="material-icons text-sm">arrow_forward</span>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>

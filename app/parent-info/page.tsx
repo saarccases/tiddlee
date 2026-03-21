@@ -15,8 +15,6 @@ export default function ParentInfo() {
         id: '',
         child_attended_school: 'no',
         prev_school_name: '',
-        prev_school_address: '',
-        prev_school_phone: '',
         prev_school_class: '',
         prev_school_timings_from: '',
         prev_school_timings_to: '',
@@ -103,8 +101,6 @@ export default function ParentInfo() {
                             id: storedId,
                             child_attended_school: data.child_attended_school || 'no',
                             prev_school_name: data.prev_school_name || '',
-                            prev_school_address: data.prev_school_address || '',
-                            prev_school_phone: data.prev_school_phone || '',
                             prev_school_class: data.prev_school_class || '',
                             prev_school_timings_from: data.prev_school_timings_from || '',
                             prev_school_timings_to: data.prev_school_timings_to || '',
@@ -465,28 +461,6 @@ export default function ParentInfo() {
                                                 onChange={handleChange}
                                             />
                                         </div>
-                                        <div className="md:col-span-2">
-                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Address</label>
-                                            <textarea
-                                                className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium resize-none"
-                                                placeholder="Enter school address"
-                                                rows={2}
-                                                name="prev_school_address"
-                                                value={formData.prev_school_address}
-                                                onChange={handleChange}
-                                            ></textarea>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Phone Number</label>
-                                            <input
-                                                className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                                placeholder="School contact number"
-                                                type="tel"
-                                                name="prev_school_phone"
-                                                value={formData.prev_school_phone}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
                                         <div>
                                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Class and Division</label>
                                             <input
@@ -757,12 +731,6 @@ export default function ParentInfo() {
                     </div>
                 </form>
             </div>
-
-            <footer className="mt-20 py-10 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                <div className="max-w-5xl mx-auto px-6 text-center">
-                    <p className="text-slate-400 text-sm">© {new Date().getFullYear()} TIDDLEE Preschool & Daycare. All Rights Reserved.</p>
-                </div>
-            </footer>
         </main >
     );
 }

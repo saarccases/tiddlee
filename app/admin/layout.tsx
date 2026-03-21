@@ -18,6 +18,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         { label: 'Dashboard', icon: 'dashboard', href: '/admin/dashboard' },
         { label: 'Admissions', icon: 'app_registration', href: '/admin/admissions' },
         { label: 'Students', icon: 'groups', href: '/admin/students' },
+        { label: 'Fees', icon: 'account_balance_wallet', href: '/admin/fees' },
         { label: 'Staff', icon: 'badge', href: '#' },
         { label: 'Reports', icon: 'bar_chart', href: '#' },
     ];

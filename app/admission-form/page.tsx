@@ -465,15 +465,6 @@ export default function AdmissionForm() {
                 </form>
             </div>
 
-            <footer className="max-w-5xl mx-auto px-4 mt-20 text-center pb-16">
-                <p className="text-slate-400 text-sm font-medium">© {new Date().getFullYear()} TIDDLEE Pre-School. All rights reserved.</p>
-                <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-primary/60 font-black uppercase tracking-[0.5em]">
-                    <span className="w-8 h-[1px] bg-primary/20"></span>
-                    Nurturing curiosity
-                    <span className="w-8 h-[1px] bg-primary/20"></span>
-                </div>
-            </footer>
-
             {/* Dark Mode Toggle */}
             <button className="fixed bottom-8 right-8 p-4 bg-white dark:bg-slate-800 rounded-full shadow-2xl border border-slate-100 dark:border-slate-700 z-50 transform hover:scale-110 active:scale-95 transition-all group" onClick={toggleDarkMode}>
                 <span className="material-icons dark:hidden text-orange-400 group-hover:rotate-12 transition-transform">light_mode</span>

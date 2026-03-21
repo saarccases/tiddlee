@@ -202,9 +202,6 @@ export default function MedicalAuthorization() {
                         <Link href="/care-routines" className="px-6 py-2 border border-gray-300 text-gray-600 font-semibold rounded-full hover:bg-gray-100 transition-colors">
                             Back
                         </Link>
-                        <div className="text-[10px] text-gray-400 uppercase tracking-widest hidden md:block">
-                            Section 07 | Tiddlee Preschool & Daycare | Form Ref: MED-AUTH-V2
-                        </div>
                         <button
                             type="submit"
                             disabled={isSaving}

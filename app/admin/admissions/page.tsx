@@ -60,6 +60,22 @@ function AdmissionsContent() {
             });
             if (response.ok) {
                 setAdmissions(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
+
+                // Auto-assign fees when approved
+                if (newStatus === 'approved') {
+                    const student = admissions.find(a => a.id === id);
+                    if (student?.programs_selected?.length) {
+                        await fetch('/api/admin/fees', {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                action: 'assign',
+                                admission_id: id,
+                                programs: student.programs_selected,
+                            }),
+                        });
+                    }
+                }
             }
         } catch (err) {
             console.error(err);
@@ -289,29 +305,33 @@ function AdmissionsContent() {
                         </div>
 
                         {/* Sticky Action Bar */}
-                        <div className="p-8 border-t border-slate-50 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] flex justify-between items-center px-12 z-20">
-                            <button
-                                onClick={() => updateStatus(selectedApp.id, 'rejected')}
-                                className="px-10 py-4 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl text-sm font-black uppercase tracking-widest transition-all"
-                            >
-                                Reject Application
-                            </button>
-                            <div className="flex gap-4">
-                                <button
-                                    onClick={() => updateStatus(selectedApp.id, 'pending')}
-                                    className="px-8 py-4 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-white rounded-2xl text-sm font-black uppercase tracking-widest transition-all hover:bg-slate-200"
-                                >
-                                    Set to Pending
-                                </button>
-                                <button
-                                    onClick={() => updateStatus(selectedApp.id, 'approved')}
-                                    className="px-12 py-4 bg-primary hover:bg-lime-600 text-white rounded-2xl text-sm font-black uppercase tracking-widest shadow-xl shadow-primary/30 transition-all transform hover:-translate-y-1 active:scale-95 flex items-center gap-3"
-                                >
+                        {selectedApp.status !== 'rejected' && (
+                        <div className="p-8 border-t border-slate-50 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] flex justify-end items-center px-12 z-20">
+                            {selectedApp.status === 'approved' && (
+                                <div className="flex items-center gap-3 px-12 py-4 bg-slate-100 dark:bg-zinc-800 text-slate-400 dark:text-zinc-500 rounded-2xl text-sm font-black uppercase tracking-widest">
                                     <span className="material-icons text-xl">check_circle</span>
-                                    Approve Admission
-                                </button>
-                            </div>
+                                    Approved
+                                </div>
+                            )}
+                            {selectedApp.status === 'pending' && (
+                                <div className="flex gap-4">
+                                    <button
+                                        onClick={() => updateStatus(selectedApp.id, 'rejected')}
+                                        className="px-10 py-4 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl text-sm font-black uppercase tracking-widest transition-all"
+                                    >
+                                        Decline
+                                    </button>
+                                    <button
+                                        onClick={() => updateStatus(selectedApp.id, 'approved')}
+                                        className="px-12 py-4 bg-primary hover:bg-lime-600 text-white rounded-2xl text-sm font-black uppercase tracking-widest shadow-xl shadow-primary/30 transition-all transform hover:-translate-y-1 active:scale-95 flex items-center gap-3"
+                                    >
+                                        <span className="material-icons text-xl">check_circle</span>
+                                        Approve
+                                    </button>
+                                </div>
+                            )}
                         </div>
+                        )}
                     </>
                 ) : (
                     <div className="flex-1 flex flex-col items-center justify-center text-slate-300 p-20">
