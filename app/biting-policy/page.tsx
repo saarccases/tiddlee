@@ -74,7 +74,7 @@ export default function BitingPolicy() {
                             <span className="material-icons text-sm">circle</span> For the child that bit
                         </h3>
                         <p className="text-slate-600 leading-relaxed pl-6 font-medium">
-                            The child will be placed in time out for no longer than five minutes. The Parents are notified. Inform Front Office.
+                            The child will be placed in time out for no longer than five minutes. The Parents are notified.
                         </p>
                     </section>
 
@@ -109,21 +109,6 @@ export default function BitingPolicy() {
                             </p>
                         </div>
                     </section>
-
-                    <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100">
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Unique ID</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formData.unique_id || <span className="text-sm text-gray-400 italic">Office use only</span>}
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Date of Admission</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formatDate(formData.admission_date)}
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
 

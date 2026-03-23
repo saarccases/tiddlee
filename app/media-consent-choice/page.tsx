@@ -256,16 +256,6 @@ export default function MediaConsentChoice() {
                         </div>
                     </div>
 
-                    <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs font-medium text-slate-500">
-                        <div className="flex items-center gap-2">
-                            <span>Unique ID:</span>
-                            <span className="text-primary font-bold border-b border-dotted border-primary/40 flex-grow min-w-[50px]">{formData.unique_id || '................'}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span>Date of Admission:</span>
-                            <span className="text-primary font-bold border-b border-dotted border-primary/40 flex-grow min-w-[50px]">{formatDate(formData.admission_date) || '................'}</span>
-                        </div>
-                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 bg-slate-50 flex justify-between items-center border-t border-slate-200">

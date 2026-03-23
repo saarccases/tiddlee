@@ -103,21 +103,6 @@ export default function DetailedPreschoolPolicies() {
                             <p className="mt-2"><strong className="text-slate-900">Note:</strong> Security deposit shall be consumed in part or whole in the event of Medical emergency, Fee default, and/or Damage to property.</p>
                         </div>
                     </div>
-
-                    <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100">
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Unique ID</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formData.unique_id || <span className="text-sm text-gray-400 italic">Office use only</span>}
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Date of Admission</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formatDate(formData.admission_date)}
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div className="p-8 flex justify-between gap-4 no-print bg-white border-t border-gray-100">

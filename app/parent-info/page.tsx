@@ -520,17 +520,6 @@ export default function ParentInfo() {
                                             onChange={handleChange}
                                         />
                                     </div>
-                                    <div className="flex flex-col">
-                                        <label className="text-xs font-bold text-gray-500 uppercase">Residence Address</label>
-                                        <input
-                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
-                                            placeholder="Street Address, City"
-                                            type="text"
-                                            name="mother_residence_address"
-                                            value={formData.mother_residence_address}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="flex flex-col">
                                             <label className="text-xs font-bold text-gray-500 uppercase">Employed by</label>
@@ -579,17 +568,6 @@ export default function ParentInfo() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex flex-col">
-                                        <label className="text-xs font-bold text-gray-500 uppercase">Relationship to child</label>
-                                        <input
-                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
-                                            placeholder="Mother / Step-mother / Guardian"
-                                            type="text"
-                                            name="mother_relationship"
-                                            value={formData.mother_relationship}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
                                 </div>
                             </div>
 
@@ -611,28 +589,6 @@ export default function ParentInfo() {
                                             onChange={handleChange}
                                         />
                                     </div>
-                                    <div className="flex flex-col">
-                                        <div className="flex justify-between items-center mb-1">
-                                            <label className="text-xs font-bold text-gray-500 uppercase">Residence Address</label>
-                                            <label className="flex items-center space-x-2 cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    className="rounded border-gray-300 text-primary focus:ring-primary h-3 w-3"
-                                                    onChange={handleSameAddress}
-                                                />
-                                                <span className="text-[10px] font-bold text-gray-400 uppercase">Same as Mother</span>
-                                            </label>
-                                        </div>
-                                        <input
-                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
-                                            placeholder="Street Address, City"
-                                            type="text"
-                                            name="father_residence_address"
-                                            value={formData.father_residence_address}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="flex flex-col">
                                             <label className="text-xs font-bold text-gray-500 uppercase">Employed by</label>
@@ -682,38 +638,12 @@ export default function ParentInfo() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex flex-col">
-                                        <label className="text-xs font-bold text-gray-500 uppercase">Relationship to child</label>
-                                        <input
-                                            className="w-full bg-transparent border-0 border-b-2 border-dashed border-gray-200 focus:border-primary focus:ring-0 text-lg py-1 font-medium text-slate-900 dark:text-slate-100"
-                                            placeholder="Father / Step-father / Guardian"
-                                            type="text"
-                                            name="father_relationship"
-                                            value={formData.father_relationship}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
                                 </div>
                             </div>
                         </div>
 
 
                     </section>
-
-                    <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100 dark:border-slate-800">
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Unique ID</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 dark:text-gray-200 font-medium">
-                                {formData.unique_id || <span className="text-sm text-gray-400 italic">Office use only</span>}
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Date of Admission</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 dark:text-gray-200 font-medium whitespace-nowrap overflow-hidden">
-                                {formatDate(formData.admission_date)}
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="flex justify-between items-center pt-8">
                         <button

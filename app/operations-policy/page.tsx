@@ -58,7 +58,7 @@ export default function OperationsPolicy() {
                             <span className="material-icons text-4xl text-slate-400">fact_check</span>
                         </div>
                         <div className="space-y-2">
-                            <p><strong className="text-slate-900">Attendance Policy:</strong> Children must be signed in and out each day upon entering or leaving the facility. Only approved parents or guardians can sign the children in or out. There is no refund for late arrival, early pickup or absence.</p>
+                            <p><strong className="text-slate-900">Attendance Policy:</strong> Only approved parents or guardians can sign the children in or out. There is no refund for late arrival, early pickup or absence.</p>
                         </div>
                     </div>
 
@@ -83,7 +83,8 @@ export default function OperationsPolicy() {
                             </div>
                             <div className="bg-primary/5 border-l-4 border-primary p-4">
                                 <p className="font-bold text-slate-800 mb-1">Daycare:</p>
-                                <p>All payments are due by the fifth of each month. Any payments after the fifth will be assessed a late payment fee of Rs. 100 per day. Any cheque bounce will attract an extra charge.</p>
+                                <p>All payments are due by the fifth of each month. Any payments after the fifth will be assessed a late payment fee of Rs. 100 per day. </p>
+                                <p>Any cheque bounce will attract an extra charge.</p>
                             </div>
                         </div>
                     </div>
@@ -102,7 +103,7 @@ export default function OperationsPolicy() {
                             <span className="material-icons text-4xl text-slate-400">gavel</span>
                         </div>
                         <div className="space-y-3">
-                            <p><strong className="text-slate-900">Termination Policy:</strong> TIDDLEE reserves the right to deny service or terminate care for your child without notice for any reasons including, but not limited to, non-payment, excessive late payment, child unruliness, or any unforeseen problems. This will allow us to refund any applicable security deposit and/or post-dated cheque submitted.</p>
+                            <p><strong className="text-slate-900">Termination Policy:</strong> TIDDLEE reserves the right to deny service or terminate care for your child without notice for any reasons including, but not limited to, non-payment, excessive late payment, child unruliness, or any unforeseen problems. This will allow us to refund any applicable security deposit and/or post-dated cheque submitted. This will allow us to refund any applicable security deposit and/or post-dated cheque submitted.</p>
                             <p>Parents or guardians may withdraw their Child for any reason with prior intimation. All payments due shall be paid within next 2 weeks.</p>
                         </div>
                     </div>
@@ -117,20 +118,6 @@ export default function OperationsPolicy() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-gray-100">
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Unique ID</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formData.unique_id || <span className="text-sm text-gray-400 italic">Office use only</span>}
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Date of Admission</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formatDate(formData.admission_date)}
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
 

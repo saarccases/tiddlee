@@ -107,20 +107,6 @@ export default function HealthHygienePolicies() {
                         </div>
                     </div>
 
-                    <div className="mt-20 flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100">
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Unique ID</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formData.unique_id || <span className="text-sm text-gray-400 italic">Office use only</span>}
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Date of Admission</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formatDate(formData.admission_date)}
-                            </div>
-                        </div>
-                    </div>
                 </main>
 
                 <footer className="mt-auto">

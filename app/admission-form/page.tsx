@@ -423,23 +423,8 @@ export default function AdmissionForm() {
                         </div>
                     </section>
 
-                    {/* Office Use & Actions */}
+                    {/* Actions */}
                     <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
-                        <div className="flex flex-col md:flex-row gap-8 pb-8 border-b border-slate-50 dark:border-slate-800 mb-8">
-                            <div className="flex-1">
-                                <label className="block text-[10px] font-black text-slate-400 mb-1 uppercase tracking-widest">Office Unique ID</label>
-                                <div className="border-b border-slate-200 dark:border-slate-700 w-full h-10 flex items-center text-slate-800 dark:text-slate-200 font-bold text-lg">
-                                    {formData.unique_id || <span className="text-sm font-medium text-slate-300 italic">Pre-assigned after review</span>}
-                                </div>
-                            </div>
-                            <div className="flex-1">
-                                <label className="block text-[10px] font-black text-slate-400 mb-1 uppercase tracking-widest">Date of Admission</label>
-                                <div className="border-b border-slate-200 dark:border-slate-700 w-full h-10 flex items-center text-slate-800 dark:text-slate-200 font-bold text-lg">
-                                    {formatDate(formData.admission_date)}
-                                </div>
-                            </div>
-                        </div>
-
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                             <button className="flex items-center gap-2 text-slate-400 hover:text-slate-600 transition-colors uppercase text-xs font-black tracking-widest group" type="button">
                                 <span className="material-icons text-lg">print</span>

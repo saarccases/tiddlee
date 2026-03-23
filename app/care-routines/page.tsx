@@ -7,6 +7,7 @@ export default function CareRoutines() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [acknowledged, setAcknowledged] = useState(false);
 
     const [formData, setFormData] = useState({
         id: '',
@@ -170,22 +171,21 @@ export default function CareRoutines() {
 
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100 dark:border-zinc-800">
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Unique ID</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 dark:text-gray-200 font-medium">
-                                {formData.unique_id || <span className="text-sm text-gray-400 italic">Office use only</span>}
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Date of Admission</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 dark:text-gray-200 font-medium">
-                                {formatDate(formData.admission_date)}
-                            </div>
-                        </div>
+                    <div className="pt-8">
+                        <label className="flex items-center gap-3 cursor-pointer group">
+                            <input
+                                type="checkbox"
+                                checked={acknowledged}
+                                onChange={(e) => setAcknowledged(e.target.checked)}
+                                className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary"
+                            />
+                            <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">
+                                I acknowledge and agree to the above Medical Authorization.
+                            </span>
+                        </label>
                     </div>
 
-                    <div className="pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
                         <button
                             type="button"
                             onClick={handleBack}
@@ -197,8 +197,8 @@ export default function CareRoutines() {
                         <div className="flex gap-4 w-full md:w-auto">
                             <button
                                 type="submit"
-                                disabled={isSaving}
-                                className="flex-1 md:flex-none bg-primary hover:bg-lime-600 text-white px-12 py-3 rounded-full font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/30 transition-all transform hover:-translate-y-1 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                                disabled={isSaving || !acknowledged}
+                                className="flex-1 md:flex-none bg-primary hover:bg-lime-600 text-white px-12 py-3 rounded-full font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/30 transition-all transform hover:-translate-y-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {isSaving ? 'Saving...' : 'Save & Continue'}
                                 <span className="material-icons text-sm">arrow_forward</span>

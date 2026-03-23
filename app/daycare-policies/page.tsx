@@ -142,20 +142,6 @@ export default function DaycarePolicies() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100">
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Unique ID</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formData.unique_id || <span className="text-sm text-gray-400 italic">Office use only</span>}
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Date of Admission</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formatDate(formData.admission_date)}
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
 
@@ -164,7 +150,6 @@ export default function DaycarePolicies() {
                     <Link href="/care-routines" className="px-6 py-2 border border-slate-300 font-semibold rounded-full hover:bg-white transition-colors">
                         Back
                     </Link>
-                    <span className="text-xs font-bold text-slate-400 hidden md:block">SECTION 10 / DAYCARE POLICIES</span>
                     <Link href="/biting-policy" className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full font-bold transition-all shadow-md active:scale-95">
                         Save &amp; Continue
                     </Link>

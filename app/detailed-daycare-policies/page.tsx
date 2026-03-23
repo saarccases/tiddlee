@@ -72,7 +72,7 @@ export default function DetailedDaycarePolicies() {
                         </div>
                         <div className="space-y-2">
                             <p><strong className="text-slate-900">Arrival:</strong> Prompt arrival at the given/selected time is encouraged.</p>
-                            <p><strong className="text-slate-900">Late Pick up Policy:</strong> The Child needs to be picked up at the allotted time based on the time selected. <span className="text-red-500 font-bold">Rs. 50 will be charged for every 15 minute delay in pick up or 15 min early drop.</span></p>
+                            <p><strong className="text-slate-900">Early drop/Late Pick up Policy:</strong> The Child needs to be picked up at the allotted time based on the time selected. <span className="text-red-500 font-bold">Rs. 50 will be charged for every 15 minute delay in pick up or 15 min early drop.</span></p>
                         </div>
                     </div>
 
@@ -120,21 +120,6 @@ export default function DetailedDaycarePolicies() {
                         </div>
                         <div>
                             <p><strong className="text-slate-900">Meal Time:</strong> Meals will be served during designated daycare meal timings. Exceptions will be made only for children coming directly from other schools with prior intimation from parents.</p>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-slate-100">
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Unique ID</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formData.unique_id || <span className="text-sm text-gray-400 italic">Office use only</span>}
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Date of Admission</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formatDate(formData.admission_date)}
-                            </div>
                         </div>
                     </div>
                 </div>

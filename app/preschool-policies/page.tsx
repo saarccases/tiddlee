@@ -94,23 +94,7 @@ export default function PreschoolPolicies() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-gray-100">
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Unique ID</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formData.unique_id || <span className="text-sm text-gray-400 italic">Office use only</span>}
-                            </div>
-                        </div>
-                        <div className="flex-1">
-                            <label className="block text-primary font-bold mb-1">Date of Admission</label>
-                            <div className="border-b border-dotted border-gray-400 w-full h-8 flex items-end text-gray-800 font-medium">
-                                {formatDate(formData.admission_date)}
-                            </div>
-                        </div>
-                    </div>
                 </div>
-
-
 
                 <div className="px-8 py-6 bg-gray-50 flex justify-between items-center border-t border-gray-200">
                     <Link href="/care-routines" className="px-6 py-2 border border-gray-300 text-gray-600 font-semibold rounded-full hover:bg-gray-100 transition-colors">
