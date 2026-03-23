@@ -4,10 +4,15 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function DetailedPreschoolPolicies() {
+    const [programType, setProgramType] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         unique_id: '',
         admission_date: ''
     });
+
+    useEffect(() => {
+        setProgramType(localStorage.getItem('selectedProgramType'));
+    }, []);
 
     useEffect(() => {
         const storedId = localStorage.getItem('currentAdmissionId');
@@ -113,7 +118,7 @@ export default function DetailedPreschoolPolicies() {
                         <button className="px-6 py-2 bg-slate-200 text-slate-700 rounded-full hover:bg-slate-300 transition-colors flex items-center gap-2">
                             <span className="material-icons text-sm">print</span> Print
                         </button>
-                        <Link href="/detailed-daycare-policies" className="px-6 py-2 bg-primary text-white font-bold rounded-full hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20">
+                        <Link href={programType === 'preschool' ? '/common-policies' : '/detailed-daycare-policies'} className="px-6 py-2 bg-primary text-white font-bold rounded-full hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20">
                             Save &amp; Continue <span className="material-icons text-sm">arrow_forward</span>
                         </Link>
                     </div>

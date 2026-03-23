@@ -4,10 +4,15 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function CommonPolicies() {
+    const [programType, setProgramType] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         unique_id: '',
         admission_date: ''
     });
+
+    useEffect(() => {
+        setProgramType(localStorage.getItem('selectedProgramType'));
+    }, []);
 
     useEffect(() => {
         const storedId = localStorage.getItem('currentAdmissionId');
@@ -46,7 +51,7 @@ export default function CommonPolicies() {
             <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
                 <div className="p-8 border-b border-primary">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
-                        <span className="text-primary font-bold">Preschool &amp; Daycare Common Policies</span>
+                        <span className="text-primary font-bold">Common Policies</span>
                     </h1>
                     <div className="h-1.5 w-full bg-primary mt-4 rounded-full"></div>
                 </div>
@@ -128,7 +133,7 @@ export default function CommonPolicies() {
                 </div>
 
                 <div className="p-8 flex justify-between gap-4 no-print bg-white border-t border-gray-100">
-                    <Link href="/detailed-daycare-policies" className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2">
+                    <Link href={programType === 'preschool' ? '/detailed-preschool-policies' : programType === 'daycare' ? '/detailed-daycare-policies' : '/detailed-daycare-policies'} className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2">
                         Back
                     </Link>
                     <div className="flex gap-4">

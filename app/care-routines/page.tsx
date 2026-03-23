@@ -72,7 +72,7 @@ export default function CareRoutines() {
             if (response.ok) {
                 const programType = localStorage.getItem('selectedProgramType');
                 if (programType === 'daycare') {
-                    router.push('/daycare-policies');
+                    router.push('/detailed-daycare-policies');
                 } else {
                     router.push('/preschool-policies');
                 }

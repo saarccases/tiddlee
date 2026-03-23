@@ -1,6 +1,22 @@
+'use client';
+
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 export function HomeHeader() {
+    const [programLabel, setProgramLabel] = useState('Preschool with Daycare Program');
+
+    useEffect(() => {
+        const type = localStorage.getItem('selectedProgramType');
+        if (type === 'preschool') {
+            setProgramLabel('Preschool Program');
+        } else if (type === 'daycare') {
+            setProgramLabel('Daycare Program');
+        } else {
+            setProgramLabel('Preschool with Daycare Program');
+        }
+    }, []);
+
     return (
         <header className="relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between relative z-10">
@@ -12,7 +28,7 @@ export function HomeHeader() {
                     />
                 </Link>
                 <div className="text-center md:text-right">
-                    <p className="text-slate-500 dark:text-slate-400 font-medium">Preschool with Daycare Program</p>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">{programLabel}</p>
                 </div>
             </div>
             <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">

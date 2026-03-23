@@ -150,7 +150,7 @@ export default function DaycarePolicies() {
                     <Link href="/care-routines" className="px-6 py-2 border border-slate-300 font-semibold rounded-full hover:bg-white transition-colors">
                         Back
                     </Link>
-                    <Link href="/biting-policy" className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full font-bold transition-all shadow-md active:scale-95">
+                    <Link href="/detailed-daycare-policies" className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full font-bold transition-all shadow-md active:scale-95">
                         Save &amp; Continue
                     </Link>
                 </div>

@@ -4,12 +4,14 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function DetailedDaycarePolicies() {
+    const [programType, setProgramType] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         unique_id: '',
         admission_date: ''
     });
 
     useEffect(() => {
+        setProgramType(localStorage.getItem('selectedProgramType'));
         const storedId = localStorage.getItem('currentAdmissionId');
         if (storedId) {
             const fetchAdmission = async () => {
@@ -125,7 +127,7 @@ export default function DetailedDaycarePolicies() {
                 </div>
 
                 <div className="p-8 flex justify-between gap-4 no-print bg-white border-t border-gray-100">
-                    <Link href="/detailed-preschool-policies" className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2">
+                    <Link href={programType === 'daycare' ? '/care-routines' : '/detailed-preschool-policies'} className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2">
                         Back
                     </Link>
                     <div className="flex gap-4">

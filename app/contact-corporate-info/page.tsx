@@ -1,3 +1,4 @@
+'use client';
 
 import React from 'react';
 
@@ -8,42 +9,65 @@ export default function ContactCorporateInfo() {
             <main className="flex-grow flex flex-col items-center justify-center p-8 relative overflow-hidden">
                 <div className="max-w-4xl w-full flex flex-col items-center space-y-12">
 
-                    <div className="relative w-full max-w-2xl h-64 flex flex-col items-end justify-end">
-                        <div className="absolute top-0 right-1/4 animate-bounce">
-                            <svg fill="none" height="120" viewBox="0 0 100 100" width="120" xmlns="http://www.w3.org/2000/svg">
-                                <path className="opacity-80" d="M50 80C50 80 20 70 20 40C20 20 40 20 50 40C60 20 80 20 80 40C80 70 50 80 50 80Z" fill="#ffce00"></path>
-                                <path className="opacity-90" d="M50 80C50 80 30 75 30 50C30 35 45 35 50 50C55 35 70 35 70 50C70 75 50 80 50 80Z" fill="#e91e63"></path>
-                                <path d="M50 70L48 40L50 35L52 40L50 70Z" fill="#333"></path>
-                            </svg>
-                            <span className="sr-only">Colorful butterfly illustration</span>
-                        </div>
-
-                        <div className="flex items-end space-x-2">
+                    <div className="relative w-full max-w-2xl h-72 flex items-end justify-center">
+                        {/* Trees (behind butterfly) */}
+                        <div className="flex items-end justify-center gap-3 relative z-0">
                             <div className="flex flex-col items-center">
-                                <div className="w-16 h-16 bg-primary rounded-full opacity-60"></div>
-                                <div className="w-1 bg-primary h-12"></div>
-                            </div>
-                            <div className="flex flex-col items-center">
-                                <div className="w-24 h-24 bg-primary rounded-full opacity-80"></div>
-                                <div className="w-1 bg-primary h-20"></div>
-                            </div>
-                            <div className="flex flex-col items-center">
-                                <div className="w-20 h-20 bg-primary rounded-full"></div>
+                                <div className="w-14 h-14 bg-primary rounded-full opacity-70"></div>
                                 <div className="w-1 bg-primary h-16"></div>
                             </div>
                             <div className="flex flex-col items-center">
-                                <div className="w-32 h-32 bg-primary rounded-full opacity-90"></div>
+                                <div className="w-20 h-20 bg-primary rounded-full opacity-80"></div>
+                                <div className="w-1 bg-primary h-20"></div>
+                            </div>
+                            <div className="flex flex-col items-center relative">
+                                <div className="w-28 h-28 bg-primary rounded-full opacity-90"></div>
                                 <div className="w-1 bg-primary h-24"></div>
                             </div>
                             <div className="flex flex-col items-center">
-                                <div className="w-14 h-14 bg-primary rounded-full opacity-70"></div>
-                                <div className="w-1 bg-primary h-10"></div>
+                                <div className="w-12 h-12 bg-primary rounded-full opacity-60"></div>
+                                <div className="w-1 bg-primary h-12"></div>
                             </div>
                             <div className="flex flex-col items-center">
-                                <div className="w-24 h-24 bg-primary rounded-full opacity-85"></div>
-                                <div className="w-1 bg-primary h-14"></div>
+                                <div className="w-20 h-20 bg-primary rounded-full opacity-75"></div>
+                                <div className="w-1 bg-primary h-16"></div>
                             </div>
                         </div>
+
+                        {/* Animated butterfly - flies over the tree tops */}
+                        <div className="absolute z-10" style={{
+                            bottom: '45%',
+                            left: '50%',
+                            animation: 'butterflyFly 10s ease-in-out infinite',
+                        }}>
+                            <div style={{ animation: 'butterflyBob 2s ease-in-out infinite' }}>
+                                <img src="/butterfly.png" alt="Tiddlee Butterfly" className="h-24 w-auto drop-shadow-lg" style={{
+                                    animation: 'butterflyWings 0.3s ease-in-out infinite alternate',
+                                }} />
+                            </div>
+                        </div>
+
+                        <style jsx>{`
+                            @keyframes butterflyFly {
+                                0% { transform: translateX(-50%) translateY(0); }
+                                10% { transform: translateX(-160px) translateY(-20px); }
+                                20% { transform: translateX(-120px) translateY(15px); }
+                                35% { transform: translateX(-30px) translateY(-25px); }
+                                50% { transform: translateX(40px) translateY(10px); }
+                                65% { transform: translateX(120px) translateY(-15px); }
+                                80% { transform: translateX(60px) translateY(20px); }
+                                90% { transform: translateX(-20px) translateY(-10px); }
+                                100% { transform: translateX(-50%) translateY(0); }
+                            }
+                            @keyframes butterflyBob {
+                                0%, 100% { transform: translateY(0px) rotate(-5deg); }
+                                50% { transform: translateY(-10px) rotate(5deg); }
+                            }
+                            @keyframes butterflyWings {
+                                0% { transform: scaleX(1); }
+                                100% { transform: scaleX(0.65); }
+                            }
+                        `}</style>
                     </div>
 
                     <div className="text-center space-y-6">
@@ -102,7 +126,7 @@ export default function ContactCorporateInfo() {
                                 </a>
                                 <a className="flex items-center space-x-3 text-sm text-slate-700 hover:text-primary transition-colors" href="mailto:care@mytiddlee.com">
                                     <span className="material-icons text-primary text-lg">mail_outline</span>
-                                    <span>care@mytiddlee.com</span>
+                                    <span>admin@mytiddlee.com</span>
                                 </a>
                                 <a className="flex items-center space-x-3 text-sm text-slate-700 hover:text-primary transition-colors" href="https://www.mytiddlee.com" target="_blank" rel="noopener noreferrer">
                                     <span className="material-icons text-primary text-lg">language</span>

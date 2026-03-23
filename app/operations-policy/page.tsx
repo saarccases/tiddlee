@@ -58,7 +58,7 @@ export default function OperationsPolicy() {
                             <span className="material-icons text-4xl text-slate-400">fact_check</span>
                         </div>
                         <div className="space-y-2">
-                            <p><strong className="text-slate-900">Attendance Policy:</strong> Only approved parents or guardians can sign the children in or out. There is no refund for late arrival, early pickup or absence.</p>
+                            <p><strong className="text-slate-900">Attendance Policy:</strong> Children must be signed in and out before they can enter or leave the facility.</p>
                         </div>
                     </div>
 
@@ -67,7 +67,7 @@ export default function OperationsPolicy() {
                             <span className="material-icons text-4xl text-slate-400">psychology</span>
                         </div>
                         <div className="space-y-2">
-                            <p><strong className="text-slate-900">Discipline Policy:</strong> TIDDLEE enforces a positive reinforcement disciplinary policy which may consist of a time out or redirection. We want to ensure the safety of all our children. You will receive information regarding your Child. We encourage parent/guardian - caregiver communication and we believe that communication is the key to be sure your child is properly taken care off. A PTM day shall be fixed quarterly for discussion and feedback purpose.</p>
+                            <p><strong className="text-slate-900">Discipline Policy:</strong> TIDDLEE enforces a positive reinforcement disciplinary policy which may consist of a time out or redirection. We want to ensure the safety of all our children. You will receive information regarding your Child. We encourage parent/guardian - caregiver communication and we believe that communication is the key to be sure your child is properly taken care off. A PTM day shall be fixed for discussion and feedback purpose.</p>
                         </div>
                     </div>
 
@@ -83,8 +83,11 @@ export default function OperationsPolicy() {
                             </div>
                             <div className="bg-primary/5 border-l-4 border-primary p-4">
                                 <p className="font-bold text-slate-800 mb-1">Daycare:</p>
-                                <p>All payments are due by the fifth of each month. Any payments after the fifth will be assessed a late payment fee of Rs. 100 per day. </p>
                                 <p>Any cheque bounce will attract an extra charge.</p>
+                            </div>
+                            <div className="bg-primary/5 border-l-4 border-primary p-4">
+                                <p className="font-bold text-slate-800 mb-1">Refund:</p>
+                                <p>All fees once paid are non-refundable and non-transferable under any circumstances.</p>
                             </div>
                         </div>
                     </div>
@@ -103,8 +106,9 @@ export default function OperationsPolicy() {
                             <span className="material-icons text-4xl text-slate-400">gavel</span>
                         </div>
                         <div className="space-y-3">
-                            <p><strong className="text-slate-900">Termination Policy:</strong> TIDDLEE reserves the right to deny service or terminate care for your child without notice for any reasons including, but not limited to, non-payment, excessive late payment, child unruliness, or any unforeseen problems. This will allow us to refund any applicable security deposit and/or post-dated cheque submitted. This will allow us to refund any applicable security deposit and/or post-dated cheque submitted.</p>
+                            <p><strong className="text-slate-900">Termination Policy:</strong> TIDDLEE reserves the right to deny service or terminate care for your child without notice for any reasons including, but not limited to, non-payment, excessive late payment, child unruliness, or any unforeseen problems. This will allow us to refund any applicable security deposit and/or post-dated cheque submitted.</p>
                             <p>Parents or guardians may withdraw their Child for any reason with prior intimation. All payments due shall be paid within next 2 weeks.</p>
+                            <p>This will allow us to refund any applicable security deposit and/or post-dated cheque submitted.</p>
                         </div>
                     </div>
 
@@ -113,8 +117,7 @@ export default function OperationsPolicy() {
                             <span className="material-icons text-4xl text-slate-400">event</span>
                         </div>
                         <div className="space-y-2">
-                            <p><strong className="text-slate-900">Holidays:</strong> TIDDLEE will remain closed on the days shared in the holiday list <strong>(Separate for Preschool &amp; Daycare)</strong></p>
-                            <p>Services for children are closed on the 4th Saturday of every month.</p>
+                            <p><strong className="text-slate-900">Holidays:</strong> TIDDLEE will remain closed on the days shared in the holiday list <strong>(Separate for Preschool &amp; Daycare)</strong>.</p>
                         </div>
                     </div>
 
