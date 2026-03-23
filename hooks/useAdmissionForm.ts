@@ -14,6 +14,8 @@ export const INITIAL_FORM_DATA = {
     allergies: '',
     programs_selected: [] as string[],
     daycare_time_opted: '',
+    daycare_time_from: '',
+    daycare_time_to: '',
     mother_name: '',
     mother_cell_phone: '',
     mother_relationship: '',

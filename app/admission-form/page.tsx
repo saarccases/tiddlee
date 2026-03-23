@@ -381,21 +381,61 @@ export default function AdmissionForm() {
 
                             {/* Daycare Time Opted Field - Only shown if Daycare is selected or implicit */}
                             {(programType === 'daycare' || formData.programs_selected.includes('Daycare')) && (
-                                <div className="col-span-2 md:col-span-5 mt-4 space-y-2">
-                                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Time Opted For (Daycare)</label>
-                                    <select
-                                        className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-lg font-medium"
-                                        name="daycare_time_opted"
-                                        value={formData.daycare_time_opted || ''}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="">Select Timing</option>
-                                        <option value="9:00 AM - 1:00 PM">9:00 AM - 1:00 PM</option>
-                                        <option value="9:00 AM - 3:00 PM">9:00 AM - 3:00 PM</option>
-                                        <option value="9:00 AM - 6:00 PM">9:00 AM - 6:00 PM</option>
-                                        <option value="Full Day">Full Day</option>
-                                        <option value="Half Day">Half Day</option>
-                                    </select>
+                                <div className="col-span-2 md:col-span-5 mt-4 space-y-4">
+                                    <div className="space-y-2">
+                                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Hours Opted For (Daycare)</label>
+                                        <select
+                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-lg font-medium"
+                                            name="daycare_time_opted"
+                                            value={formData.daycare_time_opted || ''}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="">Select Hours</option>
+                                            <option value="3 Hours">3 Hours</option>
+                                            <option value="4 Hours">4 Hours</option>
+                                            <option value="5 Hours">5 Hours</option>
+                                            <option value="6 Hours">6 Hours</option>
+                                            <option value="7 Hours">7 Hours</option>
+                                            <option value="8 Hours">8 Hours</option>
+                                            <option value="9 Hours">9 Hours</option>
+                                            <option value="10 Hours">10 Hours</option>
+                                            <option value="11 Hours">11 Hours</option>
+                                            <option value="12 Hours">12 Hours</option>
+                                        </select>
+                                    </div>
+                                    {formData.daycare_time_opted === '3 Hours' && (
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">From</label>
+                                                <input
+                                                    type="time"
+                                                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-lg font-medium"
+                                                    name="daycare_time_from"
+                                                    value={formData.daycare_time_from || ''}
+                                                    onChange={(e) => {
+                                                        handleChange(e);
+                                                        const fromTime = e.target.value;
+                                                        if (fromTime) {
+                                                            const [hours, minutes] = fromTime.split(':').map(Number);
+                                                            const toHours = hours + 3;
+                                                            const toTime = `${String(toHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                                                            setFormData((prev: typeof formData) => ({ ...prev, daycare_time_to: toTime }));
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">To</label>
+                                                <input
+                                                    type="time"
+                                                    className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-lg font-medium text-slate-500"
+                                                    name="daycare_time_to"
+                                                    value={formData.daycare_time_to || ''}
+                                                    readOnly
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
