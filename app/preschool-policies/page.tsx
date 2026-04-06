@@ -97,7 +97,7 @@ export default function PreschoolPolicies() {
                 </div>
 
                 <div className="px-8 py-6 bg-gray-50 flex justify-between items-center border-t border-gray-200">
-                    <Link href="/care-routines" className="px-6 py-2 border border-gray-300 text-gray-600 font-semibold rounded-full hover:bg-gray-100 transition-colors">
+                    <Link href="/document-upload" className="px-6 py-2 border border-gray-300 text-gray-600 font-semibold rounded-full hover:bg-gray-100 transition-colors">
                         Back
                     </Link>
                     <Link href="/detailed-preschool-policies" className="px-6 py-2 bg-primary text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all">

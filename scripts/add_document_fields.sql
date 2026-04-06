@@ -1,0 +1,7 @@
+ALTER TABLE admissions
+  ADD COLUMN IF NOT EXISTS medical_auth_name VARCHAR(255),
+  ADD COLUMN IF NOT EXISTS daycare_time_from VARCHAR(10),
+  ADD COLUMN IF NOT EXISTS daycare_time_to VARCHAR(10),
+  ADD COLUMN IF NOT EXISTS aadhar_front VARCHAR(500),
+  ADD COLUMN IF NOT EXISTS aadhar_back VARCHAR(500),
+  ADD COLUMN IF NOT EXISTS birth_certificate VARCHAR(500);

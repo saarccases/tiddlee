@@ -22,7 +22,9 @@ export async function POST(request: Request) {
             'unique_id', 'admission_date', 'mother_signature', 'mother_signature_date', 'father_signature', 'father_signature_date',
             'blood_group', 'physician_name', 'physician_phone', 'physician_address', 'backup_physician_allowed', 'allergies_reactions', 'past_illnesses', 'other_health_info',
             'immunization_records', 'current_height', 'current_weight',
-            'food_allergies', 'likes', 'dislikes', 'sleep_routines', 'playtime_activities', 'is_potty_trained', 'redirection_techniques', 'additional_comments'
+            'food_allergies', 'likes', 'dislikes', 'sleep_routines', 'playtime_activities', 'is_potty_trained', 'redirection_techniques', 'additional_comments',
+            'medical_auth_name', 'daycare_time_from', 'daycare_time_to',
+            'aadhar_front', 'aadhar_back', 'birth_certificate'
         ];
 
         // 1. If we have an ID, we perform a dynamic UPDATE

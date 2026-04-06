@@ -76,12 +76,7 @@ export default function CareRoutines() {
             });
 
             if (response.ok) {
-                const programType = localStorage.getItem('selectedProgramType');
-                if (programType === 'daycare') {
-                    router.push('/detailed-daycare-policies');
-                } else {
-                    router.push('/preschool-policies');
-                }
+                router.push('/document-upload');
             } else {
                 alert('Failed to save data');
             }

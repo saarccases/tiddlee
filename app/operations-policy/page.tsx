@@ -86,16 +86,24 @@ export default function OperationsPolicy() {
                         </div>
                         <div className="space-y-3">
                             <p className="font-bold text-slate-900 text-lg">Payment Policy:</p>
-                            {programType !== 'daycare' && (
+                            {programType === 'both' && (
+                                <div className="bg-primary/5 border-l-4 border-primary p-4">
+                                    <p className="font-bold text-slate-800 mb-1">Preschool &amp; Daycare:</p>
+                                    <p>All payments are due by the fifth of each month. Any payments after the fifth will be assessed a late payment of Rs. 100 per day.</p>
+                                    <p>Any cheque bounce will attract an extra charge.</p>
+                                </div>
+                            )}
+                            {programType === 'preschool' && (
                                 <div className="bg-primary/5 border-l-4 border-primary p-4">
                                     <p className="font-bold text-slate-800 mb-1">Preschool:</p>
                                     <p>All payments are to be made by due dates, failing which a late fee of Rs. 100 per day will be levied.</p>
                                 </div>
                             )}
-                            {programType !== 'preschool' && (
+                            {programType === 'daycare' && (
                                 <div className="bg-primary/5 border-l-4 border-primary p-4">
                                     <p className="font-bold text-slate-800 mb-1">Daycare:</p>
-                                    <p>All payments are due by the fifth of each month. Any payments after the fifth will be assessed a late payment of Rs. 100 per day. Any cheque bounce will attract an extra charge.</p>
+                                    <p>All payments are due by the fifth of each month. Any payments after the fifth will be assessed a late payment of Rs. 100 per day.</p>
+                                    <p>Any cheque bounce will attract an extra charge.</p>
                                 </div>
                             )}
                             <div className="bg-primary/5 border-l-4 border-primary p-4">
