@@ -114,7 +114,7 @@ export default function ImmunizationRecords() {
     };
 
     return (
-        <main className="min-h-screen bg-slate-50 dark:bg-zinc-950 transition-colors duration-200 py-12 px-4 font-quicksand">
+        <main className="min-h-screen bg-slate-50 dark:bg-zinc-950 transition-colors duration-200 py-12 px-4 font-display">
             <div className="max-w-5xl mx-auto bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-800">
                 <header className="bg-white dark:bg-zinc-900 pt-12 pb-6 flex flex-col items-center">
                     <img

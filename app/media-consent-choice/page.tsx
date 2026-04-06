@@ -8,6 +8,7 @@ import SignaturePad from '../components/SignaturePad';
 export default function MediaConsentChoice() {
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
+    const [errors, setErrors] = useState<{ consent?: string; signature?: string }>({});
     const [formData, setFormData] = useState({
         id: '',
         child_name: '',
@@ -104,6 +105,19 @@ export default function MediaConsentChoice() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const newErrors: { consent?: string; signature?: string } = {};
+        if (!formData.media_consent) {
+            newErrors.consent = 'Please select a consent option before submitting.';
+        }
+        if (!formData.mother_signature && !formData.father_signature) {
+            newErrors.signature = 'At least one signature (Mother or Father) is required before submitting.';
+        }
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+        setErrors({});
         setIsSaving(true);
 
         try {
@@ -129,7 +143,7 @@ export default function MediaConsentChoice() {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen py-10 px-4 font-inter text-slate-800">
+        <div className="bg-slate-50 min-h-screen py-10 px-4 font-display text-slate-800">
             <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
 
                 <div className="bg-primary p-6 text-center text-white relative overflow-hidden">
@@ -152,7 +166,7 @@ export default function MediaConsentChoice() {
                     </div>
 
                     <div className="space-y-4 mb-10">
-                        <label className="flex items-center p-4 border-2 border-slate-100 rounded-xl cursor-pointer hover:border-primary/20 transition-colors group">
+                        <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'allow' ? 'border-primary/40 bg-primary/5' : errors.consent ? 'border-red-300' : 'border-slate-100 hover:border-primary/20'}`}>
                             <input
                                 className="w-5 h-5 text-primary border-slate-300 focus:ring-primary"
                                 name="consent"
@@ -164,7 +178,7 @@ export default function MediaConsentChoice() {
                             <span className="ml-4 font-semibold text-lg">I allow the use of the photos taken involving my child</span>
                             <span className="ml-auto material-icons text-slate-300 group-hover:text-primary">check_circle</span>
                         </label>
-                        <label className="flex items-center p-4 border-2 border-slate-100 rounded-xl cursor-pointer hover:border-red-200 transition-colors group">
+                        <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'deny' ? 'border-red-300 bg-red-50' : errors.consent ? 'border-red-300' : 'border-slate-100 hover:border-red-200'}`}>
                             <input
                                 className="w-5 h-5 text-red-500 border-slate-300 focus:ring-red-500"
                                 name="consent"
@@ -176,6 +190,12 @@ export default function MediaConsentChoice() {
                             <span className="ml-4 font-semibold text-lg">I do not allow the use of the photos taken involving my child</span>
                             <span className="ml-auto material-icons text-slate-300 group-hover:text-red-400">cancel</span>
                         </label>
+                        {errors.consent && (
+                            <p className="flex items-center gap-2 text-red-500 text-sm font-semibold">
+                                <span className="material-icons text-base">error</span>
+                                {errors.consent}
+                            </p>
+                        )}
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
@@ -255,6 +275,12 @@ export default function MediaConsentChoice() {
                             </div>
                         </div>
                     </div>
+                    {errors.signature && (
+                        <p className="flex items-center gap-2 text-red-500 text-sm font-semibold mt-6">
+                            <span className="material-icons text-base">draw</span>
+                            {errors.signature}
+                        </p>
+                    )}
 
                 </div>
 

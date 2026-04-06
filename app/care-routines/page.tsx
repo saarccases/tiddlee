@@ -14,6 +14,9 @@ export default function CareRoutines() {
         child_name: '',
         child_age: '',
         father_name: '',
+        mother_name: '',
+        guardian_name: '',
+        medical_auth_name: '',
         allergies_reactions: '',
         food_allergies: '',
         likes: '',
@@ -36,6 +39,9 @@ export default function CareRoutines() {
                             child_name: data.child_name || '',
                             child_age: data.child_age || '',
                             father_name: data.father_name || '',
+                            mother_name: data.mother_name || '',
+                            guardian_name: data.guardian_name || '',
+                            medical_auth_name: data.medical_auth_name || data.father_name || '',
                             allergies_reactions: data.allergies_reactions || '',
                             food_allergies: data.food_allergies || '',
                             likes: data.likes || '',
@@ -103,7 +109,7 @@ export default function CareRoutines() {
     };
 
     return (
-        <main className="min-h-screen bg-slate-50 dark:bg-background-dark transition-colors duration-200 pb-12 font-quicksand">
+        <main className="min-h-screen bg-slate-50 dark:bg-background-dark transition-colors duration-200 pb-12 font-display">
             <div className="max-w-4xl mx-auto pt-10 px-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div className="flex items-center gap-4">
@@ -138,13 +144,24 @@ export default function CareRoutines() {
 
                         <div className="space-y-4 text-slate-700 dark:text-slate-300 leading-relaxed text-sm md:text-base">
                             <div className="flex flex-wrap items-center gap-2 font-medium">
-                                I, <input
-                                    className="border-b border-dashed border-slate-300 bg-transparent flex-1 min-w-[200px] outline-none px-2 py-1 text-primary font-bold"
-                                    placeholder="Full Name of Parent/Guardian"
-                                    type="text"
-                                    value={formData.father_name}
-                                    readOnly
-                                />
+                                I,
+                                <select
+                                    className="border-b border-dashed border-slate-300 bg-transparent flex-1 min-w-[200px] outline-none px-2 py-1 text-primary font-bold cursor-pointer"
+                                    name="medical_auth_name"
+                                    value={formData.medical_auth_name}
+                                    onChange={handleChange}
+                                >
+                                    <option value="" disabled>Select Parent / Guardian</option>
+                                    {formData.father_name && (
+                                        <option value={formData.father_name}>{formData.father_name} (Father)</option>
+                                    )}
+                                    {formData.mother_name && (
+                                        <option value={formData.mother_name}>{formData.mother_name} (Mother)</option>
+                                    )}
+                                    {formData.guardian_name && (
+                                        <option value={formData.guardian_name}>{formData.guardian_name} (Guardian)</option>
+                                    )}
+                                </select>
                                 parent/guardian of
                                 <input
                                     className="border-b border-dashed border-slate-300 bg-transparent flex-1 min-w-[200px] outline-none px-2 py-1 text-primary font-bold"

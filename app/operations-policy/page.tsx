@@ -4,10 +4,15 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function OperationsPolicy() {
+    const [programType, setProgramType] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         unique_id: '',
         admission_date: ''
     });
+
+    useEffect(() => {
+        setProgramType(localStorage.getItem('selectedProgramType'));
+    }, []);
 
     useEffect(() => {
         const storedId = localStorage.getItem('currentAdmissionId');
@@ -42,7 +47,7 @@ export default function OperationsPolicy() {
     };
 
     return (
-        <div className="bg-gray-50 min-h-screen py-8 font-inter text-gray-800">
+        <div className="bg-gray-50 min-h-screen py-8 font-display text-gray-800">
             <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
                 <div className="p-8 border-b border-primary">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
@@ -58,7 +63,11 @@ export default function OperationsPolicy() {
                             <span className="material-icons text-4xl text-slate-400">fact_check</span>
                         </div>
                         <div className="space-y-2">
-                            <p><strong className="text-slate-900">Attendance Policy:</strong> Children must be signed in and out before they can enter or leave the facility.</p>
+                            {programType === 'preschool' ? (
+                                <p><strong className="text-slate-900">Attendance Policy:</strong> Children must be signed in and out before they can enter or leave the facility. Only approved parents or guardians can sign the children in or out.</p>
+                            ) : (
+                                <p><strong className="text-slate-900">Attendance Policy:</strong> Only approved parents or guardians can sign the children in or out. There is no refund for late arrival, early pickup or absence.</p>
+                            )}
                         </div>
                     </div>
 
@@ -77,14 +86,18 @@ export default function OperationsPolicy() {
                         </div>
                         <div className="space-y-3">
                             <p className="font-bold text-slate-900 text-lg">Payment Policy:</p>
-                            <div className="bg-primary/5 border-l-4 border-primary p-4">
-                                <p className="font-bold text-slate-800 mb-1">Preschool:</p>
-                                <p>All payments are to be made by due dates, failing which a late fee of Rs. 100 per day will be levied.</p>
-                            </div>
-                            <div className="bg-primary/5 border-l-4 border-primary p-4">
-                                <p className="font-bold text-slate-800 mb-1">Daycare:</p>
-                                <p>Any cheque bounce will attract an extra charge.</p>
-                            </div>
+                            {programType !== 'daycare' && (
+                                <div className="bg-primary/5 border-l-4 border-primary p-4">
+                                    <p className="font-bold text-slate-800 mb-1">Preschool:</p>
+                                    <p>All payments are to be made by due dates, failing which a late fee of Rs. 100 per day will be levied.</p>
+                                </div>
+                            )}
+                            {programType !== 'preschool' && (
+                                <div className="bg-primary/5 border-l-4 border-primary p-4">
+                                    <p className="font-bold text-slate-800 mb-1">Daycare:</p>
+                                    <p>All payments are due by the fifth of each month. Any payments after the fifth will be assessed a late payment of Rs. 100 per day. Any cheque bounce will attract an extra charge.</p>
+                                </div>
+                            )}
                             <div className="bg-primary/5 border-l-4 border-primary p-4">
                                 <p className="font-bold text-slate-800 mb-1">Refund:</p>
                                 <p>All fees once paid are non-refundable and non-transferable under any circumstances.</p>

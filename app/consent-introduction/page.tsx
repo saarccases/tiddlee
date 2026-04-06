@@ -129,7 +129,7 @@ export default function ConsentIntroduction() {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen py-10 px-4 font-quicksand text-slate-800">
+        <div className="bg-slate-50 min-h-screen py-10 px-4 font-display text-slate-800">
             <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
                 <div className="p-8 border-b border-primary">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
@@ -291,9 +291,6 @@ export default function ConsentIntroduction() {
                         Back
                     </Link>
                     <div className="flex gap-4">
-                        <button className="px-6 py-2 bg-slate-200 text-slate-700 rounded-full hover:bg-slate-300 transition-colors flex items-center gap-2">
-                            <span className="material-icons text-sm">print</span> Print
-                        </button>
                         <button
                             type="submit"
                             disabled={isSaving}

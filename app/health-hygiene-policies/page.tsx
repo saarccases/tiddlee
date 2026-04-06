@@ -42,7 +42,7 @@ export default function HealthHygienePolicies() {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen py-8 font-outfit text-slate-800">
+        <div className="bg-slate-50 min-h-screen py-8 font-display text-slate-800">
             <div className="max-w-5xl mx-auto my-8 bg-white shadow-xl overflow-hidden min-h-[1100px] flex flex-col border border-slate-200">
                 <header className="p-8 pb-4">
                     <h2 className="text-xl font-bold text-slate-700 border-b-2 border-primary pb-2 inline-block">

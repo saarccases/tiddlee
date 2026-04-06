@@ -316,7 +316,7 @@ export default function ParentInfo() {
     };
 
     return (
-        <main className="font-body bg-slate-50 dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-300 pb-12">
+        <main className="font-display bg-slate-50 dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-300 pb-12">
             <header className="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50">
                 <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center">
@@ -462,10 +462,10 @@ export default function ParentInfo() {
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Class and Division</label>
+                                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Class </label>
                                             <input
                                                 className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                                placeholder="e.g. Nursery - A"
+                                                placeholder="e.g. Nursery"
                                                 type="text"
                                                 name="prev_school_class"
                                                 value={formData.prev_school_class}

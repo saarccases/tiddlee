@@ -403,7 +403,7 @@ export default function AdmissionForm() {
                                             <option value="12 Hours">12 Hours</option>
                                         </select>
                                     </div>
-                                    {formData.daycare_time_opted === '3 Hours' && (
+                                    {formData.daycare_time_opted && (
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">From</label>
@@ -415,10 +415,13 @@ export default function AdmissionForm() {
                                                     onChange={(e) => {
                                                         handleChange(e);
                                                         const fromTime = e.target.value;
-                                                        if (fromTime) {
+                                                        if (fromTime && formData.daycare_time_opted) {
+                                                            const selectedHours = parseInt(formData.daycare_time_opted);
                                                             const [hours, minutes] = fromTime.split(':').map(Number);
-                                                            const toHours = hours + 3;
-                                                            const toTime = `${String(toHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                                                            const toTotalMinutes = hours * 60 + minutes + selectedHours * 60;
+                                                            const toHours = Math.floor(toTotalMinutes / 60) % 24;
+                                                            const toMins = toTotalMinutes % 60;
+                                                            const toTime = `${String(toHours).padStart(2, '0')}:${String(toMins).padStart(2, '0')}`;
                                                             setFormData((prev: typeof formData) => ({ ...prev, daycare_time_to: toTime }));
                                                         }
                                                     }}
@@ -466,10 +469,6 @@ export default function AdmissionForm() {
                     {/* Actions */}
                     <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                            <button className="flex items-center gap-2 text-slate-400 hover:text-slate-600 transition-colors uppercase text-xs font-black tracking-widest group" type="button">
-                                <span className="material-icons text-lg">print</span>
-                                <span>Export Physical Form</span>
-                            </button>
                             <div className="flex gap-4 w-full md:w-auto">
                                 <button
                                     className="flex-1 md:flex-none px-6 py-4 rounded-xl font-bold text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all text-sm uppercase tracking-widest"

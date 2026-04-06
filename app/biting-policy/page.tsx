@@ -44,7 +44,7 @@ export default function BitingPolicy() {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen py-10 px-4 font-inter text-slate-800">
+        <div className="bg-slate-50 min-h-screen py-10 px-4 font-display text-slate-800">
             <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
 
                 <div className="p-8 border-b border-primary">
@@ -65,7 +65,7 @@ export default function BitingPolicy() {
                             Biting is unfortunately not unexpected behavior for toddlers. Some children and many toddlers communicate through this behavior. However, biting can be harmful to other children and to staff. This biting policy has been developed with both of these ideas in mind.
                         </p>
                         <p className="text-slate-600 leading-relaxed pl-6 font-medium mt-2">
-                            As a preschool and day care, we understand that biting, unfortunately, can become a part of our care setting. Our goal is to help identify what is causing the biting and resolve these issues.
+                            As a preschool and day care, we understand that biting, unfortunately, can become a part of our setting. Our goal is to help identify what is causing the biting and resolve these issues.
                         </p>
                     </section>
 
@@ -113,7 +113,7 @@ export default function BitingPolicy() {
 
 
 
-                <div className="p-4 bg-slate-100 flex justify-between items-center px-8 border-t border-slate-200 font-quicksand">
+                <div className="p-4 bg-slate-100 flex justify-between items-center px-8 border-t border-slate-200 font-display">
                     <button
                         onClick={() => router.push('/common-policies')}
                         className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-white transition-colors"

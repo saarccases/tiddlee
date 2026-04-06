@@ -42,7 +42,7 @@ export default function PreschoolPolicies() {
     };
 
     return (
-        <div className="bg-gray-100 min-h-screen py-10 px-4 font-quicksand text-slate-800">
+        <div className="bg-gray-100 min-h-screen py-10 px-4 font-display text-slate-800">
             <div className="max-w-4xl mx-auto bg-white shadow-2xl overflow-hidden rounded-xl border border-gray-200">
 
                 {/* Header Illustration Area */}

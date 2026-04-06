@@ -47,7 +47,7 @@ export default function DetailedPreschoolPolicies() {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen py-10 px-4 font-quicksand text-slate-800">
+        <div className="bg-slate-50 min-h-screen py-10 px-4 font-display text-slate-800">
             <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
                 <div className="p-8 border-b border-primary">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
@@ -93,7 +93,7 @@ export default function DetailedPreschoolPolicies() {
                             <span className="material-icons text-4xl text-slate-400">checkroom</span>
                         </div>
                         <div>
-                            <p><strong className="text-slate-900">Dress Code:</strong> Children should come in TIDDLEE uniform compulsorily.</p>
+                            <p><strong className="text-slate-900">Dress Code:</strong> Children should come in TIDDLEE uniform.</p>
                         </div>
                     </div>
 
@@ -115,9 +115,6 @@ export default function DetailedPreschoolPolicies() {
                         Back
                     </Link>
                     <div className="flex gap-4">
-                        <button className="px-6 py-2 bg-slate-200 text-slate-700 rounded-full hover:bg-slate-300 transition-colors flex items-center gap-2">
-                            <span className="material-icons text-sm">print</span> Print
-                        </button>
                         <Link href={programType === 'preschool' ? '/common-policies' : '/detailed-daycare-policies'} className="px-6 py-2 bg-primary text-white font-bold rounded-full hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20">
                             Save &amp; Continue <span className="material-icons text-sm">arrow_forward</span>
                         </Link>

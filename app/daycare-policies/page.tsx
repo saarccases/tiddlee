@@ -42,7 +42,7 @@ export default function DaycarePolicies() {
     };
 
     return (
-        <div className="bg-white min-h-screen p-4 md:p-8 font-quicksand text-slate-800">
+        <div className="bg-white min-h-screen p-4 md:p-8 font-display text-slate-800">
             <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden border border-slate-200">
 
                 {/* Header with Image */}

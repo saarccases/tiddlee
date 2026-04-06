@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function ContactCorporateInfo() {
     return (
-        <div className="bg-white min-h-screen flex flex-col transition-colors duration-300 font-quicksand text-slate-800">
+        <div className="bg-white min-h-screen flex flex-col transition-colors duration-300 font-display text-slate-800">
 
             <main className="flex-grow flex flex-col items-center justify-center p-8 relative overflow-hidden">
                 <div className="max-w-4xl w-full flex flex-col items-center space-y-12">
