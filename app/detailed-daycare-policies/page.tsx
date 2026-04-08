@@ -25,7 +25,6 @@ export default function DetailedDaycarePolicies() {
                         });
                     }
                 } catch (error) {
-                    console.error('[DetailedDaycarePolicies] Fetch error:', error);
                 }
             };
             fetchAdmission();

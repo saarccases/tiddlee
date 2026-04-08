@@ -25,7 +25,6 @@ export default function BitingPolicy() {
                         });
                     }
                 } catch (error) {
-                    console.error('[BitingPolicy] Fetch error:', error);
                 }
             };
             fetchAdmission();

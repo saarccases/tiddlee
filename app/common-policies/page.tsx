@@ -28,7 +28,6 @@ export default function CommonPolicies() {
                         });
                     }
                 } catch (error) {
-                    console.error('[CommonPolicies] Fetch error:', error);
                 }
             };
             fetchAdmission();

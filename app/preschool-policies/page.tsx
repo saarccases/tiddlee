@@ -23,7 +23,6 @@ export default function PreschoolPolicies() {
                         });
                     }
                 } catch (error) {
-                    console.error('[PreschoolPolicies] Fetch error:', error);
                 }
             };
             fetchAdmission();

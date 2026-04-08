@@ -66,7 +66,6 @@ export default function PhotoUpload({ onPhotoUploaded, currentPhotoUrl }: PhotoU
                 setPreview(null);
             }
         } catch (err) {
-            console.error('Upload error:', err);
             setError('Upload failed. Please try again.');
             setPreview(null);
         } finally {

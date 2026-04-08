@@ -38,7 +38,6 @@ export default function ImmunizationRecords() {
                                     ? JSON.parse(data.immunization_records)
                                     : data.immunization_records;
                             } catch (e) {
-                                console.error('Error parsing immunization records:', e);
                             }
                         }
 
@@ -52,7 +51,6 @@ export default function ImmunizationRecords() {
                         });
                     }
                 } catch (error) {
-                    console.error('Error fetching data:', error);
                 } finally {
                     setLoading(false);
                 }
@@ -91,7 +89,6 @@ export default function ImmunizationRecords() {
                 alert('Failed to save data');
             }
         } catch (error) {
-            console.error('Error saving:', error);
             alert('An error occurred');
         } finally {
             setIsSaving(false);

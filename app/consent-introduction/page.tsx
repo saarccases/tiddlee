@@ -5,9 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import SignaturePad from '../components/SignaturePad';
 
+type FormErrors = { consent?: string; signature?: string };
+
 export default function ConsentIntroduction() {
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
+    const [errors, setErrors] = useState<FormErrors>({});
     const [formData, setFormData] = useState({
         id: '',
         child_name: '',
@@ -43,7 +46,6 @@ export default function ConsentIntroduction() {
                         });
                     }
                 } catch (error) {
-                    console.error('[ConsentIntroduction] Fetch error:', error);
                 }
             };
             fetchAdmission();
@@ -94,7 +96,6 @@ export default function ConsentIntroduction() {
                 }));
             }
         } catch (err) {
-            console.error('Signature upload error:', err);
         }
     };
 
@@ -104,6 +105,19 @@ export default function ConsentIntroduction() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const newErrors: FormErrors = {};
+        if (!formData.media_consent) {
+            newErrors.consent = 'Please select a consent option before submitting.';
+        }
+        if (!formData.mother_signature && !formData.father_signature) {
+            newErrors.signature = 'At least one parent / guardian signature is required before submitting.';
+        }
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+        setErrors({});
         setIsSaving(true);
 
         try {
@@ -115,13 +129,14 @@ export default function ConsentIntroduction() {
 
             if (response.ok) {
                 localStorage.removeItem('currentAdmissionId');
-                router.push('/contact-corporate-info');
+                localStorage.setItem('formSubmitted', 'true');
+                // Use replace so the browser back button cannot return to this page
+                router.replace('/contact-corporate-info');
             } else {
                 const errorData = await response.json();
                 alert(`Failed to save: ${errorData.message || 'Please try again.'}`);
             }
         } catch (error) {
-            console.error('Submit error:', error);
             alert('An error occurred. Please try again.');
         } finally {
             setIsSaving(false);
@@ -169,8 +184,12 @@ export default function ConsentIntroduction() {
                         </div>
                     </div>
 
-                    <div className="space-y-4">
-                        <label className="flex items-center p-4 border-2 border-slate-100 rounded-xl cursor-pointer hover:border-primary/20 transition-colors group">
+                    <div className="space-y-3">
+                        <p className="text-sm font-bold text-red-600 flex items-center gap-1">
+                            <span className="material-icons text-sm">info</span>
+                            Required — please select one option
+                        </p>
+                        <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'allow' ? 'border-primary bg-primary/5' : errors.consent ? 'border-red-300 bg-red-50/50' : 'border-slate-200 hover:border-primary/40'}`}>
                             <input
                                 className="w-5 h-5 text-primary border-slate-300 focus:ring-primary"
                                 name="consent"
@@ -182,7 +201,7 @@ export default function ConsentIntroduction() {
                             <span className="ml-4 font-semibold text-lg">I allow the use of the photos taken involving my child</span>
                             <span className="ml-auto material-icons text-slate-300 group-hover:text-primary">check_circle</span>
                         </label>
-                        <label className="flex items-center p-4 border-2 border-slate-100 rounded-xl cursor-pointer hover:border-red-200 transition-colors group">
+                        <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'deny' ? 'border-red-400 bg-red-50' : errors.consent ? 'border-red-300 bg-red-50/50' : 'border-slate-200 hover:border-red-200'}`}>
                             <input
                                 className="w-5 h-5 text-red-500 border-slate-300 focus:ring-red-500"
                                 name="consent"
@@ -194,6 +213,11 @@ export default function ConsentIntroduction() {
                             <span className="ml-4 font-semibold text-lg">I do not allow the use of the photos taken involving my child</span>
                             <span className="ml-auto material-icons text-slate-300 group-hover:text-red-400">cancel</span>
                         </label>
+                        {errors.consent && (
+                            <p className="flex items-center gap-2 text-red-500 text-sm font-semibold">
+                                <span className="material-icons text-base">error</span>{errors.consent}
+                            </p>
+                        )}
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
@@ -246,6 +270,10 @@ export default function ConsentIntroduction() {
                 </div>
 
                 <div className="bg-[#fffde1] p-8 md:p-12 border-t border-primary/20">
+                    <p className="text-sm font-bold text-red-600 flex items-center gap-1 mb-4">
+                        <span className="material-icons text-sm">draw</span>
+                        Required — at least one parent / guardian must sign below
+                    </p>
                     <div className="text-slate-600 text-sm mb-10 leading-relaxed italic">
                         By signing below the parent or guardian fully understands and agrees to the entire content of the facility&apos;s policies and Terms &amp; Conditions. The Parent / Guardian ensures that the data provided by them is accurate.
                     </div>
@@ -274,6 +302,11 @@ export default function ConsentIntroduction() {
                         </div>
                     </div>
 
+                    {errors.signature && (
+                        <p className="flex items-center gap-2 text-red-500 text-sm font-semibold mt-6">
+                            <span className="material-icons text-base">error</span>{errors.signature}
+                        </p>
+                    )}
                     <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs font-medium text-slate-500">
                         <div className="flex items-center gap-2">
                             <span>Unique ID:</span>
@@ -286,20 +319,18 @@ export default function ConsentIntroduction() {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 flex justify-between gap-4 no-print bg-white border-t border-gray-100">
-                    <Link href="/operations-policy" className="px-6 py-2 border border-slate-300 text-slate-600 font-semibold rounded-full hover:bg-gray-50 transition-colors flex items-center gap-2">
-                        Back
-                    </Link>
-                    <div className="flex gap-4">
-                        <button
-                            type="submit"
-                            disabled={isSaving}
-                            className="px-6 py-2 bg-primary text-white font-bold rounded-full hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20 disabled:opacity-50"
-                        >
-                            {isSaving ? 'Submitting...' : 'Submit Consent'}
-                            <span className="material-icons text-sm">arrow_forward</span>
-                        </button>
-                    </div>
+                <form onSubmit={handleSubmit} className="p-8 flex justify-end gap-4 no-print bg-white border-t border-gray-100">
+                    <button
+                        type="submit"
+                        disabled={isSaving}
+                        className="px-8 py-3 bg-primary text-white font-bold rounded-full hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-primary/20 disabled:opacity-50"
+                    >
+                        {isSaving ? (
+                            <><span className="material-icons animate-spin text-sm">sync</span> Submitting...</>
+                        ) : (
+                            <>Submit Consent <span className="material-icons text-sm">check_circle</span></>
+                        )}
+                    </button>
                 </form>
             </div>
         </div>

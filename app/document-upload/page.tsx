@@ -105,7 +105,6 @@ export default function DocumentUpload() {
                     if (hasExistingAadhar) setHasAadhar(true);
                     else if (data.birth_certificate) setHasAadhar(false);
                 })
-                .catch(e => console.error('Fetch error:', e));
         }
     }, []);
 
@@ -133,7 +132,6 @@ export default function DocumentUpload() {
                 alert('Upload failed. Please try again.');
             }
         } catch (e) {
-            console.error('Upload error:', e);
             alert('Upload failed. Please try again.');
         } finally {
             setUploading(prev => ({ ...prev, [field]: false }));
@@ -247,7 +245,6 @@ export default function DocumentUpload() {
                 alert('Failed to save. Please try again.');
             }
         } catch (err) {
-            console.error('Submit error:', err);
             alert('An error occurred.');
         } finally {
             setIsSaving(false);

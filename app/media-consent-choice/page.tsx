@@ -44,7 +44,6 @@ export default function MediaConsentChoice() {
                         });
                     }
                 } catch (error) {
-                    console.error('[MediaConsentChoice] Fetch error:', error);
                 }
             };
             fetchAdmission();
@@ -95,7 +94,6 @@ export default function MediaConsentChoice() {
                 }));
             }
         } catch (err) {
-            console.error('Signature upload error:', err);
         }
     };
 
@@ -108,20 +106,12 @@ export default function MediaConsentChoice() {
 
         const newErrors: { consent?: string; signature?: string } = {};
 
-        // 1. Media consent is MANDATORY - user must select Allow or Do Not Allow
-        if (!formData.media_consent || formData.media_consent.trim() === '') {
-            newErrors.consent = '⚠️ Media Consent is MANDATORY. Please select "Allow" or "Do Not Allow" before submitting.';
+        if (!formData.media_consent) {
+            newErrors.consent = 'Please select a consent option before submitting.';
         }
-
-        // 2. At least one parent/guardian signature is MANDATORY
-        const hasMotherSignature = formData.mother_signature && formData.mother_signature.trim() !== '';
-        const hasFatherSignature = formData.father_signature && formData.father_signature.trim() !== '';
-
-        if (!hasMotherSignature && !hasFatherSignature) {
-            newErrors.signature = '⚠️ Parent/Guardian Signature is MANDATORY. At least one parent or guardian must sign below before submitting.';
+        if (!formData.mother_signature && !formData.father_signature) {
+            newErrors.signature = 'At least one parent / guardian signature is required before submitting.';
         }
-
-        // If there are any validation errors, display them and prevent submission
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
@@ -138,13 +128,14 @@ export default function MediaConsentChoice() {
 
             if (response.ok) {
                 localStorage.removeItem('currentAdmissionId');
-                router.push('/contact-corporate-info');
+                localStorage.setItem('formSubmitted', 'true');
+                // Use replace so the browser back button cannot return to this page
+                router.replace('/contact-corporate-info');
             } else {
                 const errorData = await response.json();
                 alert(`Failed to save: ${errorData.message || 'Please try again.'}`);
             }
         } catch (error) {
-            console.error('Submit error:', error);
             alert('An error occurred. Please try again.');
         } finally {
             setIsSaving(false);
@@ -159,9 +150,6 @@ export default function MediaConsentChoice() {
                     <div className="relative z-10">
                         <h1 className="text-3xl font-bold font-display">Child Photo / Video Consent Form</h1>
                         <p className="mt-2 opacity-90 font-medium">Section 16 - Admission Application</p>
-                        <div className="mt-4 bg-white/20 border border-white/40 rounded-lg p-3 inline-block">
-                            <p className="text-sm font-bold">⚠️ MANDATORY: Consent Selection & Parent Signature Required</p>
-                        </div>
                     </div>
                     <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full"></div>
                     <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-white opacity-10 rounded-full"></div>
@@ -177,12 +165,12 @@ export default function MediaConsentChoice() {
                         </p>
                     </div>
 
-                    <div className="space-y-4 mb-10 bg-yellow-50 p-6 rounded-xl border-2 border-yellow-200">
-                        <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
-                            <span className="material-icons text-red-500">assignment</span>
-                            Please Select Your Consent Choice (MANDATORY)
-                        </h3>
-                        <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'allow' ? 'border-primary/40 bg-primary/5' : errors.consent ? 'border-red-300' : 'border-slate-100 hover:border-primary/20'}`}>
+                    <div className="space-y-3 mb-10">
+                        <p className="text-sm font-bold text-red-600 flex items-center gap-1">
+                            <span className="material-icons text-sm">info</span>
+                            Required — please select one option
+                        </p>
+                        <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'allow' ? 'border-primary bg-primary/5' : errors.consent ? 'border-red-300 bg-red-50/50' : 'border-slate-200 hover:border-primary/40'}`}>
                             <input
                                 className="w-5 h-5 text-primary border-slate-300 focus:ring-primary"
                                 name="consent"
@@ -264,15 +252,10 @@ export default function MediaConsentChoice() {
                 </div>
 
                 <div className="bg-[#fffde1] p-8 md:p-12 border-t border-primary/20">
-                    <div className="bg-red-50 border-2 border-red-300 p-4 rounded-lg mb-6">
-                        <h3 className="font-bold text-lg text-red-700 flex items-center gap-2 mb-2">
-                            <span className="material-icons">verified_user</span>
-                            Parent / Guardian Signature (MANDATORY)
-                        </h3>
-                        <p className="text-red-600 text-sm">
-                            At least one parent or guardian MUST sign below. By signing, you confirm that you fully understand and agree to the facility's policies and Terms &amp; Conditions.
-                        </p>
-                    </div>
+                    <p className="text-sm font-bold text-red-600 flex items-center gap-1 mb-4">
+                        <span className="material-icons text-sm">draw</span>
+                        Required — at least one parent / guardian must sign below
+                    </p>
                     <div className="text-slate-600 text-sm mb-10 leading-relaxed italic">
                         By signing below the parent or guardian fully understands and agrees to the entire content of the facility's policies and Terms &amp; Conditions. The Parent / Guardian ensures that the data provided by them is accurate.
                     </div>
@@ -309,20 +292,18 @@ export default function MediaConsentChoice() {
 
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 bg-slate-50 flex justify-between items-center border-t border-slate-200">
-                    <Link href="/consent-introduction" className="px-6 py-2 border border-slate-300 text-slate-500 font-semibold rounded-lg hover:bg-white transition-colors">
-                        Back
-                    </Link>
-                    <div className="flex gap-4">
-                        <button type="button" className="px-6 py-2 text-slate-500 font-semibold hover:text-slate-700 transition-colors">Save Draft</button>
-                        <button
-                            type="submit"
-                            disabled={isSaving}
-                            className="bg-primary hover:bg-opacity-90 disabled:opacity-50 text-white px-8 py-2 rounded-lg font-bold shadow-lg transition-all transform hover:-translate-y-0.5"
-                        >
-                            {isSaving ? 'Submitting...' : 'Submit Consent'}
-                        </button>
-                    </div>
+                <form onSubmit={handleSubmit} className="p-6 bg-slate-50 flex justify-end items-center border-t border-slate-200">
+                    <button
+                        type="submit"
+                        disabled={isSaving}
+                        className="bg-primary hover:bg-opacity-90 disabled:opacity-50 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all flex items-center gap-2"
+                    >
+                        {isSaving ? (
+                            <><span className="material-icons animate-spin text-sm">sync</span> Submitting...</>
+                        ) : (
+                            <>Submit Consent <span className="material-icons text-sm">check_circle</span></>
+                        )}
+                    </button>
                 </form>
             </div>
 

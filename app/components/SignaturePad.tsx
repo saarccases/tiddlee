@@ -117,7 +117,6 @@ export default function SignaturePad({ onSave, savedSignatureUrl, label }: Signa
                 const dataUrl = canvas.toDataURL('image/png');
                 await onSave(dataUrl);
             } catch (error) {
-                console.error('Error saving signature:', error);
             } finally {
                 setIsSaving(false);
             }

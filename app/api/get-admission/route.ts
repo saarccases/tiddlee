@@ -17,11 +17,9 @@ export async function GET(request: Request) {
         const admission = (rows as any[])[0];
 
         if (!admission) {
-            console.warn(`[Get] Admission with ID ${id} not found in database.`);
             return NextResponse.json({ message: 'Admission not found' }, { status: 404 });
         }
 
-        console.log(`[Get] Found admission record for ID ${id}:`, admission);
 
         // 1. Handle JSON parsing for programs_selected and immunization_records
         const jsonFields = ['programs_selected', 'immunization_records'];

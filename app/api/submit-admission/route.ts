@@ -5,7 +5,6 @@ import { ResultSetHeader } from 'mysql2';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        console.log('[Submit] Received payload:', body);
 
         const { id } = body;
         const db = await getDb();
@@ -60,8 +59,6 @@ export async function POST(request: Request) {
             if (updateFields.length > 0) {
                 const query = `UPDATE admissions SET ${updateFields.join(', ')} WHERE id = ?`;
                 values.push(id);
-                console.log('[Submit] Running UPDATE query:', query);
-                console.log('[Submit] Submission date set to:', today);
                 await db.query(query, values);
             }
 
@@ -69,7 +66,6 @@ export async function POST(request: Request) {
         }
 
         // 2. If NO ID, we perform an INSERT
-        console.log('[Submit] No ID found, performing INSERT');
         const fields: string[] = [];
         const placeholders: string[] = [];
         const values: any[] = [];
@@ -101,7 +97,6 @@ export async function POST(request: Request) {
         let finalAdmissionDate = body.admission_date;
         if (!finalAdmissionDate || finalAdmissionDate === '') {
             finalAdmissionDate = today;
-            console.log('[Submit] Auto-setting admission_date to:', today);
         }
 
         fields.push('admission_date');
@@ -111,8 +106,6 @@ export async function POST(request: Request) {
         const query = `INSERT INTO admissions (${fields.join(', ')}) VALUES (${placeholders.join(', ')})`;
         const [result] = await db.query<ResultSetHeader>(query, values);
 
-        console.log('[Submit] INSERT successful, record ID:', result.insertId);
-        console.log('[Submit] Submission date set to:', today);
         return NextResponse.json({ message: 'Admission saved successfully', id: result.insertId, submission_date: today, admission_date: body.admission_date || today }, { status: 200 });
 
     } catch (error) {

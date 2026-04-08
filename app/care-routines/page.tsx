@@ -51,7 +51,6 @@ export default function CareRoutines() {
                         });
                     }
                 } catch (error) {
-                    console.error('Error fetching data:', error);
                 } finally {
                     setLoading(false);
                 }
@@ -81,7 +80,6 @@ export default function CareRoutines() {
                 alert('Failed to save data');
             }
         } catch (error) {
-            console.error('Error saving:', error);
             alert('An error occurred');
         } finally {
             setIsSaving(false);

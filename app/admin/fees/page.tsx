@@ -35,7 +35,6 @@ export default function FeesManagement() {
             const res = await fetch('/api/admin/fees');
             if (res.ok) setFees(await res.json());
         } catch (err) {
-            console.error(err);
         } finally {
             setLoading(false);
         }
@@ -46,7 +45,6 @@ export default function FeesManagement() {
             const res = await fetch('/api/admin/admissions?status=approved');
             if (res.ok) setStudents(await res.json());
         } catch (err) {
-            console.error(err);
         }
     };
 
@@ -56,7 +54,6 @@ export default function FeesManagement() {
             const res = await fetch(`/api/admin/fees?admission_id=${admissionId}`);
             if (res.ok) setStudentFees(await res.json());
         } catch (err) {
-            console.error(err);
         } finally {
             setLoadingStudentFees(false);
         }
@@ -75,7 +72,6 @@ export default function FeesManagement() {
                 resetForm();
             }
         } catch (err) {
-            console.error(err);
         }
     };
 
@@ -84,7 +80,6 @@ export default function FeesManagement() {
             const res = await fetch(`/api/admin/fees?id=${id}`, { method: 'DELETE' });
             if (res.ok) fetchFees();
         } catch (err) {
-            console.error(err);
         }
     };
 
@@ -121,7 +116,6 @@ export default function FeesManagement() {
                 fetchStudentFees(selectedStudent.id);
             }
         } catch (err) {
-            console.error(err);
         }
     };
 

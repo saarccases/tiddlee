@@ -30,7 +30,11 @@ export default function AdmissionForm() {
         e.preventDefault();
 
         const admissionId = formData.id || localStorage.getItem('currentAdmissionId');
-        const payload = { ...formData, id: admissionId };
+        const payload: any = { ...formData, id: admissionId };
+        // Don't overwrite photos already saved via direct upload if formData hasn't synced yet
+        if (!payload.child_photo) delete payload.child_photo;
+        if (!payload.mother_photo) delete payload.mother_photo;
+        if (!payload.father_photo) delete payload.father_photo;
 
         try {
             const res = await fetch('/api/submit-admission', {
@@ -48,7 +52,6 @@ export default function AdmissionForm() {
                 alert(`Error: ${err.message}`);
             }
         } catch (error) {
-            console.error('Submission failed:', error);
             alert('An error occurred while saving.');
         }
     };
@@ -200,7 +203,7 @@ export default function AdmissionForm() {
                                                 method: 'POST',
                                                 headers: { 'Content-Type': 'application/json' },
                                                 body: JSON.stringify({ id: currentId, child_photo: url }),
-                                            }).catch(e => console.error('Auto-save failed:', e));
+                                            });
                                         }
                                     }}
                                 />

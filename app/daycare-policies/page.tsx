@@ -23,7 +23,6 @@ export default function DaycarePolicies() {
                         });
                     }
                 } catch (error) {
-                    console.error('[DaycarePolicies] Fetch error:', error);
                 }
             };
             fetchAdmission();

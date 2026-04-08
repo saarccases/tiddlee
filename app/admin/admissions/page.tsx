@@ -45,7 +45,6 @@ function AdmissionsContent() {
                 }
             }
         } catch (err) {
-            console.error(err);
         } finally {
             setLoading(false);
         }
@@ -78,7 +77,6 @@ function AdmissionsContent() {
                 }
             }
         } catch (err) {
-            console.error(err);
         }
     };
 

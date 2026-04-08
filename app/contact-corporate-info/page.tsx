@@ -1,8 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function ContactCorporateInfo() {
+    const router = useRouter();
+
+    useEffect(() => {
+        // If form was not submitted (no flag set), redirect to home
+        const submitted = localStorage.getItem('formSubmitted');
+        if (!submitted) {
+            router.replace('/');
+            return;
+        }
+        // Clear the flag so refreshing this page also redirects to home
+        localStorage.removeItem('formSubmitted');
+    }, [router]);
+
     return (
         <div className="bg-white min-h-screen flex flex-col transition-colors duration-300 font-display text-slate-800">
 

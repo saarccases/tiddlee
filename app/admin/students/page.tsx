@@ -24,7 +24,6 @@ export default function StudentDirectory() {
                 setStudents(data);
             }
         } catch (err) {
-            console.error(err);
         } finally {
             setLoading(false);
         }
@@ -81,7 +80,6 @@ export default function StudentDirectory() {
                 setEditing(false);
             }
         } catch (err) {
-            console.error(err);
         } finally {
             setSaving(false);
         }

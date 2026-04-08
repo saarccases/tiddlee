@@ -23,7 +23,6 @@ export default function HealthHygienePolicies() {
                         });
                     }
                 } catch (error) {
-                    console.error('[HealthHygienePolicies] Fetch error:', error);
                 }
             };
             fetchAdmission();

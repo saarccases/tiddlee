@@ -60,7 +60,6 @@ export default function ParentInfo() {
             setIsDaycare(true);
         }
 
-        console.log('[ParentInfo] currentAdmissionId:', storedId);
 
         if (storedId) {
             const fetchAdmission = async () => {
@@ -69,7 +68,6 @@ export default function ParentInfo() {
                     const response = await fetch(`/api/get-admission?id=${storedId}&t=${Date.now()}`);
                     if (response.ok) {
                         const data = await response.json();
-                        console.log('[ParentInfo] Received data:', data);
 
                         if (Array.isArray(data.programs_selected) && data.programs_selected.includes('Daycare')) {
                             setIsDaycare(true);
@@ -139,7 +137,6 @@ export default function ParentInfo() {
                         });
                     }
                 } catch (error) {
-                    console.error('[ParentInfo] Fetch error:', error);
                 } finally {
                     setLoading(false);
                 }
@@ -244,7 +241,6 @@ export default function ParentInfo() {
                 alert('Failed to save data');
             }
         } catch (error) {
-            console.error(error);
             alert('An error occurred');
         }
     };
@@ -264,9 +260,8 @@ export default function ParentInfo() {
                 body: JSON.stringify(submissionData),
             });
         } catch (error) {
-            console.error('Error saving on back:', error);
         }
-        router.push('/');
+        router.push('/admission-form');
     };
 
     const formatDate = (dateStr: string) => {
@@ -313,7 +308,6 @@ export default function ParentInfo() {
                 }));
             }
         } catch (err) {
-            console.error('Signature upload error:', err);
         }
     };
 
@@ -392,7 +386,7 @@ export default function ParentInfo() {
                                                 headers: { 'Content-Type': 'application/json' },
                                                 body: JSON.stringify({ id: currentId, mother_photo: url }),
                                             });
-                                        } catch (error) { console.error('Error auto-saving mother photo:', error); }
+                                        } catch { }
                                     }
                                 }}
                                 currentPhotoUrl={formData.mother_photo}
@@ -412,7 +406,7 @@ export default function ParentInfo() {
                                                 headers: { 'Content-Type': 'application/json' },
                                                 body: JSON.stringify({ id: currentId, father_photo: url }),
                                             });
-                                        } catch (error) { console.error('Error auto-saving father photo:', error); }
+                                        } catch { }
                                     }
                                 }}
                                 currentPhotoUrl={formData.father_photo}

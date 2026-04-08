@@ -28,7 +28,6 @@ export default function DetailedPreschoolPolicies() {
                         });
                     }
                 } catch (error) {
-                    console.error('[DetailedPreschoolPolicies] Fetch error:', error);
                 }
             };
             fetchAdmission();
