@@ -135,14 +135,22 @@ export default function ChildHealth() {
                         </div>
                         <div>
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Blood Group</label>
-                            <input
+                            <select
                                 className="w-full bg-transparent border-0 border-b-2 border-slate-100 dark:border-slate-800 focus:ring-0 focus:border-primary px-0 py-2 text-lg font-medium"
-                                placeholder="e.g. O+ Positive"
-                                type="text"
                                 name="blood_group"
                                 value={formData.blood_group}
                                 onChange={handleChange}
-                            />
+                            >
+                                <option value="">Select Blood Group</option>
+                                <option value="O+">O+ Positive</option>
+                                <option value="O-">O- Negative</option>
+                                <option value="A+">A+ Positive</option>
+                                <option value="A-">A- Negative</option>
+                                <option value="B+">B+ Positive</option>
+                                <option value="B-">B- Negative</option>
+                                <option value="AB+">AB+ Positive</option>
+                                <option value="AB-">AB- Negative</option>
+                            </select>
                         </div>
                     </div>
 

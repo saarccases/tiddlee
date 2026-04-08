@@ -59,6 +59,24 @@ const EXPECTED_COLUMNS: [string, string][] = [
     ['guardian_name', 'VARCHAR(255)'],
     ['guardian_phone', 'VARCHAR(50)'],
     ['guardian_relationship', 'VARCHAR(100)'],
+    ['guardian1_name', 'VARCHAR(255)'],
+    ['guardian2_name', 'VARCHAR(255)'],
+
+    // Documents - Child Identity
+    ['aadhar_front', 'VARCHAR(500)'],
+    ['aadhar_back', 'VARCHAR(500)'],
+    ['birth_certificate', 'VARCHAR(500)'],
+
+    // Documents - Parent/Guardian Aadhaar
+    ['father_aadhar_front', 'VARCHAR(500)'],
+    ['father_aadhar_back', 'VARCHAR(500)'],
+    ['mother_aadhar_front', 'VARCHAR(500)'],
+    ['mother_aadhar_back', 'VARCHAR(500)'],
+    ['guardian1_aadhar_front', 'VARCHAR(500)'],
+    ['guardian1_aadhar_back', 'VARCHAR(500)'],
+    ['guardian2_aadhar_front', 'VARCHAR(500)'],
+    ['guardian2_aadhar_back', 'VARCHAR(500)'],
+    ['address_proof', 'VARCHAR(500)'],
 
     // Health Information
     ['blood_group', 'VARCHAR(20)'],

@@ -60,6 +60,24 @@ CREATE TABLE IF NOT EXISTS admissions (
     guardian_name VARCHAR(255),
     guardian_phone VARCHAR(50),
     guardian_relationship VARCHAR(100),
+    guardian1_name VARCHAR(255),
+    guardian2_name VARCHAR(255),
+
+    -- Documents - Child Identity
+    aadhar_front VARCHAR(500), -- Full CDN URL from Cloudinary
+    aadhar_back VARCHAR(500), -- Full CDN URL from Cloudinary
+    birth_certificate VARCHAR(500), -- Full CDN URL from Cloudinary
+
+    -- Documents - Parent/Guardian Aadhaar
+    father_aadhar_front VARCHAR(500), -- Full CDN URL from Cloudinary
+    father_aadhar_back VARCHAR(500), -- Full CDN URL from Cloudinary
+    mother_aadhar_front VARCHAR(500), -- Full CDN URL from Cloudinary
+    mother_aadhar_back VARCHAR(500), -- Full CDN URL from Cloudinary
+    guardian1_aadhar_front VARCHAR(500), -- Full CDN URL from Cloudinary
+    guardian1_aadhar_back VARCHAR(500), -- Full CDN URL from Cloudinary
+    guardian2_aadhar_front VARCHAR(500), -- Full CDN URL from Cloudinary
+    guardian2_aadhar_back VARCHAR(500), -- Full CDN URL from Cloudinary
+    address_proof VARCHAR(500), -- Full CDN URL from Cloudinary
 
     -- Health Information
     blood_group VARCHAR(20),

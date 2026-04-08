@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-type DocKey = 'aadhar_front' | 'aadhar_back' | 'birth_certificate';
+type DocKey = 'aadhar_front' | 'aadhar_back' | 'birth_certificate' | 'father_aadhar_front' | 'father_aadhar_back' | 'mother_aadhar_front' | 'mother_aadhar_back' | 'guardian1_aadhar_front' | 'guardian1_aadhar_back' | 'guardian2_aadhar_front' | 'guardian2_aadhar_back' | 'address_proof';
 
 export default function DocumentUpload() {
     const router = useRouter();
@@ -13,6 +13,15 @@ export default function DocumentUpload() {
         aadhar_front: false,
         aadhar_back: false,
         birth_certificate: false,
+        father_aadhar_front: false,
+        father_aadhar_back: false,
+        mother_aadhar_front: false,
+        mother_aadhar_back: false,
+        guardian1_aadhar_front: false,
+        guardian1_aadhar_back: false,
+        guardian2_aadhar_front: false,
+        guardian2_aadhar_back: false,
+        address_proof: false,
     });
     const [errors, setErrors] = useState<string | null>(null);
     const [formData, setFormData] = useState({
@@ -21,11 +30,36 @@ export default function DocumentUpload() {
         aadhar_front: '',
         aadhar_back: '',
         birth_certificate: '',
+        father_aadhar_front: '',
+        father_aadhar_back: '',
+        mother_aadhar_front: '',
+        mother_aadhar_back: '',
+        guardian1_aadhar_front: '',
+        guardian1_aadhar_back: '',
+        guardian2_aadhar_front: '',
+        guardian2_aadhar_back: '',
+        address_proof: '',
+    });
+    const [hasParents, setHasParents] = useState<boolean | null>(null);
+    const [parentNames, setParentNames] = useState({
+        father_name: '',
+        mother_name: '',
+        guardian1_name: '',
+        guardian2_name: '',
     });
 
     const aadharFrontRef = useRef<HTMLInputElement>(null);
     const aadharBackRef = useRef<HTMLInputElement>(null);
     const birthCertRef = useRef<HTMLInputElement>(null);
+    const fatherAadharFrontRef = useRef<HTMLInputElement>(null);
+    const fatherAadharBackRef = useRef<HTMLInputElement>(null);
+    const motherAadharFrontRef = useRef<HTMLInputElement>(null);
+    const motherAadharBackRef = useRef<HTMLInputElement>(null);
+    const guardian1AadharFrontRef = useRef<HTMLInputElement>(null);
+    const guardian1AadharBackRef = useRef<HTMLInputElement>(null);
+    const guardian2AadharFrontRef = useRef<HTMLInputElement>(null);
+    const guardian2AadharBackRef = useRef<HTMLInputElement>(null);
+    const addressProofRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const storedId = localStorage.getItem('currentAdmissionId');
@@ -34,13 +68,40 @@ export default function DocumentUpload() {
                 .then(r => r.json())
                 .then(data => {
                     const hasExistingAadhar = !!(data.aadhar_front || data.aadhar_back);
+                    const hasBothParents = !!(data.father_name && data.mother_name);
+                    const hasGuardians = !!(data.guardian_name || data.guardian1_name || data.guardian2_name);
+
                     setFormData({
                         id: storedId,
                         child_name: data.child_name || '',
                         aadhar_front: data.aadhar_front || '',
                         aadhar_back: data.aadhar_back || '',
                         birth_certificate: data.birth_certificate || '',
+                        father_aadhar_front: data.father_aadhar_front || '',
+                        father_aadhar_back: data.father_aadhar_back || '',
+                        mother_aadhar_front: data.mother_aadhar_front || '',
+                        mother_aadhar_back: data.mother_aadhar_back || '',
+                        guardian1_aadhar_front: data.guardian1_aadhar_front || '',
+                        guardian1_aadhar_back: data.guardian1_aadhar_back || '',
+                        guardian2_aadhar_front: data.guardian2_aadhar_front || '',
+                        guardian2_aadhar_back: data.guardian2_aadhar_back || '',
+                        address_proof: data.address_proof || '',
                     });
+
+                    setParentNames({
+                        father_name: data.father_name || '',
+                        mother_name: data.mother_name || '',
+                        guardian1_name: data.guardian1_name || data.guardian_name || '',
+                        guardian2_name: data.guardian2_name || '',
+                    });
+
+                    // Auto-set hasParents based on form data
+                    if (hasBothParents) {
+                        setHasParents(true);
+                    } else if (hasGuardians) {
+                        setHasParents(false);
+                    }
+
                     if (hasExistingAadhar) setHasAadhar(true);
                     else if (data.birth_certificate) setHasAadhar(false);
                 })
@@ -51,7 +112,14 @@ export default function DocumentUpload() {
     const uploadFile = async (file: File, field: DocKey) => {
         setUploading(prev => ({ ...prev, [field]: true }));
         try {
-            const folder = field === 'birth_certificate' ? 'tiddlee/documents/birth-certificates' : 'tiddlee/documents/aadhar';
+            let folder = 'tiddlee/documents/aadhar';
+            if (field === 'birth_certificate') folder = 'tiddlee/documents/birth-certificates';
+            else if (field.includes('father_aadhar')) folder = 'tiddlee/documents/father-aadhar';
+            else if (field.includes('mother_aadhar')) folder = 'tiddlee/documents/mother-aadhar';
+            else if (field.includes('guardian1_aadhar')) folder = 'tiddlee/documents/guardian1-aadhar';
+            else if (field.includes('guardian2_aadhar')) folder = 'tiddlee/documents/guardian2-aadhar';
+            else if (field === 'address_proof') folder = 'tiddlee/documents/address-proof';
+
             const upload = new FormData();
             upload.append('file', file);
             upload.append('type', 'document');
@@ -100,6 +168,33 @@ export default function DocumentUpload() {
                 return;
             }
         }
+        if (hasParents === null) {
+            setErrors('Please select whether you have both parents available.');
+            return;
+        }
+        if (hasParents) {
+            if (!formData.father_aadhar_front || !formData.father_aadhar_back) {
+                setErrors('Please upload both front and back of Father\'s Aadhaar.');
+                return;
+            }
+            if (!formData.mother_aadhar_front || !formData.mother_aadhar_back) {
+                setErrors('Please upload both front and back of Mother\'s Aadhaar.');
+                return;
+            }
+        } else {
+            if (!formData.guardian1_aadhar_front || !formData.guardian1_aadhar_back) {
+                setErrors('Please upload both front and back of Guardian 1\'s Aadhaar.');
+                return;
+            }
+            if (!formData.guardian2_aadhar_front || !formData.guardian2_aadhar_back) {
+                setErrors('Please upload both front and back of Guardian 2\'s Aadhaar.');
+                return;
+            }
+        }
+        if (!formData.address_proof) {
+            setErrors('Please upload the Address Proof.');
+            return;
+        }
         setErrors(null);
         setIsSaving(true);
 
@@ -114,6 +209,26 @@ export default function DocumentUpload() {
                 payload.aadhar_front = null;
                 payload.aadhar_back = null;
             }
+            if (hasParents) {
+                payload.father_aadhar_front = formData.father_aadhar_front;
+                payload.father_aadhar_back = formData.father_aadhar_back;
+                payload.mother_aadhar_front = formData.mother_aadhar_front;
+                payload.mother_aadhar_back = formData.mother_aadhar_back;
+                payload.guardian1_aadhar_front = null;
+                payload.guardian1_aadhar_back = null;
+                payload.guardian2_aadhar_front = null;
+                payload.guardian2_aadhar_back = null;
+            } else {
+                payload.father_aadhar_front = null;
+                payload.father_aadhar_back = null;
+                payload.mother_aadhar_front = null;
+                payload.mother_aadhar_back = null;
+                payload.guardian1_aadhar_front = formData.guardian1_aadhar_front;
+                payload.guardian1_aadhar_back = formData.guardian1_aadhar_back;
+                payload.guardian2_aadhar_front = formData.guardian2_aadhar_front;
+                payload.guardian2_aadhar_back = formData.guardian2_aadhar_back;
+            }
+            payload.address_proof = formData.address_proof;
 
             const res = await fetch('/api/submit-admission', {
                 method: 'POST',
@@ -148,7 +263,24 @@ export default function DocumentUpload() {
         label: string;
         icon: string;
     }) => {
-        const inputRef = field === 'aadhar_front' ? aadharFrontRef : field === 'aadhar_back' ? aadharBackRef : birthCertRef;
+        const getInputRef = () => {
+            switch (field) {
+                case 'aadhar_front': return aadharFrontRef;
+                case 'aadhar_back': return aadharBackRef;
+                case 'birth_certificate': return birthCertRef;
+                case 'father_aadhar_front': return fatherAadharFrontRef;
+                case 'father_aadhar_back': return fatherAadharBackRef;
+                case 'mother_aadhar_front': return motherAadharFrontRef;
+                case 'mother_aadhar_back': return motherAadharBackRef;
+                case 'guardian1_aadhar_front': return guardian1AadharFrontRef;
+                case 'guardian1_aadhar_back': return guardian1AadharBackRef;
+                case 'guardian2_aadhar_front': return guardian2AadharFrontRef;
+                case 'guardian2_aadhar_back': return guardian2AadharBackRef;
+                case 'address_proof': return addressProofRef;
+                default: return addressProofRef;
+            }
+        };
+        const inputRef = getInputRef();
         const value = formData[field];
         const isUploading = uploading[field];
         const isImage = value && (value.includes('.jpg') || value.includes('.jpeg') || value.includes('.png') || value.includes('.webp'));
@@ -256,6 +388,104 @@ export default function DocumentUpload() {
                         <div className="space-y-4">
                             <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest">Birth Certificate</h3>
                             <UploadBox field="birth_certificate" label="Upload Birth Certificate" icon="article" />
+                        </div>
+                    )}
+
+                    {/* Parent/Guardian selection */}
+                    <div className="space-y-4 border-t pt-8 border-slate-200">
+                        <h2 className="text-lg font-black text-slate-800 uppercase tracking-wide flex items-center gap-2">
+                            <span className="material-icons text-primary">family_restroom</span>
+                            Parent / Guardian Information
+                        </h2>
+                        <p className="text-sm text-slate-500">Please upload the Aadhaar documents for the guardians listed below.</p>
+
+                        {/* Show buttons only if parent names aren't auto-detected */}
+                        {!parentNames.father_name && !parentNames.guardian1_name && (
+                            <div className="grid grid-cols-2 gap-4">
+                                <button
+                                    type="button"
+                                    onClick={() => { setHasParents(true); setErrors(null); }}
+                                    className={`p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
+                                        ${hasParents === true ? 'border-primary bg-primary/10 text-primary' : 'border-slate-200 text-slate-500 hover:border-primary/30'}`}
+                                >
+                                    <span className="material-icons text-base">people</span>
+                                    Both Parents Available
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setHasParents(false); setErrors(null); }}
+                                    className={`p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
+                                        ${hasParents === false ? 'border-primary bg-primary/10 text-primary' : 'border-slate-200 text-slate-500 hover:border-primary/30'}`}
+                                >
+                                    <span className="material-icons text-base">supervisor_account</span>
+                                    Guardians / Not Both Parents
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Father & Mother Aadhaar upload */}
+                    {(hasParents === true || parentNames.father_name) && (
+                        <div className="space-y-4">
+                            <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest">
+                                {parentNames.father_name ? `${parentNames.father_name}'s` : "Father's"} Aadhaar Card — Front &amp; Back
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <UploadBox field="father_aadhar_front" label="Aadhaar Front" icon="credit_card" />
+                                <UploadBox field="father_aadhar_back" label="Aadhaar Back" icon="credit_card" />
+                            </div>
+
+                            <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest pt-4">
+                                {parentNames.mother_name ? `${parentNames.mother_name}'s` : "Mother's"} Aadhaar Card — Front &amp; Back
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <UploadBox field="mother_aadhar_front" label="Aadhaar Front" icon="credit_card" />
+                                <UploadBox field="mother_aadhar_back" label="Aadhaar Back" icon="credit_card" />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Guardian 1 & 2 Aadhaar upload */}
+                    {(hasParents === false || parentNames.guardian1_name) && !parentNames.father_name && (
+                        <div className="space-y-4">
+                            <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest">
+                                {parentNames.guardian1_name ? `${parentNames.guardian1_name}'s` : "Guardian 1's"} Aadhaar Card — Front &amp; Back
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <UploadBox field="guardian1_aadhar_front" label="Aadhaar Front" icon="credit_card" />
+                                <UploadBox field="guardian1_aadhar_back" label="Aadhaar Back" icon="credit_card" />
+                            </div>
+
+                            {parentNames.guardian2_name && (
+                                <>
+                                    <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest pt-4">
+                                        {parentNames.guardian2_name}'s Aadhaar Card — Front &amp; Back
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <UploadBox field="guardian2_aadhar_front" label="Aadhaar Front" icon="credit_card" />
+                                        <UploadBox field="guardian2_aadhar_back" label="Aadhaar Back" icon="credit_card" />
+                                    </div>
+                                </>
+                            )}
+
+                            {!parentNames.guardian2_name && (
+                                <>
+                                    <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest pt-4">Guardian 2 Aadhaar Card — Front &amp; Back</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <UploadBox field="guardian2_aadhar_front" label="Aadhaar Front" icon="credit_card" />
+                                        <UploadBox field="guardian2_aadhar_back" label="Aadhaar Back" icon="credit_card" />
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Address Proof */}
+                    {(hasParents !== null) && (
+                        <div className="space-y-4 border-t pt-8 border-slate-200">
+                            <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest">Address Proof</h3>
+                            <p className="text-xs text-slate-500 italic">If the address mentioned on the Aadhaar card differs from your current residential address, please submit a valid address proof reflecting your present residence.</p>
+                            <UploadBox field="address_proof" label="Upload Address Proof" icon="location_on" />
                         </div>
                     )}
 

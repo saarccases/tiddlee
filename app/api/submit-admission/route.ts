@@ -18,13 +18,16 @@ export async function POST(request: Request) {
             'child_attended_school', 'prev_school_name', 'prev_school_address', 'prev_school_phone', 'prev_school_class', 'prev_school_timings_from', 'prev_school_timings_to',
             'mother_name', 'mother_residence_address', 'mother_employer', 'mother_employer_address', 'mother_work_phone', 'mother_cell_phone', 'mother_email', 'mother_relationship', 'mother_photo',
             'father_name', 'father_residence_address', 'father_employer', 'father_employer_address', 'father_work_phone', 'father_cell_phone', 'father_email', 'father_relationship', 'father_photo',
-            'guardian_name', 'guardian_phone', 'guardian_relationship',
+            'guardian_name', 'guardian_phone', 'guardian_relationship', 'guardian1_name', 'guardian2_name',
             'unique_id', 'admission_date', 'mother_signature', 'mother_signature_date', 'father_signature', 'father_signature_date',
             'blood_group', 'physician_name', 'physician_phone', 'physician_address', 'backup_physician_allowed', 'allergies_reactions', 'past_illnesses', 'other_health_info',
             'immunization_records', 'current_height', 'current_weight',
             'food_allergies', 'likes', 'dislikes', 'sleep_routines', 'playtime_activities', 'is_potty_trained', 'redirection_techniques', 'additional_comments',
             'medical_auth_name', 'daycare_time_from', 'daycare_time_to',
-            'aadhar_front', 'aadhar_back', 'birth_certificate'
+            'aadhar_front', 'aadhar_back', 'birth_certificate',
+            'father_aadhar_front', 'father_aadhar_back', 'mother_aadhar_front', 'mother_aadhar_back',
+            'guardian1_aadhar_front', 'guardian1_aadhar_back', 'guardian2_aadhar_front', 'guardian2_aadhar_back',
+            'address_proof'
         ];
 
         // 1. If we have an ID, we perform a dynamic UPDATE

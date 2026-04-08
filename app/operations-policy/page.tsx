@@ -5,46 +5,10 @@ import Link from 'next/link';
 
 export default function OperationsPolicy() {
     const [programType, setProgramType] = useState<string | null>(null);
-    const [formData, setFormData] = useState({
-        unique_id: '',
-        admission_date: ''
-    });
 
     useEffect(() => {
         setProgramType(localStorage.getItem('selectedProgramType'));
     }, []);
-
-    useEffect(() => {
-        const storedId = localStorage.getItem('currentAdmissionId');
-        if (storedId) {
-            const fetchAdmission = async () => {
-                try {
-                    const response = await fetch(`/api/get-admission?id=${storedId}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        setFormData({
-                            unique_id: data.unique_id || '',
-                            admission_date: data.admission_date || ''
-                        });
-                    }
-                } catch (error) {
-                    console.error('[OperationsPolicy] Fetch error:', error);
-                }
-            };
-            fetchAdmission();
-        }
-    }, []);
-
-    const formatDate = (dateStr: string) => {
-        if (!dateStr) return '';
-        if (dateStr.includes('-')) {
-            const [year, month, day] = dateStr.split('-');
-            return `${day}/${month}/${year}`;
-        }
-        const d = new Date(dateStr);
-        if (isNaN(d.getTime())) return '';
-        return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
-    };
 
     return (
         <div className="bg-gray-50 min-h-screen py-8 font-display text-gray-800">
@@ -87,11 +51,19 @@ export default function OperationsPolicy() {
                         <div className="space-y-3">
                             <p className="font-bold text-slate-900 text-lg">Payment Policy:</p>
                             {programType === 'both' && (
-                                <div className="bg-primary/5 border-l-4 border-primary p-4">
-                                    <p className="font-bold text-slate-800 mb-1">Preschool &amp; Daycare:</p>
-                                    <p>All payments are due by the fifth of each month. Any payments after the fifth will be assessed a late payment of Rs. 100 per day.</p>
-                                    <p>Any cheque bounce will attract an extra charge.</p>
-                                </div>
+                                <>
+                                    <div className="bg-primary/5 border-l-4 border-primary p-4">
+                                        <p className="font-bold text-slate-800 mb-1">Preschool:</p>
+                                        <p>All payments are to be made by due dates, failing which a late fee of Rs. 100 per day will be levied.</p>
+                                    </div>
+                                    <div className="bg-primary/5 border-l-4 border-primary p-4">
+                                        <p className="font-bold text-slate-800 mb-1">Daycare:</p>
+                                        <p>All payments are due by the fifth of each month. Any payments after the fifth will be assessed a late payment of Rs. 100 per day.</p>
+                                    </div>
+                                    <div className="bg-primary/5 border-l-4 border-primary p-4">
+                                        <p>Any cheque bounce will attract an extra charge.</p>
+                                    </div>
+                                </>
                             )}
                             {programType === 'preschool' && (
                                 <div className="bg-primary/5 border-l-4 border-primary p-4">

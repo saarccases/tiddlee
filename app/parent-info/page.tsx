@@ -27,6 +27,7 @@ export default function ParentInfo() {
         mother_email: '',
         mother_relationship: '',
         mother_photo: '',
+        child_photo: '',
         father_name: '',
         father_residence_address: '',
         father_employer: '',
@@ -113,6 +114,7 @@ export default function ParentInfo() {
                             mother_email: data.mother_email || '',
                             mother_relationship: data.mother_relationship || 'Mother',
                             mother_photo: data.mother_photo || '',
+                            child_photo: data.child_photo || '',
                             father_name: fName,
                             father_residence_address: data.father_residence_address || '',
                             father_employer: data.father_employer || '',
@@ -341,22 +343,38 @@ export default function ParentInfo() {
                 <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-8">
                     <div className="flex gap-4 items-end">
                         <div className="text-center group">
-                            <div className="w-24 h-24 rounded-full border-4 border-secondary overflow-hidden bg-yellow-50 dark:bg-slate-800 mb-2 shadow-lg transition-transform group-hover:scale-105">
-                                <img alt="Mother Avatar" src="/images/parent-1.png" />
+                            <div className={`w-24 h-24 rounded-full border-4 overflow-hidden mb-2 shadow-lg transition-transform group-hover:scale-105 ${formData.mother_photo ? 'border-primary' : 'border-secondary bg-yellow-50 dark:bg-slate-800'}`}>
+                                <img
+                                    alt="Mother"
+                                    src={formData.mother_photo || '/images/parent-1.png'}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Mother</span>
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                                {formData.mother_name || 'Mother'}
+                            </span>
                         </div>
                         <div className="text-center group">
-                            <div className="w-20 h-20 rounded-full border-4 border-primary overflow-hidden bg-green-50 dark:bg-slate-800 mb-2 shadow-lg transition-transform group-hover:scale-105">
-                                <img alt="Child Avatar" src="/images/parent-2.png" />
+                            <div className={`w-20 h-20 rounded-full border-4 overflow-hidden mb-2 shadow-lg transition-transform group-hover:scale-105 ${formData.child_photo ? 'border-primary' : 'border-primary bg-green-50 dark:bg-slate-800'}`}>
+                                <img
+                                    alt="Child"
+                                    src={formData.child_photo || '/images/parent-2.png'}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Child</span>
                         </div>
                         <div className="text-center group">
-                            <div className="w-24 h-24 rounded-full border-4 border-secondary overflow-hidden bg-yellow-50 dark:bg-slate-800 mb-2 shadow-lg transition-transform group-hover:scale-105">
-                                <img alt="Father Avatar" src="/images/parent-3.png" />
+                            <div className={`w-24 h-24 rounded-full border-4 overflow-hidden mb-2 shadow-lg transition-transform group-hover:scale-105 ${formData.father_photo ? 'border-primary' : 'border-secondary bg-yellow-50 dark:bg-slate-800'}`}>
+                                <img
+                                    alt="Father"
+                                    src={formData.father_photo || '/images/parent-3.png'}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Father</span>
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                                {formData.father_name || 'Father'}
+                            </span>
                         </div>
                     </div>
                     <div className="flex gap-4">
@@ -364,6 +382,7 @@ export default function ParentInfo() {
                             <span className="text-[10px] font-bold uppercase mb-1 text-slate-400">Mother/Guardian 1</span>
                             <PhotoUpload
                                 onPhotoUploaded={async (url) => {
+                                    // Instantly update avatar
                                     setFormData(prev => ({ ...prev, mother_photo: url }));
                                     const currentId = formData.id || localStorage.getItem('currentAdmissionId');
                                     if (currentId) {
@@ -383,6 +402,7 @@ export default function ParentInfo() {
                             <span className="text-[10px] font-bold uppercase mb-1 text-slate-400">Father/Guardian 2</span>
                             <PhotoUpload
                                 onPhotoUploaded={async (url) => {
+                                    // Instantly update avatar
                                     setFormData(prev => ({ ...prev, father_photo: url }));
                                     const currentId = formData.id || localStorage.getItem('currentAdmissionId');
                                     if (currentId) {
