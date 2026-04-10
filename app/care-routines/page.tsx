@@ -103,8 +103,8 @@ export default function CareRoutines() {
 
     return (
         <main className="min-h-screen bg-slate-50 dark:bg-background-dark transition-colors duration-200 pb-12 font-display">
-            <div className="max-w-4xl mx-auto pt-10 px-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div className="max-w-4xl mx-auto pt-6 md:pt-10 px-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 md:mb-8 gap-4">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
                             <span className="material-icons text-3xl">child_care</span>
@@ -127,7 +127,7 @@ export default function CareRoutines() {
                     <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-[0.2em] font-display">Medical Authorization</h2>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-10 space-y-10">
+                <form onSubmit={handleSubmit} className="p-5 md:p-10 space-y-8 md:space-y-10">
                     {/* Medical Authorization Section */}
                     <div className="space-y-6">
                         <div className="flex items-center gap-3">
@@ -195,11 +195,11 @@ export default function CareRoutines() {
                         </label>
                     </div>
 
-                    <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="pt-6 md:pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 md:gap-6">
                         <button
                             type="button"
                             onClick={handleBack}
-                            className="w-full md:w-auto px-10 py-3 border-2 border-slate-200 dark:border-zinc-700 rounded-full text-slate-600 dark:text-slate-300 font-black uppercase tracking-widest text-xs hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
+                            className="w-full sm:w-auto px-10 py-3 border-2 border-slate-200 dark:border-zinc-700 rounded-full text-slate-600 dark:text-slate-300 font-black uppercase tracking-widest text-xs hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
                         >
                             <span className="material-icons text-sm">arrow_back</span>
                             Back

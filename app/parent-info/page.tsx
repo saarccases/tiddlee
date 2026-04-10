@@ -314,18 +314,18 @@ export default function ParentInfo() {
     return (
         <main className="font-display bg-slate-50 dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-300 pb-12">
             <header className="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50">
-                <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+                <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center group transition-all duration-300">
                             <img
                                 src="/logo.svg"
                                 alt="TIDDLEE Logo"
-                                className="h-14 w-auto object-contain transform group-hover:scale-105 transition-transform"
+                                className="h-10 md:h-14 w-auto object-contain transform group-hover:scale-105 transition-transform"
                             />
                         </Link>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <span className="text-sm font-semibold text-primary px-3 py-1 bg-primary/10 rounded-full">Section 2 of 5</span>
+                    <div className="flex items-center gap-2 md:gap-4">
+                        <span className="text-xs md:text-sm font-semibold text-primary px-2 md:px-3 py-1 bg-primary/10 rounded-full">Section 2 of 5</span>
                         <button className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onClick={toggleDarkMode}>
                             <span className="material-icons text-slate-600 dark:text-slate-300">dark_mode</span>
                         </button>
@@ -333,9 +333,9 @@ export default function ParentInfo() {
                 </div>
             </header>
 
-            <div className="max-w-5xl mx-auto px-6 py-10">
-                <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-8">
-                    <div className="flex gap-4 items-end">
+            <div className="max-w-5xl mx-auto px-4 py-6 md:py-10">
+                <div className="flex flex-col sm:flex-row items-center justify-between mb-6 md:mb-8 gap-6 md:gap-8">
+                    <div className="flex gap-3 md:gap-4 items-end">
                         <div className="text-center group">
                             <div className={`w-24 h-24 rounded-full border-4 overflow-hidden mb-2 shadow-lg transition-transform group-hover:scale-105 ${formData.mother_photo ? 'border-primary' : 'border-secondary bg-yellow-50 dark:bg-slate-800'}`}>
                                 <img
@@ -514,8 +514,8 @@ export default function ParentInfo() {
                         </section>
                     )}
 
-                    <section className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <section className="bg-white dark:bg-slate-900 p-5 md:p-8 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                             {/* Mother / Guardian 1 Column */}
                             <div className="space-y-6">
                                 <div className="flex items-center space-x-3 border-b-2 border-primary pb-2 mb-6">
@@ -659,16 +659,16 @@ export default function ParentInfo() {
 
                     </section>
 
-                    <div className="flex justify-between items-center pt-8">
+                    <div className="flex flex-col sm:flex-row justify-between items-center pt-6 md:pt-8 gap-4">
                         <button
                             type="button"
                             onClick={handleBack}
-                            className="flex items-center gap-2 px-8 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm"
+                            className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-colors shadow-sm"
                         >
                             <span className="material-icons">arrow_back</span>
                             Back
                         </button>
-                        <button type="submit" className="flex items-center gap-2 px-10 py-4 bg-primary text-white rounded-full font-bold hover:bg-opacity-90 transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-1">
+                        <button type="submit" className="w-full sm:w-auto flex items-center justify-center gap-2 px-10 py-4 bg-primary text-white rounded-full font-bold hover:bg-opacity-90 transition-all shadow-lg hover:shadow-primary/30 transform hover:-translate-y-1">
                             Save and Continue
                             <span className="material-icons">arrow_forward</span>
                         </button>

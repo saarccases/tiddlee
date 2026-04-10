@@ -153,10 +153,10 @@ export default function FeesManagement() {
             </div>
 
             {/* Program Filter */}
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-2 lg:gap-3">
                 <button
                     onClick={() => setSelectedProgram('all')}
-                    className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${selectedProgram === 'all' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white dark:bg-zinc-800 text-slate-400 hover:text-primary border border-slate-100 dark:border-zinc-700'}`}
+                    className={`px-4 lg:px-6 py-2.5 lg:py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${selectedProgram === 'all' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white dark:bg-zinc-800 text-slate-400 hover:text-primary border border-slate-100 dark:border-zinc-700'}`}
                 >
                     All
                 </button>
@@ -164,7 +164,7 @@ export default function FeesManagement() {
                     <button
                         key={p}
                         onClick={() => setSelectedProgram(p)}
-                        className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${selectedProgram === p ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white dark:bg-zinc-800 text-slate-400 hover:text-primary border border-slate-100 dark:border-zinc-700'}`}
+                        className={`px-4 lg:px-6 py-2.5 lg:py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${selectedProgram === p ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white dark:bg-zinc-800 text-slate-400 hover:text-primary border border-slate-100 dark:border-zinc-700'}`}
                     >
                         {p}
                     </button>
@@ -317,7 +317,7 @@ export default function FeesManagement() {
             {showForm && (
                 <>
                     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 animate-in fade-in duration-300" onClick={resetForm} />
-                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white dark:bg-zinc-900 rounded-[2rem] shadow-2xl z-50 animate-in zoom-in-95 duration-300 border border-slate-100 dark:border-zinc-800">
+                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-lg bg-white dark:bg-zinc-900 rounded-[2rem] shadow-2xl z-50 animate-in zoom-in-95 duration-300 border border-slate-100 dark:border-zinc-800 max-h-[90vh] overflow-y-auto">
                         <div className="p-8 border-b border-slate-100 dark:border-zinc-800">
                             <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">{editingFee ? 'Edit Fee' : 'Add New Fee'}</h3>
                             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Set fee for a programme</p>
@@ -355,12 +355,12 @@ export default function FeesManagement() {
                             </div>
                             <div>
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Frequency</label>
-                                <div className="flex gap-2">
+                                <div className="flex flex-wrap gap-2">
                                     {FREQUENCIES.map(f => (
                                         <button
                                             key={f}
                                             onClick={() => setFormData({ ...formData, frequency: f })}
-                                            className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${formData.frequency === f ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-50 dark:bg-zinc-800 text-slate-400 border border-slate-200 dark:border-zinc-700'}`}
+                                            className={`flex-1 min-w-[80px] py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${formData.frequency === f ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-50 dark:bg-zinc-800 text-slate-400 border border-slate-200 dark:border-zinc-700'}`}
                                         >
                                             {f}
                                         </button>
@@ -394,7 +394,7 @@ export default function FeesManagement() {
                         className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 animate-in fade-in duration-300"
                         onClick={() => { setSelectedStudent(null); setStudentFees([]); }}
                     />
-                    <div className="fixed top-0 right-0 h-full w-full max-w-[550px] bg-white dark:bg-zinc-900 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
+                    <div className="fixed top-0 right-0 h-full w-full sm:max-w-[550px] bg-white dark:bg-zinc-900 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
                         {/* Header */}
                         <div className="p-8 border-b border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/30">
                             <div className="flex items-center justify-between mb-5">

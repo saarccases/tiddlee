@@ -62,9 +62,9 @@ export default function AdmissionForm() {
         <main className="font-display">
             <HomeHeader />
 
-            <div className="max-w-5xl mx-auto px-4 mt-8">
+            <div className="max-w-5xl mx-auto px-4 mt-6 md:mt-8">
                 {/* Decorative Illustrations */}
-                <div className="flex justify-center space-x-8 mb-8">
+                <div className="flex justify-center space-x-4 md:space-x-8 mb-6 md:mb-8">
                     {[
                         "/images/admission-1.png",
                         "/images/admission-2.png",
@@ -97,7 +97,7 @@ export default function AdmissionForm() {
                     </div>
 
                     {/* Child Details Section */}
-                    <section className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                    <section className="bg-white dark:bg-slate-900 p-5 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                         <div className="flex flex-col lg:flex-row gap-8">
                             <div className="flex-1 space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -124,7 +124,7 @@ export default function AdmissionForm() {
                                         />
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                                     <div className="space-y-2">
                                         <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Birth Date</label>
                                         <div className="relative">
@@ -212,7 +212,7 @@ export default function AdmissionForm() {
                     </section>
 
                     {/* Parent / Guardian Details */}
-                    <section className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                    <section className="bg-white dark:bg-slate-900 p-5 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                         <h4 className="text-lg font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-wider flex items-center gap-3">
                             <span className="material-icons text-blue-500">family_restroom</span>
                             Parent / Guardian Details
@@ -267,7 +267,7 @@ export default function AdmissionForm() {
 
                             <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">If parents are unavailable</p>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                                     <div className="space-y-2">
                                         <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Guardian Name</label>
                                         <input
@@ -307,13 +307,13 @@ export default function AdmissionForm() {
                     </section>
 
                     {/* Emergency Contacts */}
-                    <section className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                    <section className="bg-white dark:bg-slate-900 p-5 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                         <h4 className="text-lg font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-wider flex items-center gap-3">
                             <span className="material-icons text-red-500">contact_emergency</span>
                             Emergency Contact Information
                         </h4>
                         <div className="space-y-8">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 rounded-xl bg-slate-50/50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-4 md:p-6 rounded-xl bg-slate-50/50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800">
                                 <div className="space-y-2">
                                     <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Contact Person</label>
                                     <input
@@ -355,8 +355,8 @@ export default function AdmissionForm() {
                     </section>
 
                     {/* Program & Languages */}
-                    <section className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
-                        <h4 className="text-lg font-bold text-slate-800 dark:text-white mb-8 uppercase tracking-wider flex items-center gap-3">
+                    <section className="bg-white dark:bg-slate-900 p-5 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                        <h4 className="text-lg font-bold text-slate-800 dark:text-white mb-6 md:mb-8 uppercase tracking-wider flex items-center gap-3">
                             <span className="material-icons text-primary">school</span>
                             Level of Program
                         </h4>
@@ -470,7 +470,7 @@ export default function AdmissionForm() {
                     </section>
 
                     {/* Actions */}
-                    <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                    <div className="bg-white dark:bg-slate-900 p-5 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                             <div className="flex gap-4 w-full md:w-auto">
                                 <button

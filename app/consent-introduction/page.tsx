@@ -128,10 +128,15 @@ export default function ConsentIntroduction() {
             });
 
             if (response.ok) {
+                const programType = localStorage.getItem('selectedProgramType');
                 localStorage.removeItem('currentAdmissionId');
                 localStorage.setItem('formSubmitted', 'true');
-                // Use replace so the browser back button cannot return to this page
-                router.replace('/contact-corporate-info');
+                // Route to the appropriate policy page based on program type
+                if (programType === 'daycare') {
+                    router.replace('/detailed-daycare-policies');
+                } else {
+                    router.replace('/preschool-policies');
+                }
             } else {
                 const errorData = await response.json();
                 alert(`Failed to save: ${errorData.message || 'Please try again.'}`);
@@ -144,16 +149,16 @@ export default function ConsentIntroduction() {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen py-10 px-4 font-display text-slate-800">
+        <div className="bg-slate-50 min-h-screen py-6 md:py-10 px-4 font-display text-slate-800">
             <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
-                <div className="p-8 border-b border-primary">
+                <div className="p-5 md:p-8 border-b border-primary">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
                         <span className="text-primary font-bold">Child Photo / Video Consent Form</span>
                     </h1>
                     <div className="h-1.5 w-full bg-primary mt-4 rounded-full"></div>
                 </div>
 
-                <div className="px-10 py-8 leading-relaxed">
+                <div className="px-4 md:px-10 py-6 md:py-8 leading-relaxed">
                     <div className="mb-8 font-medium">
                         <p className="font-bold text-lg mb-4">Dear TIDDLEE Parent/ Guardian,</p>
                         <p className="mb-6">
@@ -172,7 +177,7 @@ export default function ConsentIntroduction() {
                     </div>
                 </div>
 
-                <div className="px-10 pb-8 space-y-8">
+                <div className="px-4 md:px-10 pb-6 md:pb-8 space-y-6 md:space-y-8">
                     <div className="pt-8 border-t border-slate-100">
                         <div className="prose prose-slate max-w-none">
                             <p className="text-lg font-medium leading-relaxed">
@@ -189,29 +194,29 @@ export default function ConsentIntroduction() {
                             <span className="material-icons text-sm">info</span>
                             Required — please select one option
                         </p>
-                        <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'allow' ? 'border-primary bg-primary/5' : errors.consent ? 'border-red-300 bg-red-50/50' : 'border-slate-200 hover:border-primary/40'}`}>
+                        <label className={`flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'allow' ? 'border-primary bg-primary/5' : errors.consent ? 'border-red-300 bg-red-50/50' : 'border-slate-200 hover:border-primary/40'}`}>
                             <input
-                                className="w-5 h-5 text-primary border-slate-300 focus:ring-primary"
+                                className="w-5 h-5 shrink-0 text-primary border-slate-300 focus:ring-primary"
                                 name="consent"
                                 type="radio"
                                 value="allow"
                                 checked={formData.media_consent === 'allow'}
                                 onChange={handleConsentChange}
                             />
-                            <span className="ml-4 font-semibold text-lg">I allow the use of the photos taken involving my child</span>
-                            <span className="ml-auto material-icons text-slate-300 group-hover:text-primary">check_circle</span>
+                            <span className="font-semibold text-base md:text-lg flex-1">I allow the use of the photos taken involving my child</span>
+                            <span className="material-icons text-slate-300 group-hover:text-primary shrink-0">check_circle</span>
                         </label>
-                        <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'deny' ? 'border-red-400 bg-red-50' : errors.consent ? 'border-red-300 bg-red-50/50' : 'border-slate-200 hover:border-red-200'}`}>
+                        <label className={`flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-colors group ${formData.media_consent === 'deny' ? 'border-red-400 bg-red-50' : errors.consent ? 'border-red-300 bg-red-50/50' : 'border-slate-200 hover:border-red-200'}`}>
                             <input
-                                className="w-5 h-5 text-red-500 border-slate-300 focus:ring-red-500"
+                                className="w-5 h-5 shrink-0 text-red-500 border-slate-300 focus:ring-red-500"
                                 name="consent"
                                 type="radio"
                                 value="deny"
                                 checked={formData.media_consent === 'deny'}
                                 onChange={handleConsentChange}
                             />
-                            <span className="ml-4 font-semibold text-lg">I do not allow the use of the photos taken involving my child</span>
-                            <span className="ml-auto material-icons text-slate-300 group-hover:text-red-400">cancel</span>
+                            <span className="font-semibold text-base md:text-lg flex-1">I do not allow the use of the photos taken involving my child</span>
+                            <span className="material-icons text-slate-300 group-hover:text-red-400 shrink-0">cancel</span>
                         </label>
                         {errors.consent && (
                             <p className="flex items-center gap-2 text-red-500 text-sm font-semibold">
@@ -220,7 +225,7 @@ export default function ConsentIntroduction() {
                         )}
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-sm font-bold uppercase tracking-wider text-slate-500">Name of the Child</label>
                             <input
@@ -269,7 +274,7 @@ export default function ConsentIntroduction() {
                     </div>
                 </div>
 
-                <div className="bg-[#fffde1] p-8 md:p-12 border-t border-primary/20">
+                <div className="bg-[#fffde1] p-5 md:p-8 lg:p-12 border-t border-primary/20">
                     <p className="text-sm font-bold text-red-600 flex items-center gap-1 mb-4">
                         <span className="material-icons text-sm">draw</span>
                         Required — at least one parent / guardian must sign below
@@ -277,7 +282,7 @@ export default function ConsentIntroduction() {
                     <div className="text-slate-600 text-sm mb-10 leading-relaxed italic">
                         By signing below the parent or guardian fully understands and agrees to the entire content of the facility&apos;s policies and Terms &amp; Conditions. The Parent / Guardian ensures that the data provided by them is accurate.
                     </div>
-                    <div className="grid md:grid-cols-2 gap-12">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                         <div className="space-y-4">
                             <SignaturePad
                                 label="Mother's Signature"
@@ -307,7 +312,7 @@ export default function ConsentIntroduction() {
                             <span className="material-icons text-base">error</span>{errors.signature}
                         </p>
                     )}
-                    <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs font-medium text-slate-500">
+                    <div className="mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 text-xs font-medium text-slate-500">
                         <div className="flex items-center gap-2">
                             <span>Unique ID:</span>
                             <span className="text-primary font-bold border-b border-dotted border-primary/40 flex-grow min-w-[50px]">{formData.unique_id || '................'}</span>
@@ -319,7 +324,7 @@ export default function ConsentIntroduction() {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 flex justify-end gap-4 no-print bg-white border-t border-gray-100">
+                <form onSubmit={handleSubmit} className="p-5 md:p-8 flex justify-end gap-4 no-print bg-white border-t border-gray-100">
                     <button
                         type="submit"
                         disabled={isSaving}

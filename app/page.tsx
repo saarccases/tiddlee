@@ -35,59 +35,59 @@ export default function AdmissionEntry() {
             </div>
 
             {/* Main Content Container */}
-            <main className="relative z-10 container mx-auto px-4 py-12 flex flex-col items-center justify-start min-h-screen pt-20 md:pt-32">
+            <main className="relative z-10 container mx-auto px-4 py-8 flex flex-col items-center justify-start min-h-screen pt-12 md:pt-32">
                 {/* Top Character Brand Section */}
-                <div className="flex items-center justify-center gap-6 mb-12">
+                <div className="flex items-center justify-center gap-3 md:gap-6 mb-8 md:mb-12">
                     <div className="relative">
-                        <div className="absolute -top-4 -left-4 text-yellow-400">
-                            <span className="material-icons text-2xl">auto_awesome</span>
+                        <div className="absolute -top-3 -left-3 md:-top-4 md:-left-4 text-yellow-400">
+                            <span className="material-icons text-xl md:text-2xl">auto_awesome</span>
                         </div>
                         <img
                             alt="Tiddlee Character 1"
-                            className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
+                            className="w-16 h-16 md:w-24 md:h-24 rounded-full border-4 border-white shadow-lg object-cover"
                             src="/images/home-1.png"
                         />
                     </div>
                     <div className="relative">
                         <img
                             alt="Tiddlee Character 2"
-                            className="w-32 h-32 rounded-full border-4 border-primary shadow-xl object-cover"
+                            className="w-20 h-20 md:w-32 md:h-32 rounded-full border-4 border-primary shadow-xl object-cover"
                             src="/images/home-2.png"
                         />
                         <div className="absolute -bottom-2 -right-2 text-yellow-400">
-                            <span className="material-icons text-3xl">star</span>
+                            <span className="material-icons text-2xl md:text-3xl">star</span>
                         </div>
                     </div>
                     <div className="relative">
-                        <div className="absolute -top-4 -right-4 text-yellow-400">
-                            <span className="material-icons text-2xl">auto_awesome</span>
+                        <div className="absolute -top-3 -right-3 md:-top-4 md:-right-4 text-yellow-400">
+                            <span className="material-icons text-xl md:text-2xl">auto_awesome</span>
                         </div>
                         <img
                             alt="Tiddlee Character 3"
-                            className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
+                            className="w-16 h-16 md:w-24 md:h-24 rounded-full border-4 border-white shadow-lg object-cover"
                             src="/images/home-3.png"
                         />
                     </div>
                 </div>
 
                 {/* Headline Section */}
-                <div className="text-center mb-16 max-w-4xl">
-                    <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight flex flex-col md:flex-row items-center md:items-end justify-center gap-x-4 gap-y-2 flex-wrap">
+                <div className="text-center mb-8 md:mb-16 max-w-4xl px-2">
+                    <h1 className="text-2xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 md:mb-6 leading-tight flex flex-col md:flex-row items-center md:items-end justify-center gap-x-4 gap-y-2 flex-wrap">
                         <span className="md:mb-2">Welcome to</span>
                         <img
                             src="/logo.svg"
                             alt="TIDDLEE"
-                            className="h-20 md:h-28 object-contain md:mb-2"
+                            className="h-14 md:h-28 object-contain md:mb-2"
                         />
                         <span className="md:mb-2">Admission Portal</span>
                     </h1>
-                    <p className="text-lg text-slate-600 dark:text-slate-400">
+                    <p className="text-base md:text-lg text-slate-600 dark:text-slate-400">
                         Begin your child's journey of discovery and growth. Please select a program to start the admission process.
                     </p>
                 </div>
 
                 {/* Action Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 w-full max-w-6xl">
                     {/* Card 1: Preschool & Daycare */}
                     <div className="bg-white dark:bg-slate-800/50 backdrop-blur-sm p-8 rounded-xl border-2 border-transparent hover:border-primary/30 transition-all duration-300 flex flex-col items-center text-center group shadow-sm hover:shadow-xl hover:-translate-y-2">
                         <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
@@ -147,8 +147,8 @@ export default function AdmissionEntry() {
                 </div>
 
                 {/* Footer */}
-                <footer className="mt-20 flex flex-col items-center gap-4 text-slate-400 dark:text-slate-500 text-sm">
-                    <div className="flex items-center gap-6">
+                <footer className="mt-10 md:mt-20 flex flex-col items-center gap-4 text-slate-400 dark:text-slate-500 text-sm">
+                    <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
                         <a className="hover:text-primary transition-colors cursor-pointer" href="#">Privacy Policy</a>
                         <a className="hover:text-primary transition-colors cursor-pointer" href="#">Terms of Service</a>
                         <a className="hover:text-primary transition-colors cursor-pointer" href="#">Contact Support</a>

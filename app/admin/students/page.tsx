@@ -121,25 +121,25 @@ export default function StudentDirectory() {
     };
 
     return (
-        <div className="space-y-10 animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-6 lg:space-y-10 animate-in fade-in duration-500">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 lg:gap-6">
                 <div>
-                    <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">Student Directory</h2>
+                    <h2 className="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">Student Directory</h2>
                     <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-2 flex items-center gap-2">
                         <span className="inline-block w-4 h-[2px] bg-primary"></span>
                         Manage Enrolled Records
                     </p>
                 </div>
-                <button className="bg-primary hover:bg-lime-600 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl shadow-primary/30 transition-all hover:-translate-y-1">
+                <button className="self-start sm:self-auto bg-primary hover:bg-lime-600 text-white px-6 lg:px-8 py-3 lg:py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl shadow-primary/30 transition-all hover:-translate-y-1">
                     <span className="material-icons text-xl">person_add</span>
                     Register New Student
                 </button>
             </div>
 
             {/* Filters */}
-            <div className="bg-white dark:bg-zinc-900 p-6 rounded-[2rem] border border-slate-100 dark:border-zinc-800 shadow-xl shadow-slate-200/50 dark:shadow-none">
-                <div className="flex flex-col lg:flex-row gap-6">
-                    <div className="flex-1 relative">
+            <div className="bg-white dark:bg-zinc-900 p-4 lg:p-6 rounded-[2rem] border border-slate-100 dark:border-zinc-800 shadow-xl shadow-slate-200/50 dark:shadow-none">
+                <div className="flex flex-col gap-4">
+                    <div className="relative">
                         <span className="material-icons absolute left-5 top-1/2 -translate-y-1/2 text-slate-400">search</span>
                         <input
                             type="text"
@@ -149,15 +149,15 @@ export default function StudentDirectory() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                     </div>
-                    <div className="flex gap-4">
-                        <select className="bg-slate-50 dark:bg-zinc-800/50 border-none rounded-2xl px-8 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500 focus:ring-2 focus:ring-primary/20 appearance-none min-w-[180px]">
+                    <div className="flex gap-3">
+                        <select className="flex-1 bg-slate-50 dark:bg-zinc-800/50 border-none rounded-2xl px-5 py-3 text-[10px] font-black uppercase tracking-widest text-slate-500 focus:ring-2 focus:ring-primary/20 appearance-none">
                             <option>All Programs</option>
                             <option>Playgroup</option>
                             <option>Nursery</option>
                             <option>KG 1</option>
                             <option>KG 2</option>
                         </select>
-                        <button className="size-14 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl flex items-center justify-center text-slate-400 hover:text-primary transition-all">
+                        <button className="size-12 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl flex items-center justify-center text-slate-400 hover:text-primary transition-all shrink-0">
                             <span className="material-icons">filter_list</span>
                         </button>
                     </div>
@@ -297,7 +297,7 @@ export default function StudentDirectory() {
                     />
 
                     {/* Panel */}
-                    <div className="fixed top-0 right-0 h-full w-full max-w-[700px] bg-white dark:bg-zinc-900 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
+                    <div className="fixed top-0 right-0 h-full w-full sm:max-w-[600px] lg:max-w-[700px] bg-white dark:bg-zinc-900 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
                         {/* Header */}
                         <div className="p-8 border-b border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/30">
                             <div className="flex items-center justify-between mb-6">
@@ -378,7 +378,7 @@ export default function StudentDirectory() {
                                         <Field label="Full Name" field="child_name" />
                                         <Field label="Nickname" field="child_nickname" />
                                     </div>
-                                    <div className="grid grid-cols-3 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                         <Field label="Date of Birth" field="child_dob" type="date" />
                                         <Field label="Age" field="child_age" />
                                         <Field label="Gender" field="child_gender" />
@@ -450,7 +450,7 @@ export default function StudentDirectory() {
                                     Emergency Contact
                                 </h3>
                                 <div className="bg-orange-50/50 dark:bg-orange-900/10 p-6 rounded-[1.5rem] border border-orange-100 dark:border-orange-900/20 space-y-4">
-                                    <div className="grid grid-cols-3 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                         <Field label="Name" field="emergency_contact_name" />
                                         <Field label="Phone" field="emergency_contact_phone" />
                                         <Field label="Relation" field="emergency_contact_relation" />

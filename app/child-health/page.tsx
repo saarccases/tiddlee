@@ -96,9 +96,9 @@ export default function ChildHealth() {
     };
 
     return (
-        <main className="min-h-screen bg-slate-50 dark:bg-zinc-950 transition-colors duration-200 py-12 px-4 font-display">
+        <main className="min-h-screen bg-slate-50 dark:bg-zinc-950 transition-colors duration-200 py-6 md:py-12 px-4 font-display">
             <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-800">
-                <header className="bg-white dark:bg-zinc-900 p-8 flex flex-col items-center">
+                <header className="bg-white dark:bg-zinc-900 p-5 md:p-8 flex flex-col items-center">
                     <div className="flex justify-center items-center py-4">
                         <img
                             alt="Health Illustrations"
@@ -107,12 +107,12 @@ export default function ChildHealth() {
                         />
                     </div>
                     <div className="w-full bg-primary text-white py-4 px-8 text-center rounded-lg shadow-md">
-                        <h1 className="text-3xl font-bold tracking-tight font-display uppercase">Child HEALTH Information Sheet</h1>
+                        <h1 className="text-xl md:text-3xl font-bold tracking-tight font-display uppercase">Child HEALTH Information Sheet</h1>
                         <p className="text-sm opacity-90 mt-1 uppercase tracking-widest font-bold">Section 4 of 5</p>
                     </div>
                 </header>
 
-                <form onSubmit={handleSubmit} className="p-8 md:p-12 space-y-10">
+                <form onSubmit={handleSubmit} className="p-5 md:p-8 lg:p-12 space-y-8 md:space-y-10">
                     {loading && (
                         <div className="flex justify-center py-4">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -220,11 +220,11 @@ export default function ChildHealth() {
                         ></textarea>
                     </div>
 
-                    <div className="flex justify-between items-center pt-8 border-t border-slate-100 dark:border-zinc-800">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 md:pt-8 border-t border-slate-100 dark:border-zinc-800">
                         <button
                             type="button"
                             onClick={handleBack}
-                            className="px-8 py-3 rounded-full border border-slate-300 dark:border-zinc-700 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all flex items-center gap-2"
+                            className="w-full sm:w-auto px-8 py-3 rounded-full border border-slate-300 dark:border-zinc-700 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
                         >
                             <span className="material-icons text-sm">arrow_back</span>
                             Back
@@ -232,7 +232,7 @@ export default function ChildHealth() {
                         <button
                             type="submit"
                             disabled={isSaving}
-                            className="bg-primary hover:bg-lime-600 text-white font-bold py-3 px-10 rounded-full shadow-lg transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 disabled:opacity-50"
+                            className="w-full sm:w-auto bg-primary hover:bg-lime-600 text-white font-bold py-3 px-10 rounded-full shadow-lg transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
                         >
                             {isSaving ? 'Saving...' : 'Save & Continue'}
                             <span className="material-icons text-sm">arrow_forward</span>

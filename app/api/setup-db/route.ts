@@ -16,10 +16,18 @@ const EXPECTED_COLUMNS: [string, string][] = [
     ['emergency_contact_name', 'VARCHAR(255)'],
     ['emergency_contact_phone', 'VARCHAR(50)'],
     ['emergency_contact_relation', 'VARCHAR(100)'],
+    ['emergency_contact1_name', 'VARCHAR(255)'],
+    ['emergency_contact1_phone', 'VARCHAR(50)'],
+    ['emergency_contact1_relation', 'VARCHAR(100)'],
+    ['emergency_contact2_name', 'VARCHAR(255)'],
+    ['emergency_contact2_phone', 'VARCHAR(50)'],
+    ['emergency_contact2_relation', 'VARCHAR(100)'],
 
     // Program Selection
     ['programs_selected', 'TEXT'],
     ['daycare_time_opted', 'VARCHAR(100)'],
+    ['daycare_time_from', 'TIME'],
+    ['daycare_time_to', 'TIME'],
     ['languages_spoken', 'TEXT'],
     ['allergies', 'TEXT'],
     ['media_consent', 'VARCHAR(10)'],
@@ -90,6 +98,9 @@ const EXPECTED_COLUMNS: [string, string][] = [
     ['immunization_records', 'TEXT'],
     ['current_height', 'VARCHAR(20)'],
     ['current_weight', 'VARCHAR(20)'],
+
+    // Medical Authorization
+    ['medical_auth_name', 'VARCHAR(255)'],
 
     // Child Preferences & Habits
     ['food_allergies', 'TEXT'],

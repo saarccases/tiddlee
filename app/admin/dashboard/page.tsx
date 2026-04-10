@@ -40,17 +40,17 @@ export default function AdminDashboard() {
     const { stats, recentAdmissions } = data || {};
 
     return (
-        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-6 lg:space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 lg:gap-6">
                 <div>
-                    <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">Dashboard Overview</h2>
+                    <h2 className="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">Dashboard Overview</h2>
                     <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-2 flex items-center gap-2">
                         <span className="inline-block w-4 h-[2px] bg-primary"></span>
                         Key Management Metrics
                     </p>
                 </div>
                 <div className="flex gap-4">
-                    <div className="px-6 py-3 bg-white dark:bg-zinc-900 rounded-2xl border border-slate-100 dark:border-zinc-800 flex items-center gap-3">
+                    <div className="px-4 lg:px-6 py-3 bg-white dark:bg-zinc-900 rounded-2xl border border-slate-100 dark:border-zinc-800 flex items-center gap-3">
                         <span className="material-icons text-primary text-xl">calendar_today</span>
                         <span className="text-sm font-black text-slate-700 dark:text-slate-200">
                             {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
@@ -59,7 +59,7 @@ export default function AdminDashboard() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 {/* Total Students */}
                 <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2rem] border border-slate-100 dark:border-zinc-800 shadow-xl shadow-slate-200/50 dark:shadow-none transition-all hover:scale-[1.02]">
                     <div className="flex justify-between items-start mb-6">
@@ -121,7 +121,7 @@ export default function AdminDashboard() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
                 {/* Recent Admissions Table */}
                 <div className="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800 shadow-2xl shadow-slate-200/50 dark:shadow-none overflow-hidden">
                     <div className="p-8 border-b border-slate-50 dark:border-zinc-800 flex items-center justify-between">

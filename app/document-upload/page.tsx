@@ -235,12 +235,7 @@ export default function DocumentUpload() {
             });
 
             if (res.ok) {
-                const programType = localStorage.getItem('selectedProgramType');
-                if (programType === 'daycare') {
-                    router.push('/detailed-daycare-policies');
-                } else {
-                    router.push('/preschool-policies');
-                }
+                router.push('/consent-introduction');
             } else {
                 alert('Failed to save. Please try again.');
             }
@@ -328,7 +323,7 @@ export default function DocumentUpload() {
     };
 
     return (
-        <div className="bg-slate-50 min-h-screen py-10 px-4 font-display text-slate-800">
+        <div className="bg-slate-50 min-h-screen py-6 md:py-10 px-3 md:px-4 font-display text-slate-800">
             <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-3xl overflow-hidden border border-slate-100">
 
                 {/* Header */}
@@ -337,7 +332,7 @@ export default function DocumentUpload() {
                     <p className="mt-1 text-white/80 text-sm font-medium">Required identification documents for {formData.child_name || 'your child'}</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 md:p-12 space-y-10">
+                <form onSubmit={handleSubmit} className="p-5 md:p-8 lg:p-12 space-y-8 md:space-y-10">
 
                     {/* Aadhar toggle */}
                     <div className="space-y-4">
@@ -347,11 +342,11 @@ export default function DocumentUpload() {
                         </h2>
                         <p className="text-sm text-slate-500">Please select the document available for your child.</p>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                             <button
                                 type="button"
                                 onClick={() => { setHasAadhar(true); setErrors(null); setFormData(prev => ({ ...prev, birth_certificate: '' })); }}
-                                className={`p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
+                                className={`p-3 md:p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
                                     ${hasAadhar === true ? 'border-primary bg-primary/10 text-primary' : 'border-slate-200 text-slate-500 hover:border-primary/30'}`}
                             >
                                 <span className="material-icons text-base">credit_card</span>
@@ -360,11 +355,11 @@ export default function DocumentUpload() {
                             <button
                                 type="button"
                                 onClick={() => { setHasAadhar(false); setErrors(null); setFormData(prev => ({ ...prev, aadhar_front: '', aadhar_back: '' })); }}
-                                className={`p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
+                                className={`p-3 md:p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
                                     ${hasAadhar === false ? 'border-primary bg-primary/10 text-primary' : 'border-slate-200 text-slate-500 hover:border-primary/30'}`}
                             >
                                 <span className="material-icons text-base">article</span>
-                                No Aadhar — Upload Birth Certificate
+                                No Aadhar — Birth Certificate
                             </button>
                         </div>
                     </div>
@@ -398,11 +393,11 @@ export default function DocumentUpload() {
 
                         {/* Show buttons only if parent names aren't auto-detected */}
                         {!parentNames.father_name && !parentNames.guardian1_name && (
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                                 <button
                                     type="button"
                                     onClick={() => { setHasParents(true); setErrors(null); }}
-                                    className={`p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
+                                    className={`p-3 md:p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
                                         ${hasParents === true ? 'border-primary bg-primary/10 text-primary' : 'border-slate-200 text-slate-500 hover:border-primary/30'}`}
                                 >
                                     <span className="material-icons text-base">people</span>
@@ -411,7 +406,7 @@ export default function DocumentUpload() {
                                 <button
                                     type="button"
                                     onClick={() => { setHasParents(false); setErrors(null); }}
-                                    className={`p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
+                                    className={`p-3 md:p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
                                         ${hasParents === false ? 'border-primary bg-primary/10 text-primary' : 'border-slate-200 text-slate-500 hover:border-primary/30'}`}
                                 >
                                     <span className="material-icons text-base">supervisor_account</span>
@@ -495,11 +490,11 @@ export default function DocumentUpload() {
                     )}
 
                     {/* Actions */}
-                    <div className="flex justify-between items-center pt-4 border-t border-slate-100">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-slate-100">
                         <button
                             type="button"
                             onClick={() => router.push('/care-routines')}
-                            className="px-8 py-3 border-2 border-slate-200 rounded-full text-slate-600 font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all flex items-center gap-2"
+                            className="w-full sm:w-auto px-8 py-3 border-2 border-slate-200 rounded-full text-slate-600 font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
                         >
                             <span className="material-icons text-sm">arrow_back</span>
                             Back
@@ -507,7 +502,7 @@ export default function DocumentUpload() {
                         <button
                             type="submit"
                             disabled={isSaving}
-                            className="px-10 py-3 bg-primary hover:bg-lime-600 text-white rounded-full font-black uppercase tracking-[0.15em] shadow-lg shadow-primary/30 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                            className="w-full sm:w-auto px-10 py-3 bg-primary hover:bg-lime-600 text-white rounded-full font-black uppercase tracking-[0.15em] shadow-lg shadow-primary/30 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             {isSaving ? (
                                 <><span className="material-icons animate-spin text-sm">sync</span> Saving...</>
