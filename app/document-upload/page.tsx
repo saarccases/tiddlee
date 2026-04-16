@@ -235,7 +235,13 @@ export default function DocumentUpload() {
             });
 
             if (res.ok) {
-                router.push('/consent-introduction');
+                const programType = localStorage.getItem('selectedProgramType');
+                if (programType === 'daycare') {
+                    router.push('/daycare-policies');
+                } else {
+                    // preschool or both
+                    router.push('/preschool-policies');
+                }
             } else {
                 alert('Failed to save. Please try again.');
             }

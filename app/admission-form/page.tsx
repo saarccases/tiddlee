@@ -23,7 +23,17 @@ export default function AdmissionForm() {
     const dobInputRef = React.useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        setProgramType(localStorage.getItem('selectedProgramType'));
+        const pt = localStorage.getItem('selectedProgramType');
+        setProgramType(pt);
+        // For daycare-only, auto-include 'Daycare' in programs_selected since checkboxes are hidden
+        if (pt === 'daycare') {
+            setFormData((prev: any) => ({
+                ...prev,
+                programs_selected: prev.programs_selected.includes('Daycare')
+                    ? prev.programs_selected
+                    : [...prev.programs_selected, 'Daycare'],
+            }));
+        }
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {

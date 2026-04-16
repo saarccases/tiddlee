@@ -24,24 +24,39 @@ export async function GET() {
 
         // 4. Recent Admissions list
         const [recentList]: any = await db.query(`
-            SELECT id, child_name, programs_selected, mother_name, status, created_at 
-            FROM admissions 
-            ORDER BY created_at DESC 
+            SELECT id, child_name, programs_selected, mother_name, status, created_at
+            FROM admissions
+            ORDER BY created_at DESC
             LIMIT 5
         `);
+
+        // 5. Active staff count from staff table
+        let activeStaff = 0;
+        let staffAvailability: any[] = [];
+        try {
+            const [staffCount]: any = await db.query(
+                "SELECT COUNT(*) as count FROM staff WHERE status = 'active'"
+            );
+            activeStaff = staffCount[0].count;
+
+            const [staffList]: any = await db.query(
+                "SELECT name, role, status, photo FROM staff WHERE status = 'active' ORDER BY name ASC LIMIT 5"
+            );
+            staffAvailability = staffList;
+        } catch { /* staff table may not exist yet */ }
 
         return NextResponse.json({
             stats: {
                 totalStudents: totalStudents[0].count,
                 pendingAdmissions: pendingAdmissions[0].count,
                 newToday: newToday[0].count,
-                staffCount: 18, // Mock for now
-                occupancyRate: 84 // Mock for now
+                staffCount: activeStaff,
             },
             recentAdmissions: recentList.map((row: any) => ({
                 ...row,
                 programs_selected: row.programs_selected ? JSON.parse(row.programs_selected) : []
-            }))
+            })),
+            staffAvailability,
         });
     } catch (error) {
         console.error('Stats fetch error:', error);

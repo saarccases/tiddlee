@@ -146,7 +146,7 @@ export default function DaycarePolicies() {
 
 
                 <div className="bg-slate-100 p-4 flex justify-between items-center px-8 text-slate-600">
-                    <Link href="/care-routines" className="px-6 py-2 border border-slate-300 font-semibold rounded-full hover:bg-white transition-colors">
+                    <Link href="/document-upload" className="px-6 py-2 border border-slate-300 font-semibold rounded-full hover:bg-white transition-colors">
                         Back
                     </Link>
                     <Link href="/detailed-daycare-policies" className="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-full font-bold transition-all shadow-md active:scale-95">

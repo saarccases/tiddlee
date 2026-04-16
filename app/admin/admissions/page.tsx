@@ -233,6 +233,32 @@ function AdmissionsContent() {
                                         </div>
                                     ))}
                                 </div>
+
+                                {/* Daycare time details */}
+                                {(selectedApp.programs_selected?.includes('Daycare') || selectedApp.daycare_time_opted) && (
+                                    <div className="mt-2 bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 rounded-2xl p-5 flex flex-wrap gap-6">
+                                        <div>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Hours Opted</p>
+                                            <p className="text-sm font-black text-slate-800 dark:text-white">{selectedApp.daycare_time_opted || '—'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">From</p>
+                                            <p className="text-sm font-black text-slate-800 dark:text-white">
+                                                {selectedApp.daycare_time_from
+                                                    ? selectedApp.daycare_time_from.toString().slice(0, 5)
+                                                    : '—'}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">To</p>
+                                            <p className="text-sm font-black text-slate-800 dark:text-white">
+                                                {selectedApp.daycare_time_to
+                                                    ? selectedApp.daycare_time_to.toString().slice(0, 5)
+                                                    : '—'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Family Info */}
@@ -243,9 +269,17 @@ function AdmissionsContent() {
                                         MOTHER / GUARDIAN 1
                                     </h3>
                                     <div className="bg-slate-50 dark:bg-zinc-800/50 p-6 lg:p-8 rounded-[2rem] border border-slate-100 dark:border-zinc-800 space-y-4">
-                                        <div>
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Full Name</p>
-                                            <p className="text-base lg:text-lg font-black text-slate-800 dark:text-white uppercase tracking-tight">{selectedApp.mother_name}</p>
+                                        <div className="flex items-center gap-4">
+                                            <div className="size-16 rounded-2xl overflow-hidden bg-blue-100 dark:bg-blue-900/30 shrink-0 flex items-center justify-center border-2 border-blue-200 dark:border-blue-800">
+                                                {selectedApp.mother_photo
+                                                    ? <img src={selectedApp.mother_photo} className="w-full h-full object-cover" alt={selectedApp.mother_name} />
+                                                    : <span className="text-lg font-black text-blue-400">{selectedApp.mother_name?.charAt(0) || '?'}</span>
+                                                }
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Full Name</p>
+                                                <p className="text-base lg:text-lg font-black text-slate-800 dark:text-white uppercase tracking-tight">{selectedApp.mother_name}</p>
+                                            </div>
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
@@ -266,9 +300,17 @@ function AdmissionsContent() {
                                         FATHER / GUARDIAN 2
                                     </h3>
                                     <div className="bg-slate-50 dark:bg-zinc-800/50 p-6 lg:p-8 rounded-[2rem] border border-slate-100 dark:border-zinc-800 space-y-4">
-                                        <div>
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Full Name</p>
-                                            <p className="text-base lg:text-lg font-black text-slate-800 dark:text-white uppercase tracking-tight">{selectedApp.father_name}</p>
+                                        <div className="flex items-center gap-4">
+                                            <div className="size-16 rounded-2xl overflow-hidden bg-indigo-100 dark:bg-indigo-900/30 shrink-0 flex items-center justify-center border-2 border-indigo-200 dark:border-indigo-800">
+                                                {selectedApp.father_photo
+                                                    ? <img src={selectedApp.father_photo} className="w-full h-full object-cover" alt={selectedApp.father_name} />
+                                                    : <span className="text-lg font-black text-indigo-400">{selectedApp.father_name?.charAt(0) || '?'}</span>
+                                                }
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Full Name</p>
+                                                <p className="text-base lg:text-lg font-black text-slate-800 dark:text-white uppercase tracking-tight">{selectedApp.father_name}</p>
+                                            </div>
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
@@ -313,6 +355,65 @@ function AdmissionsContent() {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Uploaded Documents */}
+                            {(() => {
+                                const docs = [
+                                    { label: "Child Aadhaar — Front", url: selectedApp.aadhar_front },
+                                    { label: "Child Aadhaar — Back", url: selectedApp.aadhar_back },
+                                    { label: "Birth Certificate", url: selectedApp.birth_certificate },
+                                    { label: "Father Aadhaar — Front", url: selectedApp.father_aadhar_front },
+                                    { label: "Father Aadhaar — Back", url: selectedApp.father_aadhar_back },
+                                    { label: "Mother Aadhaar — Front", url: selectedApp.mother_aadhar_front },
+                                    { label: "Mother Aadhaar — Back", url: selectedApp.mother_aadhar_back },
+                                    { label: "Guardian 1 Aadhaar — Front", url: selectedApp.guardian1_aadhar_front },
+                                    { label: "Guardian 1 Aadhaar — Back", url: selectedApp.guardian1_aadhar_back },
+                                    { label: "Guardian 2 Aadhaar — Front", url: selectedApp.guardian2_aadhar_front },
+                                    { label: "Guardian 2 Aadhaar — Back", url: selectedApp.guardian2_aadhar_back },
+                                    { label: "Address Proof", url: selectedApp.address_proof },
+                                ].filter(d => d.url);
+                                if (docs.length === 0) return null;
+                                return (
+                                    <div className="space-y-6">
+                                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-3">
+                                            <span className="w-10 h-0.5 bg-amber-500"></span>
+                                            UPLOADED DOCUMENTS
+                                        </h3>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                            {docs.map((doc) => (
+                                                <a
+                                                    key={doc.label}
+                                                    href={doc.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="group flex flex-col rounded-2xl overflow-hidden border border-slate-100 dark:border-zinc-800 hover:border-primary/40 hover:shadow-lg transition-all"
+                                                >
+                                                    <div className="aspect-[4/3] bg-slate-100 dark:bg-zinc-800 overflow-hidden relative">
+                                                        {doc.url && (doc.url.endsWith('.pdf')) ? (
+                                                            <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-slate-400">
+                                                                <span className="material-icons text-4xl">picture_as_pdf</span>
+                                                                <span className="text-[9px] font-black uppercase tracking-widest">PDF</span>
+                                                            </div>
+                                                        ) : (
+                                                            <img
+                                                                src={doc.url}
+                                                                alt={doc.label}
+                                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                            />
+                                                        )}
+                                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                                            <span className="material-icons text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg">open_in_new</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="p-3 bg-white dark:bg-zinc-900">
+                                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-tight">{doc.label}</p>
+                                                    </div>
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })()}
 
                             <div className="h-20"></div>
                         </div>

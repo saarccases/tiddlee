@@ -37,7 +37,7 @@ export default function AdminDashboard() {
         );
     }
 
-    const { stats, recentAdmissions } = data || {};
+    const { stats, recentAdmissions, staffAvailability } = data || {};
 
     return (
         <div className="space-y-6 lg:space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -99,7 +99,7 @@ export default function AdminDashboard() {
                         <span className="text-xs font-black text-slate-400 bg-slate-50 dark:bg-zinc-800 px-3 py-1 rounded-full">STABLE</span>
                     </div>
                     <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Active Staff</p>
-                    <h3 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{stats?.staffCount || 18}</h3>
+                    <h3 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{stats?.staffCount ?? 0}</h3>
                     <div className="mt-6 pt-6 border-t border-slate-50 dark:border-zinc-800">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Full Capacity</p>
                     </div>
@@ -145,6 +145,14 @@ export default function AdminDashboard() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-50 dark:divide-zinc-800">
+                                {(!recentAdmissions || recentAdmissions.length === 0) && (
+                                    <tr>
+                                        <td colSpan={5} className="px-8 py-16 text-center">
+                                            <span className="material-icons text-4xl text-slate-200 dark:text-zinc-700 block mb-3">inbox</span>
+                                            <p className="text-xs font-black text-slate-400 uppercase tracking-widest">No admissions yet</p>
+                                        </td>
+                                    </tr>
+                                )}
                                 {recentAdmissions?.map((app: any) => (
                                     <tr key={app.id} className="group hover:bg-slate-50/80 dark:hover:bg-zinc-800/30 transition-colors">
                                         <td className="px-8 py-6">
@@ -191,24 +199,29 @@ export default function AdminDashboard() {
                     <div className="bg-white dark:bg-zinc-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800 shadow-xl shadow-slate-200/50 dark:shadow-none">
                         <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tighter mb-6">Staff Availability</h3>
                         <div className="space-y-6">
-                            {[
-                                { name: 'Sarah Wilson', role: 'Lead Educator', status: 'Active' },
-                                { name: 'Michael Chen', role: 'Support Staff', status: 'Active' },
-                                { name: 'Emily Davis', role: 'Preschool Nurse', status: 'On Leave' },
-                            ].map((staff) => (
-                                <div key={staff.name} className="flex items-center justify-between group">
-                                    <div className="flex items-center gap-4">
-                                        <div className="size-10 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-400 font-bold text-xs">
-                                            {staff.name.split(' ').map(n => n[0]).join('')}
+                            {staffAvailability && staffAvailability.length > 0 ? (
+                                staffAvailability.map((staff: any) => (
+                                    <div key={staff.name} className="flex items-center justify-between group">
+                                        <div className="flex items-center gap-4">
+                                            <div className="size-10 rounded-full bg-slate-100 dark:bg-zinc-800 overflow-hidden flex items-center justify-center text-slate-400 font-bold text-xs shrink-0">
+                                                {staff.photo
+                                                    ? <img src={staff.photo} className="w-full h-full object-cover" alt={staff.name} />
+                                                    : staff.name.split(' ').map((n: string) => n[0]).join('')}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-black text-slate-800 dark:text-white leading-none uppercase tracking-tight">{staff.name}</p>
+                                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{staff.role}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p className="text-sm font-black text-slate-800 dark:text-white leading-none uppercase tracking-tight">{staff.name}</p>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{staff.role}</p>
-                                        </div>
+                                        <span className="size-2.5 rounded-full bg-primary shadow-lg shadow-primary/50"></span>
                                     </div>
-                                    <span className={`size-2.5 rounded-full ${staff.status === 'Active' ? 'bg-primary shadow-lg shadow-primary/50' : 'bg-slate-300'}`}></span>
+                                ))
+                            ) : (
+                                <div className="flex flex-col items-center py-6 text-slate-300">
+                                    <span className="material-icons text-4xl mb-2">badge</span>
+                                    <p className="text-xs font-black uppercase tracking-widest">No active staff</p>
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </div>
 

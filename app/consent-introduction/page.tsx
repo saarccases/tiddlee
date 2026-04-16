@@ -128,15 +128,9 @@ export default function ConsentIntroduction() {
             });
 
             if (response.ok) {
-                const programType = localStorage.getItem('selectedProgramType');
                 localStorage.removeItem('currentAdmissionId');
                 localStorage.setItem('formSubmitted', 'true');
-                // Route to the appropriate policy page based on program type
-                if (programType === 'daycare') {
-                    router.replace('/detailed-daycare-policies');
-                } else {
-                    router.replace('/preschool-policies');
-                }
+                router.replace('/contact-corporate-info');
             } else {
                 const errorData = await response.json();
                 alert(`Failed to save: ${errorData.message || 'Please try again.'}`);
