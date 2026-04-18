@@ -41,6 +41,7 @@ export default function DocumentUpload() {
         address_proof: '',
     });
     const [hasParents, setHasParents] = useState<boolean | null>(null);
+    const [addressDiffersFromAadhar, setAddressDiffersFromAadhar] = useState<boolean | null>(null);
     const [parentNames, setParentNames] = useState({
         father_name: '',
         mother_name: '',
@@ -104,6 +105,8 @@ export default function DocumentUpload() {
 
                     if (hasExistingAadhar) setHasAadhar(true);
                     else if (data.birth_certificate) setHasAadhar(false);
+
+                    if (data.address_proof) setAddressDiffersFromAadhar(true);
                 })
         }
     }, []);
@@ -184,12 +187,12 @@ export default function DocumentUpload() {
                 setErrors('Please upload both front and back of Guardian 1\'s Aadhaar.');
                 return;
             }
-            if (!formData.guardian2_aadhar_front || !formData.guardian2_aadhar_back) {
-                setErrors('Please upload both front and back of Guardian 2\'s Aadhaar.');
-                return;
-            }
         }
-        if (!formData.address_proof) {
+        if (addressDiffersFromAadhar === null) {
+            setErrors('Please indicate whether your current address differs from your Aadhaar address.');
+            return;
+        }
+        if (addressDiffersFromAadhar && !formData.address_proof) {
             setErrors('Please upload the Address Proof.');
             return;
         }
@@ -226,7 +229,7 @@ export default function DocumentUpload() {
                 payload.guardian2_aadhar_front = formData.guardian2_aadhar_front;
                 payload.guardian2_aadhar_back = formData.guardian2_aadhar_back;
             }
-            payload.address_proof = formData.address_proof;
+            payload.address_proof = addressDiffersFromAadhar ? formData.address_proof : null;
 
             const res = await fetch('/api/submit-admission', {
                 method: 'POST',
@@ -468,7 +471,7 @@ export default function DocumentUpload() {
 
                             {!parentNames.guardian2_name && (
                                 <>
-                                    <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest pt-4">Guardian 2 Aadhaar Card — Front &amp; Back</h3>
+                                    <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest pt-4">Guardian 2 Aadhaar Card — Front &amp; Back <span className="text-slate-400 font-normal normal-case">(Optional)</span></h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <UploadBox field="guardian2_aadhar_front" label="Aadhaar Front" icon="credit_card" />
                                         <UploadBox field="guardian2_aadhar_back" label="Aadhaar Back" icon="credit_card" />
@@ -482,8 +485,30 @@ export default function DocumentUpload() {
                     {(hasParents !== null) && (
                         <div className="space-y-4 border-t pt-8 border-slate-200">
                             <h3 className="text-sm font-black text-slate-600 uppercase tracking-widest">Address Proof</h3>
-                            <p className="text-xs text-slate-500 italic">If the address mentioned on the Aadhaar card differs from your current residential address, please submit a valid address proof reflecting your present residence.</p>
-                            <UploadBox field="address_proof" label="Upload Address Proof" icon="location_on" />
+                            <p className="text-xs text-slate-500 italic">Is your current residential address different from the address mentioned on the Aadhaar card?</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                                <button
+                                    type="button"
+                                    onClick={() => { setAddressDiffersFromAadhar(false); setErrors(null); }}
+                                    className={`p-3 md:p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
+                                        ${addressDiffersFromAadhar === false ? 'border-primary bg-primary/10 text-primary' : 'border-slate-200 text-slate-500 hover:border-primary/30'}`}
+                                >
+                                    <span className="material-icons text-base">check_circle</span>
+                                    No, same address
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setAddressDiffersFromAadhar(true); setErrors(null); }}
+                                    className={`p-3 md:p-4 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2
+                                        ${addressDiffersFromAadhar === true ? 'border-primary bg-primary/10 text-primary' : 'border-slate-200 text-slate-500 hover:border-primary/30'}`}
+                                >
+                                    <span className="material-icons text-base">location_on</span>
+                                    Yes, different address
+                                </button>
+                            </div>
+                            {addressDiffersFromAadhar === true && (
+                                <UploadBox field="address_proof" label="Upload Address Proof" icon="location_on" />
+                            )}
                         </div>
                     )}
 
