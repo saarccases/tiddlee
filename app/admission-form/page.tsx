@@ -73,17 +73,14 @@ export default function AdmissionForm() {
             <HomeHeader />
 
             <div className="max-w-5xl mx-auto px-4 mt-6 md:mt-8">
-                {/* Decorative Illustrations */}
-                <div className="flex justify-center space-x-4 md:space-x-8 mb-6 md:mb-8">
-                    {[
-                        "/images/admission-1.png",
-                        "/images/admission-2.png",
-                        "/images/admission-3.png"
-                    ].map((url, i) => (
-                        <div key={i} className={`w-24 h-24 rounded-full flex items-center justify-center border-4 border-white dark:border-slate-800 shadow-lg overflow-hidden ${i === 0 ? 'bg-blue-100 dark:bg-blue-900' : i === 1 ? 'bg-pink-100 dark:bg-pink-900' : 'bg-teal-100 dark:bg-teal-900'}`}>
-                            <img alt="Cartoon kid" className="w-full h-full object-cover" src={url} />
-                        </div>
-                    ))}
+                {/* Admission Form Illustration */}
+                <div className="mb-6 md:mb-8 w-full overflow-hidden" style={{ height: 'clamp(200px, 50vw, 460px)' }}>
+                    <img
+                        alt="Admission Form"
+                        className="w-full"
+                        style={{ transform: 'translateY(-18%)' }}
+                        src="/tiddlee/admission%20app-admission-form.png"
+                    />
                 </div>
 
                 {showResumePrompt && (

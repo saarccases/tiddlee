@@ -44,6 +44,13 @@ export default function DetailedDaycarePolicies() {
 
     return (
         <div className="bg-slate-50 min-h-screen py-10 px-4 font-display text-slate-800">
+            <div className="flex justify-center max-w-4xl mx-auto">
+                <img
+                    src="/tiddlee/admission%20app-detailed-daycare-policies.png"
+                    alt="Detailed Daycare Policies"
+                    style={{ maxWidth: '600px', width: '100%', height: 'auto', display: 'block' }}
+                />
+            </div>
             <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
                 <div className="p-8 border-b border-primary">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">

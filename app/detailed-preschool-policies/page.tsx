@@ -47,7 +47,7 @@ export default function DetailedPreschoolPolicies() {
 
     return (
         <div className="bg-slate-50 min-h-screen py-10 px-4 font-display text-slate-800">
-            <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
+<div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
                 <div className="p-8 border-b border-primary">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
                         <span className="text-primary font-bold">Preschool Policies</span>

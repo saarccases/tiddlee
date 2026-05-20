@@ -12,6 +12,13 @@ export default function OperationsPolicy() {
 
     return (
         <div className="bg-gray-50 min-h-screen py-8 font-display text-gray-800">
+            <div className="flex justify-center max-w-5xl mx-auto px-4">
+                <img
+                    src="/tiddlee/admission%20app-operations-policy.png"
+                    alt="Operations Policy"
+                    style={{ maxWidth: '600px', width: '100%', height: 'auto', display: 'block' }}
+                />
+            </div>
             <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
                 <div className="p-8 border-b border-primary">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">

@@ -44,11 +44,9 @@ export default function PreschoolPolicies() {
         <div className="bg-gray-100 min-h-screen py-10 px-4 font-display text-slate-800">
             <div className="max-w-4xl mx-auto bg-white shadow-2xl overflow-hidden rounded-xl border border-gray-200">
 
-                {/* Header Illustration Area */}
-                <div className="w-full bg-white flex items-center justify-center gap-6 md:gap-12 py-8 px-8 border-b border-gray-100">
-                    <img alt="Children at preschool" className="h-28 md:h-40 object-contain" src="/images/home-1.png" />
-                    <img alt="Children learning" className="h-32 md:h-44 object-contain" src="/images/home-2.png" />
-                    <img alt="Children playing" className="h-28 md:h-40 object-contain" src="/images/home-3.png" />
+                {/* Header Illustration */}
+                <div className="flex justify-center overflow-hidden" style={{ maxHeight: 'clamp(160px, 30vw, 260px)' }}>
+                    <img alt="Preschool Policies" className="h-auto object-contain" style={{ maxWidth: '520px', width: '100%', marginTop: '-3%', height: 'auto' }} src="/tiddlee/admission%20app-preschool-policies.png" />
                 </div>
 
                 <div className="bg-primary py-4 px-8 text-center">

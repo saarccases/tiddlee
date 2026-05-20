@@ -99,11 +99,12 @@ export default function ChildHealth() {
         <main className="min-h-screen bg-slate-50 dark:bg-zinc-950 transition-colors duration-200 py-6 md:py-12 px-4 font-display">
             <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-800">
                 <header className="bg-white dark:bg-zinc-900 p-5 md:p-8 flex flex-col items-center">
-                    <div className="flex justify-center items-center py-4">
+                    <div className="flex justify-center overflow-hidden" style={{ maxHeight: 'clamp(140px, 25vw, 220px)' }}>
                         <img
-                            alt="Health Illustrations"
-                            className="max-w-full h-auto max-h-48 object-contain"
-                            src="/images/health-1.png"
+                            alt="Child Health"
+                            className="h-auto object-contain"
+                            style={{ maxWidth: '380px', width: '100%' }}
+                            src="/tiddlee/admission%20app-child-health.png"
                         />
                     </div>
                     <div className="w-full bg-primary text-white py-4 px-8 text-center rounded-lg shadow-md">

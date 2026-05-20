@@ -335,48 +335,18 @@ export default function ParentInfo() {
 
             <div className="max-w-5xl mx-auto px-4 py-6 md:py-10">
                 <div className="flex flex-col sm:flex-row items-center justify-between mb-6 md:mb-8 gap-6 md:gap-8">
-                    <div className="flex gap-3 md:gap-4 items-end">
-                        <div className="text-center group">
-                            <div className={`w-24 h-24 rounded-full border-4 overflow-hidden mb-2 shadow-lg transition-transform group-hover:scale-105 ${formData.mother_photo ? 'border-primary' : 'border-secondary bg-yellow-50 dark:bg-slate-800'}`}>
-                                <img
-                                    alt="Mother"
-                                    src={formData.mother_photo || '/images/parent-1.png'}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-                                {formData.mother_name || 'Mother'}
-                            </span>
-                        </div>
-                        <div className="text-center group">
-                            <div className={`w-20 h-20 rounded-full border-4 overflow-hidden mb-2 shadow-lg transition-transform group-hover:scale-105 ${formData.child_photo ? 'border-primary' : 'border-primary bg-green-50 dark:bg-slate-800'}`}>
-                                <img
-                                    alt="Child"
-                                    src={formData.child_photo || '/images/parent-2.png'}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Child</span>
-                        </div>
-                        <div className="text-center group">
-                            <div className={`w-24 h-24 rounded-full border-4 overflow-hidden mb-2 shadow-lg transition-transform group-hover:scale-105 ${formData.father_photo ? 'border-primary' : 'border-secondary bg-yellow-50 dark:bg-slate-800'}`}>
-                                <img
-                                    alt="Father"
-                                    src={formData.father_photo || '/images/parent-3.png'}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-                                {formData.father_name || 'Father'}
-                            </span>
-                        </div>
+                    <div style={{ width: '300px', maxWidth: '100%' }}>
+                        <img
+                            src="/tiddlee/admission%20app-parent-info.png"
+                            alt="Parent Info"
+                            className="w-full h-auto object-contain"
+                        />
                     </div>
                     <div className="flex gap-4">
                         <div className="flex flex-col items-center">
                             <span className="text-[10px] font-bold uppercase mb-1 text-slate-400">Mother/Guardian 1</span>
                             <PhotoUpload
                                 onPhotoUploaded={async (url) => {
-                                    // Instantly update avatar
                                     setFormData(prev => ({ ...prev, mother_photo: url }));
                                     const currentId = formData.id || localStorage.getItem('currentAdmissionId');
                                     if (currentId) {
@@ -396,7 +366,6 @@ export default function ParentInfo() {
                             <span className="text-[10px] font-bold uppercase mb-1 text-slate-400">Father/Guardian 2</span>
                             <PhotoUpload
                                 onPhotoUploaded={async (url) => {
-                                    // Instantly update avatar
                                     setFormData(prev => ({ ...prev, father_photo: url }));
                                     const currentId = formData.id || localStorage.getItem('currentAdmissionId');
                                     if (currentId) {
@@ -675,6 +644,6 @@ export default function ParentInfo() {
                     </div>
                 </form>
             </div>
-        </main >
+        </main>
     );
 }

@@ -144,6 +144,14 @@ export default function ConsentIntroduction() {
 
     return (
         <div className="bg-slate-50 min-h-screen py-6 md:py-10 px-4 font-display text-slate-800">
+            <div className="max-w-4xl mx-auto overflow-hidden" style={{ height: 'clamp(200px, 32vw, 320px)' }}>
+                <img
+                    src="/tiddlee/admission%20app-consent-introduction.png"
+                    alt="Consent Introduction"
+                    className="w-full"
+                    style={{ marginTop: '-34%' }}
+                />
+            </div>
             <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
                 <div className="p-5 md:p-8 border-b border-primary">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">

@@ -44,6 +44,14 @@ export default function BitingPolicy() {
 
     return (
         <div className="bg-slate-50 min-h-screen py-10 px-4 font-display text-slate-800">
+            <div className="max-w-4xl mx-auto mb-4 overflow-hidden" style={{ height: 'clamp(200px, 50vw, 460px)' }}>
+                <img
+                    src="/tiddlee/admission%20app-biting-policy.png"
+                    alt="Biting Policy"
+                    className="w-full"
+                    style={{ transform: 'translateY(-18%)' }}
+                />
+            </div>
             <div className="max-w-4xl mx-auto bg-white shadow-xl overflow-hidden rounded-xl border border-slate-200">
 
                 <div className="p-8 border-b border-primary">

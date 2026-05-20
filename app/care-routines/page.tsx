@@ -104,6 +104,14 @@ export default function CareRoutines() {
     return (
         <main className="min-h-screen bg-slate-50 dark:bg-background-dark transition-colors duration-200 pb-12 font-display">
             <div className="max-w-4xl mx-auto pt-6 md:pt-10 px-4">
+                <div className="flex justify-center mb-6 md:mb-8 overflow-hidden" style={{ maxHeight: 'clamp(160px, 30vw, 280px)' }}>
+                    <img
+                        src="/tiddlee/admission%20app-care-routines.png"
+                        alt="Care Routines"
+                        className="h-auto object-contain"
+                        style={{ maxWidth: '380px', width: '100%', marginTop: '-5%' }}
+                    />
+                </div>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 md:mb-8 gap-4">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
