@@ -18,6 +18,19 @@ export async function GET() {
             )
         `);
 
+        // If student_fees has old schema (no enrollment_id), drop and recreate
+        let sfNeedsRebuild = false;
+        try { await db.query('SELECT enrollment_id FROM student_fees LIMIT 0'); }
+        catch { sfNeedsRebuild = true; }
+        if (sfNeedsRebuild) {
+            await db.query('SET FOREIGN_KEY_CHECKS = 0');
+            await db.query('DROP TABLE IF EXISTS fee_waivers');
+            await db.query('DROP TABLE IF EXISTS fee_installments');
+            await db.query('DROP TABLE IF EXISTS fee_monthly');
+            await db.query('DROP TABLE IF EXISTS student_fees');
+            await db.query('SET FOREIGN_KEY_CHECKS = 1');
+        }
+
         await db.query(`
             CREATE TABLE IF NOT EXISTS student_fees (
                 id INT AUTO_INCREMENT PRIMARY KEY,
