@@ -355,15 +355,22 @@ export default function FeesPage() {
     };
 
     // Template CRUD
+    const [bulkError, setBulkError] = useState('');
+
     const openBulkCreate = async () => {
         if (!selectedYear) return;
         setBulkResult(null);
         setBulkPreview(null);
+        setBulkError('');
         setShowBulk(true);
         setBulkLoading(true);
         try {
             const res = await fetch(`/api/admin/fees/bulk-create?year_id=${selectedYear.id}`);
-            if (res.ok) setBulkPreview(await res.json());
+            const data = await res.json();
+            if (!res.ok) { setBulkError(data.error || 'Failed to load preview'); return; }
+            setBulkPreview(data);
+        } catch (e: any) {
+            setBulkError(e.message || 'Network error');
         } finally { setBulkLoading(false); }
     };
 
@@ -931,6 +938,18 @@ export default function FeesPage() {
                                 <div className="flex flex-col items-center py-12 gap-3">
                                     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500"></div>
                                     <p className="text-sm text-slate-500">Analysing enrolled students...</p>
+                                </div>
+                            )}
+
+                            {!bulkLoading && bulkError && (
+                                <div className="py-8 text-center space-y-3">
+                                    <span className="material-icons text-4xl text-red-400">error_outline</span>
+                                    <p className="text-sm font-bold text-red-600">{bulkError}</p>
+                                    <p className="text-xs text-slate-400">Try clicking Setup DB first, then open Bulk Create again.</p>
+                                    <button onClick={() => { setShowBulk(false); runMigration(); }}
+                                        className="px-5 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-lime-600 transition-all">
+                                        Run Setup DB
+                                    </button>
                                 </div>
                             )}
 
