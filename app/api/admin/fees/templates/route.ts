@@ -3,23 +3,6 @@ import { getDb } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-// Match a program name against all templates using keywords
-export function matchTemplate(templates: any[], programName: string): any | null {
-    if (!programName) return null;
-    const name = programName.toLowerCase().trim();
-    for (const t of templates) {
-        try {
-            const keywords: string[] = JSON.parse(t.match_keywords || '[]');
-            const matched = keywords.some(k =>
-                name.includes(k.toLowerCase().trim()) ||
-                k.toLowerCase().trim().includes(name)
-            );
-            if (matched) return t;
-        } catch {}
-    }
-    return null;
-}
-
 export async function GET() {
     try {
         const db = await getDb();

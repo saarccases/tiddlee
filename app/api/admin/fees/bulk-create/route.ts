@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { matchTemplate } from '@/lib/fee-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,18 +10,6 @@ const MONTHS = [
     { no: 7, name: 'October' }, { no: 8, name: 'November' }, { no: 9, name: 'December' },
     { no: 10, name: 'January' }, { no: 11, name: 'February' }, { no: 12, name: 'March' },
 ];
-
-function matchTemplate(templates: any[], programStr: string): any | null {
-    if (!programStr) return null;
-    const name = programStr.toLowerCase().trim();
-    for (const t of templates) {
-        try {
-            const keywords: string[] = JSON.parse(t.match_keywords || '[]');
-            if (keywords.some(k => name.includes(k.toLowerCase().trim()) || k.toLowerCase().trim().includes(name))) return t;
-        } catch {}
-    }
-    return null;
-}
 
 // GET — preview: list all enrolled students with their matched template (dry run)
 export async function GET(request: Request) {
