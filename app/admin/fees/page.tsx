@@ -1,496 +1,1087 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 
-const PROGRAMS = ['Toddlers', 'Kamblee', 'Pupalee', 'Tiddlee'];
-const FEE_TYPES = ['Registration', 'Tuition', 'Activity', 'Material', 'Transport', 'Other'];
-const FREQUENCIES = ['one-time', 'monthly', 'quarterly', 'yearly'];
+const WAIVER_TYPES = ['Manual', 'Sibling Discount', 'Staff Child', 'Scholarship', 'Early Bird'];
+const APPLY_ON = ['total', 'registration', 'security_deposit', 'admission_form', 'installment', 'monthly'];
+const STATUS_OPTS = ['Unpaid', 'Paid', 'Wave Off', 'Partial'];
+const INST_COUNTS = [1, 2, 3, 4];
 
-export default function FeesManagement() {
-    const [fees, setFees] = useState<any[]>([]);
-    const [students, setStudents] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [showForm, setShowForm] = useState(false);
-    const [editingFee, setEditingFee] = useState<any>(null);
-    const [selectedProgram, setSelectedProgram] = useState('all');
-    const [selectedStudent, setSelectedStudent] = useState<any>(null);
-    const [studentFees, setStudentFees] = useState<any[]>([]);
-    const [loadingStudentFees, setLoadingStudentFees] = useState(false);
+function fmt(n: any) { return '₹' + (parseFloat(n) || 0).toLocaleString('en-IN'); }
 
-    // Form state
-    const [formData, setFormData] = useState({
-        program_name: PROGRAMS[0],
-        fee_type: FEE_TYPES[0],
-        amount: '',
-        frequency: FREQUENCIES[0],
+// Match a student's program name against template keywords
+function matchTemplate(templates: any[], programName: string): any | null {
+    if (!programName) return null;
+    const name = programName.toLowerCase().trim();
+    for (const t of templates) {
+        const keywords: string[] = Array.isArray(t.match_keywords) ? t.match_keywords : [];
+        if (keywords.some(k => name.includes(k.toLowerCase().trim()) || k.toLowerCase().trim().includes(name))) return t;
+    }
+    return null;
+}
+
+// Detect program from online admission programs_selected array
+function detectProgramFromAdmission(programs: string[], templates: any[]): any | null {
+    for (const prog of (programs || [])) {
+        const match = matchTemplate(templates, prog);
+        if (match) return match;
+    }
+    return null;
+}
+
+function StatCard({ label, value, color, icon }: any) {
+    return (
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-100 dark:border-zinc-800 p-5 flex items-center gap-4">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
+                <span className="material-icons text-xl">{icon}</span>
+            </div>
+            <div>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">{label}</p>
+                <p className="text-xl font-black text-slate-800 dark:text-white mt-0.5">{value}</p>
+            </div>
+        </div>
+    );
+}
+
+// ── Template Form (create / edit) ──────────────────────────────────────
+function TemplateForm({ initial, onSave, onCancel }: { initial?: any; onSave: (data: any) => void; onCancel: () => void }) {
+    const [d, setD] = useState<any>(initial || {
+        template_name: '', program_type: 'preschool',
+        school_fees: '', registration_amount: '', registration_status: 'Unpaid',
+        security_deposit_amount: '', security_deposit_status: 'Unpaid',
+        admission_form_fee: '', admission_form_status: 'Unpaid',
+        num_installments: 1, monthly_fee: '', hours_opted: '',
+        match_keywords: [],
     });
+    const [kw, setKw] = useState('');
 
-    useEffect(() => {
-        fetchFees();
-        fetchStudents();
-    }, []);
+    const set = (f: string, v: any) => setD((p: any) => ({ ...p, [f]: v }));
+    const addKw = () => { if (kw.trim()) { set('match_keywords', [...(d.match_keywords || []), kw.trim()]); setKw(''); } };
+    const removeKw = (i: number) => set('match_keywords', d.match_keywords.filter((_: any, idx: number) => idx !== i));
+
+    return (
+        <div className="space-y-5">
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5 col-span-2">
+                    <label className="text-xs font-bold text-slate-500 uppercase">Template Name</label>
+                    <input className="w-full px-4 py-2.5 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm bg-slate-50 dark:bg-zinc-800 outline-none"
+                        placeholder="e.g. Toddler 2-3Yrs" value={d.template_name} onChange={e => set('template_name', e.target.value)} />
+                </div>
+
+                <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase">Program Type</label>
+                    <div className="flex gap-2">
+                        {(['preschool', 'daycare'] as const).map(pt => (
+                            <button key={pt} onClick={() => set('program_type', pt)}
+                                className={`flex-1 py-2.5 rounded-xl text-xs font-bold border-2 capitalize transition-all ${d.program_type === pt ? 'border-primary bg-primary text-white' : 'border-slate-200 text-slate-500'}`}>
+                                {pt}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {d.program_type === 'preschool' ? (
+                    <>
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 uppercase">School Fees</label>
+                            <div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">₹</span>
+                                <input type="number" className="w-full pl-7 pr-3 py-2.5 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm bg-slate-50 dark:bg-zinc-800 outline-none" value={d.school_fees} onChange={e => set('school_fees', e.target.value)} /></div>
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 uppercase">No. of Installments</label>
+                            <div className="flex gap-2">
+                                {INST_COUNTS.map(n => (
+                                    <button key={n} onClick={() => set('num_installments', n)}
+                                        className={`flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${d.num_installments === n ? 'border-primary bg-primary text-white' : 'border-slate-200 text-slate-500'}`}>{n}</button>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 uppercase">Monthly Fee (incl. tax)</label>
+                            <div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">₹</span>
+                                <input type="number" className="w-full pl-7 pr-3 py-2.5 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm bg-slate-50 dark:bg-zinc-800 outline-none" value={d.monthly_fee} onChange={e => set('monthly_fee', e.target.value)} /></div>
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 uppercase">Hours Opted</label>
+                            <input type="text" placeholder="e.g. 6" className="w-full px-4 py-2.5 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm bg-slate-50 dark:bg-zinc-800 outline-none" value={d.hours_opted} onChange={e => set('hours_opted', e.target.value)} />
+                        </div>
+                    </>
+                )}
+            </div>
+
+            <p className="text-xs font-black text-slate-500 uppercase tracking-wide">One-Time Fees</p>
+            <div className="space-y-3">
+                {[
+                    { label: 'Registration', f: 'registration_amount', sf: 'registration_status' },
+                    { label: 'Security Deposit', f: 'security_deposit_amount', sf: 'security_deposit_status' },
+                    { label: 'Admission Form Fee', f: 'admission_form_fee', sf: 'admission_form_status' },
+                ].map(({ label, f, sf }) => (
+                    <div key={f} className="flex items-center gap-3">
+                        <label className="text-xs font-bold text-slate-500 w-36 shrink-0">{label}</label>
+                        <div className="relative flex-1"><span className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-xs">₹</span>
+                            <input type="number" className="w-full pl-5 pr-2 py-2 border border-slate-200 dark:border-zinc-700 rounded-lg text-xs bg-slate-50 dark:bg-zinc-800 outline-none" value={d[f] || ''} onChange={e => set(f, e.target.value)} /></div>
+                        <select className="border border-slate-200 dark:border-zinc-700 rounded-lg px-2 py-2 text-xs bg-slate-50 dark:bg-zinc-800 outline-none" value={d[sf] || 'Unpaid'} onChange={e => set(sf, e.target.value)}>
+                            {STATUS_OPTS.map(s => <option key={s}>{s}</option>)}
+                        </select>
+                    </div>
+                ))}
+            </div>
+
+            <div className="space-y-2">
+                <label className="text-xs font-black text-slate-500 uppercase tracking-wide">Match Keywords</label>
+                <p className="text-xs text-slate-400">Keywords used to auto-match this template when a student's program name is selected.</p>
+                <div className="flex flex-wrap gap-2 min-h-8">
+                    {(d.match_keywords || []).map((k: string, i: number) => (
+                        <span key={i} className="flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">
+                            {k}
+                            <button onClick={() => removeKw(i)} className="ml-1 text-primary/50 hover:text-red-500 transition-colors">×</button>
+                        </span>
+                    ))}
+                </div>
+                <div className="flex gap-2">
+                    <input className="flex-1 px-3 py-2 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm bg-slate-50 dark:bg-zinc-800 outline-none"
+                        placeholder='e.g. "Toddler", "Toddler 2-3"'
+                        value={kw} onChange={e => setKw(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && addKw()} />
+                    <button onClick={addKw} className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-lime-600 transition-all">Add</button>
+                </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2">
+                <button onClick={onCancel} className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50 transition-all">Cancel</button>
+                <button onClick={() => onSave(d)} disabled={!d.template_name}
+                    className="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-lime-600 disabled:opacity-40 transition-all">
+                    {initial ? 'Update Template' : 'Save Template'}
+                </button>
+            </div>
+        </div>
+    );
+}
+
+// ── Main Page ──────────────────────────────────────────────────────────
+export default function FeesPage() {
+    const [tab, setTab] = useState<'fees' | 'templates'>('fees');
+    const [feeTab, setFeeTab] = useState<'all' | 'preschool' | 'daycare' | 'overdue' | 'waivers'>('all');
+    const [academicYears, setAcademicYears] = useState<any[]>([]);
+    const [selectedYear, setSelectedYear] = useState<any>(null);
+    const [fees, setFees] = useState<any[]>([]);
+    const [templates, setTemplates] = useState<any[]>([]);
+    const [enrollments, setEnrollments] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [migrated, setMigrated] = useState(false);
+    const [migrating, setMigrating] = useState(false);
+    const [search, setSearch] = useState('');
+
+    // Template management
+    const [showTemplateForm, setShowTemplateForm] = useState(false);
+    const [editingTemplate, setEditingTemplate] = useState<any>(null);
+
+    // Add Fee Plan modal
+    const [showAdd, setShowAdd] = useState(false);
+    const [addStep, setAddStep] = useState(1);
+    const [addData, setAddData] = useState<any>({});
+    const [matchedTemplate, setMatchedTemplate] = useState<any>(null);
+    const [adding, setAdding] = useState(false);
+    const [addError, setAddError] = useState('');
+
+    // Bulk create modal
+    const [showBulk, setShowBulk] = useState(false);
+    const [bulkPreview, setBulkPreview] = useState<any>(null);
+    const [bulkLoading, setBulkLoading] = useState(false);
+    const [bulkCreating, setBulkCreating] = useState(false);
+    const [bulkResult, setBulkResult] = useState<any>(null);
+
+    // Waiver modal
+    const [showWaiver, setShowWaiver] = useState(false);
+    const [waiverFee, setWaiverFee] = useState<any>(null);
+    const [waiverData, setWaiverData] = useState<any>({ waiver_type: 'Manual', apply_on: 'total', amount: '', percentage: '', reason: '', approved_by: '' });
+    const [savingWaiver, setSavingWaiver] = useState(false);
+
+    // New year modal
+    const [showNewYear, setShowNewYear] = useState(false);
+    const [newYear, setNewYear] = useState({ year_label: '', start_date: '', end_date: '' });
+
+    useEffect(() => { runInit(); }, []);
+    useEffect(() => { if (selectedYear) fetchFees(); }, [selectedYear, feeTab]);
+
+    const runInit = async () => {
+        await Promise.all([fetchYears(), fetchTemplates()]);
+        setLoading(false);
+    };
+
+    const runMigration = async () => {
+        setMigrating(true);
+        await fetch('/api/admin/fees/migrate');
+        setMigrating(false);
+        setMigrated(true);
+        fetchYears();
+        fetchTemplates();
+    };
+
+    const fetchYears = async () => {
+        try {
+            const res = await fetch('/api/admin/fees/academic-years');
+            if (res.ok) {
+                const data = await res.json();
+                setAcademicYears(data);
+                if (data.length > 0) setSelectedYear(data.find((y: any) => y.status === 'active') || data[0]);
+            }
+        } catch {}
+    };
+
+    const fetchTemplates = async () => {
+        try {
+            const res = await fetch('/api/admin/fees/templates');
+            if (res.ok) setTemplates(await res.json());
+        } catch {}
+    };
 
     const fetchFees = async () => {
+        if (!selectedYear) return;
+        setLoading(true);
         try {
-            const res = await fetch('/api/admin/fees');
+            const typeParam = ['all', 'overdue', 'waivers'].includes(feeTab) ? 'all' : feeTab;
+            const res = await fetch(`/api/admin/fees?year_id=${selectedYear.id}&type=${typeParam}`);
             if (res.ok) setFees(await res.json());
-        } catch (err) {
-        } finally {
-            setLoading(false);
-        }
+        } finally { setLoading(false); }
     };
 
-    const fetchStudents = async () => {
-        try {
-            const res = await fetch('/api/admin/admissions?status=approved');
-            if (res.ok) setStudents(await res.json());
-        } catch (err) {
-        }
+    const fetchEnrollments = async () => {
+        const [psRes, dcRes] = await Promise.all([
+            fetch('/api/admin/enrollment?type=preschool'),
+            fetch('/api/admin/enrollment?type=daycare'),
+        ]);
+        const ps = psRes.ok ? await psRes.json() : [];
+        const dc = dcRes.ok ? await dcRes.json() : [];
+        setEnrollments([...ps, ...dc]);
     };
 
-    const fetchStudentFees = async (admissionId: number) => {
-        setLoadingStudentFees(true);
-        try {
-            const res = await fetch(`/api/admin/fees?admission_id=${admissionId}`);
-            if (res.ok) setStudentFees(await res.json());
-        } catch (err) {
-        } finally {
-            setLoadingStudentFees(false);
-        }
+    // When student is selected — auto-match template
+    const onStudentSelect = (enrollmentId: string) => {
+        const student = enrollments.find(e => String(e.id) === enrollmentId);
+        if (!student) return;
+
+        // Build program string for matching
+        const programStr = student.program_name || student.slot || student.hours_opted || student.program_type || '';
+        const matched = matchTemplate(templates, programStr);
+
+        setMatchedTemplate(matched || null);
+
+        // Pre-fill from matched template or sensible defaults
+        const t = matched || {};
+        setAddData({
+            enrollment_id: enrollmentId,
+            academic_year_id: selectedYear?.id,
+            program_type: matched?.program_type || student.program_type || 'preschool',
+            template_id: matched?.id || null,
+            school_fees: t.school_fees || '',
+            num_installments: t.num_installments || 1,
+            installments: Array.from({ length: t.num_installments || 1 }, (_, i) => ({ no: i + 1, amount: '', due_date: '' })),
+            monthly_fee: t.monthly_fee || '',
+            hours_opted: t.hours_opted || student.hours_opted || '',
+            registration_amount: t.registration_amount || '',
+            registration_status: t.registration_status || 'Unpaid',
+            security_deposit_amount: t.security_deposit_amount || '',
+            security_deposit_status: t.security_deposit_status || 'Unpaid',
+            admission_form_fee: t.admission_form_fee || '',
+            admission_form_status: t.admission_form_status || 'Unpaid',
+        });
     };
 
-    const handleSubmit = async () => {
+    const onTemplateChange = (templateId: string) => {
+        const t = templates.find(tp => String(tp.id) === templateId);
+        if (!t) return;
+        setMatchedTemplate(t);
+        setAddData((p: any) => ({
+            ...p,
+            program_type: t.program_type,
+            template_id: t.id,
+            school_fees: t.school_fees || '',
+            num_installments: t.num_installments || 1,
+            installments: Array.from({ length: t.num_installments || 1 }, (_, i) => ({ no: i + 1, amount: p.installments?.[i]?.amount || '', due_date: p.installments?.[i]?.due_date || '' })),
+            monthly_fee: t.monthly_fee || '',
+            hours_opted: t.hours_opted || p.hours_opted || '',
+            registration_amount: t.registration_amount || '',
+            registration_status: t.registration_status || 'Unpaid',
+            security_deposit_amount: t.security_deposit_amount || '',
+            security_deposit_status: t.security_deposit_status || 'Unpaid',
+            admission_form_fee: t.admission_form_fee || '',
+            admission_form_status: t.admission_form_status || 'Unpaid',
+        }));
+    };
+
+    const setAddField = (field: string, value: any) => setAddData((p: any) => ({ ...p, [field]: value }));
+
+    const updateInstallments = (count: number) => {
+        const insts = Array.from({ length: count }, (_, i) => ({
+            no: i + 1,
+            amount: addData.installments?.[i]?.amount || '',
+            due_date: addData.installments?.[i]?.due_date || '',
+        }));
+        setAddData((p: any) => ({ ...p, num_installments: count, installments: insts }));
+    };
+
+    const openAddModal = async () => {
+        await fetchEnrollments();
+        setAddData({ academic_year_id: selectedYear?.id, num_installments: 1, installments: [{ no: 1, amount: '', due_date: '' }] });
+        setMatchedTemplate(null);
+        setAddStep(1);
+        setAddError('');
+        setShowAdd(true);
+    };
+
+    const submitFeePlan = async () => {
+        setAdding(true);
+        setAddError('');
         try {
-            const payload = editingFee ? { ...formData, id: editingFee.id } : formData;
+            const total = addData.program_type === 'preschool'
+                ? parseFloat(addData.school_fees || 0)
+                : parseFloat(addData.monthly_fee || 0) * 12;
             const res = await fetch('/api/admin/fees', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
+                body: JSON.stringify({ ...addData, total_amount: total }),
             });
-            if (res.ok) {
-                fetchFees();
-                resetForm();
-            }
-        } catch (err) {
-        }
+            const data = await res.json();
+            if (!res.ok) { setAddError(data.error || 'Failed'); return; }
+            setShowAdd(false);
+            fetchFees();
+            if (data.id) window.location.href = `/admin/fees/${data.id}`;
+        } finally { setAdding(false); }
     };
 
-    const handleDelete = async (id: number) => {
+    // Template CRUD
+    const openBulkCreate = async () => {
+        if (!selectedYear) return;
+        setBulkResult(null);
+        setBulkPreview(null);
+        setShowBulk(true);
+        setBulkLoading(true);
         try {
-            const res = await fetch(`/api/admin/fees?id=${id}`, { method: 'DELETE' });
-            if (res.ok) fetchFees();
-        } catch (err) {
-        }
+            const res = await fetch(`/api/admin/fees/bulk-create?year_id=${selectedYear.id}`);
+            if (res.ok) setBulkPreview(await res.json());
+        } finally { setBulkLoading(false); }
     };
 
-    const handleEdit = (fee: any) => {
-        setEditingFee(fee);
-        setFormData({
-            program_name: fee.program_name,
-            fee_type: fee.fee_type,
-            amount: fee.amount,
-            frequency: fee.frequency,
-        });
-        setShowForm(true);
-    };
-
-    const resetForm = () => {
-        setShowForm(false);
-        setEditingFee(null);
-        setFormData({ program_name: PROGRAMS[0], fee_type: FEE_TYPES[0], amount: '', frequency: FREQUENCIES[0] });
-    };
-
-    const markAsPaid = async (studentFeeId: number) => {
+    const runBulkCreate = async () => {
+        if (!selectedYear) return;
+        setBulkCreating(true);
         try {
-            const res = await fetch('/api/admin/fees', {
-                method: 'PATCH',
+            const res = await fetch('/api/admin/fees/bulk-create', {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'update_status',
-                    student_fee_id: studentFeeId,
-                    status: 'paid',
-                    paid_date: new Date().toISOString().split('T')[0],
-                }),
+                body: JSON.stringify({ year_id: selectedYear.id, skip_unmatched: true }),
             });
-            if (res.ok && selectedStudent) {
-                fetchStudentFees(selectedStudent.id);
-            }
-        } catch (err) {
-        }
+            const data = await res.json();
+            setBulkResult(data);
+            fetchFees();
+        } finally { setBulkCreating(false); }
     };
 
-    const filteredFees = selectedProgram === 'all' ? fees : fees.filter(f => f.program_name === selectedProgram);
+    const saveTemplate = async (data: any) => {
+        const method = editingTemplate ? 'PATCH' : 'POST';
+        const body = editingTemplate ? { id: editingTemplate.id, ...data } : data;
+        await fetch('/api/admin/fees/templates', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        setShowTemplateForm(false);
+        setEditingTemplate(null);
+        fetchTemplates();
+    };
 
-    // Group fees by program
-    const groupedFees: Record<string, any[]> = {};
-    filteredFees.forEach(f => {
-        if (!groupedFees[f.program_name]) groupedFees[f.program_name] = [];
-        groupedFees[f.program_name].push(f);
+    const deleteTemplate = async (id: number) => {
+        if (!confirm('Delete this template?')) return;
+        await fetch(`/api/admin/fees/templates?id=${id}`, { method: 'DELETE' });
+        fetchTemplates();
+    };
+
+    const submitWaiver = async () => {
+        setSavingWaiver(true);
+        try {
+            await fetch('/api/admin/fees/waiver', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ student_fee_id: waiverFee.id, ...waiverData }) });
+            setShowWaiver(false);
+            fetchFees();
+        } finally { setSavingWaiver(false); }
+    };
+
+    const createYear = async () => {
+        await fetch('/api/admin/fees/academic-years', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newYear) });
+        setShowNewYear(false);
+        fetchYears();
+    };
+
+    const filtered = fees.filter(f => {
+        const s = f.child_name?.toLowerCase().includes(search.toLowerCase()) || f.unique_id?.toLowerCase().includes(search.toLowerCase());
+        if (feeTab === 'overdue') return s && parseFloat(f.total_due) > 0;
+        if (feeTab === 'waivers') return s && parseFloat(f.total_waiver) > 0;
+        return s;
     });
 
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
-    };
+    const totalBilled = fees.reduce((s, f) => s + parseFloat(f.total_amount || 0), 0);
+    const totalCollected = fees.reduce((s, f) => s + parseFloat(f.total_paid || 0), 0);
+    const totalDue = fees.reduce((s, f) => s + parseFloat(f.total_due || 0), 0);
+    const totalWaiver = fees.reduce((s, f) => s + parseFloat(f.total_waiver || 0), 0);
+
+    const selectedStudent = enrollments.find(e => String(e.id) === String(addData.enrollment_id));
 
     return (
-        <div className="space-y-10 animate-in fade-in duration-500">
+        <div className="space-y-6">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">Fee Management</h2>
-                    <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-[10px] mt-2 flex items-center gap-2">
-                        <span className="inline-block w-4 h-[2px] bg-primary"></span>
-                        Set Fees per Programme
-                    </p>
+                    <h1 className="text-2xl font-black text-slate-800 dark:text-white">Fee Management</h1>
+                    <p className="text-sm text-slate-500 mt-1">Academic year-wise fee tracking for Preschool & Daycare</p>
                 </div>
-                <button
-                    onClick={() => { resetForm(); setShowForm(true); }}
-                    className="bg-primary hover:bg-lime-600 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl shadow-primary/30 transition-all hover:-translate-y-1"
-                >
-                    <span className="material-icons text-xl">add</span>
-                    Add Fee
-                </button>
+                <div className="flex gap-3 flex-wrap">
+                    <button onClick={runMigration} disabled={migrating || migrated}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-bold disabled:opacity-50 transition-all">
+                        <span className="material-icons text-sm">storage</span>
+                        {migrating ? 'Setting up...' : migrated ? 'DB Ready ✓' : 'Setup DB'}
+                    </button>
+                    {tab === 'fees' && (
+                        <>
+                            <button onClick={openBulkCreate}
+                                className="flex items-center gap-2 px-5 py-2 bg-amber-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-amber-200 hover:bg-amber-600 transition-all">
+                                <span className="material-icons text-sm">auto_awesome</span>Bulk Create
+                            </button>
+                            <button onClick={openAddModal}
+                                className="flex items-center gap-2 px-5 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-lime-600 transition-all">
+                                <span className="material-icons text-sm">add</span>Add Fee Plan
+                            </button>
+                        </>
+                    )}
+                    {tab === 'templates' && (
+                        <button onClick={() => { setEditingTemplate(null); setShowTemplateForm(true); }}
+                            className="flex items-center gap-2 px-5 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-lime-600 transition-all">
+                            <span className="material-icons text-sm">add</span>New Template
+                        </button>
+                    )}
+                </div>
             </div>
 
-            {/* Program Filter */}
-            <div className="flex flex-wrap gap-2 lg:gap-3">
-                <button
-                    onClick={() => setSelectedProgram('all')}
-                    className={`px-4 lg:px-6 py-2.5 lg:py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${selectedProgram === 'all' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white dark:bg-zinc-800 text-slate-400 hover:text-primary border border-slate-100 dark:border-zinc-700'}`}
-                >
-                    All
-                </button>
-                {PROGRAMS.map(p => (
-                    <button
-                        key={p}
-                        onClick={() => setSelectedProgram(p)}
-                        className={`px-4 lg:px-6 py-2.5 lg:py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${selectedProgram === p ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white dark:bg-zinc-800 text-slate-400 hover:text-primary border border-slate-100 dark:border-zinc-700'}`}
-                    >
-                        {p}
+            {/* Main tab switcher */}
+            <div className="flex bg-slate-100 dark:bg-zinc-800 rounded-xl p-1 w-fit">
+                {(['fees', 'templates'] as const).map(t => (
+                    <button key={t} onClick={() => setTab(t)}
+                        className={`px-6 py-2 rounded-lg text-sm font-bold capitalize transition-all ${tab === t ? 'bg-white dark:bg-zinc-700 text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
+                        {t === 'fees' ? '📋 Fee Plans' : '🗂 Templates'}
                     </button>
                 ))}
             </div>
 
-            {/* Fee Cards by Program */}
-            {loading ? (
-                <div className="flex items-center justify-center py-20">
-                    <span className="material-icons animate-spin text-4xl text-primary">sync</span>
-                </div>
-            ) : Object.keys(groupedFees).length === 0 ? (
-                <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800 shadow-xl p-20 text-center">
-                    <span className="material-icons text-[80px] text-slate-200 dark:text-zinc-700">account_balance_wallet</span>
-                    <p className="mt-6 text-slate-400 font-black uppercase tracking-widest text-sm">No fees configured yet</p>
-                    <p className="mt-2 text-slate-300 text-xs font-bold uppercase tracking-widest">Add fee structures for each programme</p>
-                </div>
-            ) : (
-                <div className="space-y-8">
-                    {Object.entries(groupedFees).map(([program, programFees]) => (
-                        <div key={program} className="bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800 shadow-2xl shadow-slate-200/50 dark:shadow-none overflow-hidden">
-                            <div className="p-8 border-b border-slate-50 dark:border-zinc-800 flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                                        <span className="material-icons text-primary text-xl">school</span>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">{program}</h3>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{programFees.length} fee item{programFees.length > 1 ? 's' : ''}</p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total (One-time)</p>
-                                    <p className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
-                                        {formatCurrency(programFees.filter((f: any) => f.frequency === 'one-time').reduce((sum: number, f: any) => sum + Number(f.amount), 0))}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="divide-y divide-slate-50 dark:divide-zinc-800">
-                                {programFees.map((fee: any) => (
-                                    <div key={fee.id} className="px-8 py-5 flex items-center justify-between group hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                                        <div className="flex items-center gap-5">
-                                            <div className="size-10 rounded-xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-400">
-                                                <span className="material-icons text-lg">
-                                                    {fee.fee_type === 'Registration' ? 'app_registration' :
-                                                     fee.fee_type === 'Tuition' ? 'menu_book' :
-                                                     fee.fee_type === 'Activity' ? 'sports_soccer' :
-                                                     fee.fee_type === 'Material' ? 'inventory_2' :
-                                                     fee.fee_type === 'Transport' ? 'directions_bus' : 'receipt'}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-tight">{fee.fee_type}</p>
-                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{fee.frequency}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <p className="text-lg font-black text-slate-900 dark:text-white tracking-tight">{formatCurrency(fee.amount)}</p>
-                                            <button
-                                                onClick={() => handleEdit(fee)}
-                                                className="size-9 rounded-xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all opacity-0 group-hover:opacity-100"
-                                            >
-                                                <span className="material-icons text-base">edit</span>
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(fee.id)}
-                                                className="size-9 rounded-xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-400 hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"
-                                            >
-                                                <span className="material-icons text-base">delete</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+            {/* ═══════════════ TEMPLATES TAB ═══════════════ */}
+            {tab === 'templates' && (
+                <div className="space-y-4">
+                    {showTemplateForm ? (
+                        <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-100 dark:border-zinc-800 p-6">
+                            <h2 className="text-sm font-black text-slate-700 dark:text-white uppercase tracking-widest mb-5">
+                                {editingTemplate ? 'Edit Template' : 'New Template'}
+                            </h2>
+                            <TemplateForm
+                                initial={editingTemplate}
+                                onSave={saveTemplate}
+                                onCancel={() => { setShowTemplateForm(false); setEditingTemplate(null); }}
+                            />
                         </div>
-                    ))}
+                    ) : (
+                        <>
+                            {templates.length === 0 ? (
+                                <div className="text-center py-20 bg-white dark:bg-zinc-900 rounded-2xl border border-slate-100 dark:border-zinc-800">
+                                    <span className="material-icons text-5xl text-slate-200 block mb-3">library_books</span>
+                                    <p className="font-bold text-slate-400">No templates yet</p>
+                                    <p className="text-sm text-slate-400 mt-1">Create templates to auto-fill fee amounts when adding a plan</p>
+                                    <button onClick={() => setShowTemplateForm(true)}
+                                        className="mt-4 px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-lime-600 transition-all">
+                                        + Create First Template
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                    {templates.map(t => (
+                                        <div key={t.id} className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-100 dark:border-zinc-800 p-5 space-y-3">
+                                            <div className="flex items-start justify-between">
+                                                <div>
+                                                    <h3 className="font-black text-slate-800 dark:text-white">{t.template_name}</h3>
+                                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${t.program_type === 'preschool' ? 'bg-violet-100 text-violet-700' : 'bg-blue-100 text-blue-700'}`}>
+                                                        {t.program_type}
+                                                    </span>
+                                                </div>
+                                                <div className="flex gap-1.5">
+                                                    <button onClick={() => { setEditingTemplate(t); setShowTemplateForm(true); }}
+                                                        className="size-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-400 hover:text-primary transition-all">
+                                                        <span className="material-icons text-sm">edit</span>
+                                                    </button>
+                                                    <button onClick={() => deleteTemplate(t.id)}
+                                                        className="size-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-all">
+                                                        <span className="material-icons text-sm">delete</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-2 text-xs">
+                                                {t.program_type === 'preschool' ? (
+                                                    <>
+                                                        <div><span className="text-slate-400">School Fees</span><p className="font-bold text-slate-700 dark:text-slate-200">{fmt(t.school_fees)}</p></div>
+                                                        <div><span className="text-slate-400">Installments</span><p className="font-bold text-slate-700 dark:text-slate-200">{t.num_installments}</p></div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div><span className="text-slate-400">Monthly Fee</span><p className="font-bold text-slate-700 dark:text-slate-200">{fmt(t.monthly_fee)}</p></div>
+                                                        <div><span className="text-slate-400">Hours</span><p className="font-bold text-slate-700 dark:text-slate-200">{t.hours_opted || '—'}</p></div>
+                                                    </>
+                                                )}
+                                                <div><span className="text-slate-400">Registration</span><p className="font-bold text-slate-700 dark:text-slate-200">{fmt(t.registration_amount)}</p></div>
+                                                <div><span className="text-slate-400">Security Dep.</span><p className="font-bold text-slate-700 dark:text-slate-200">{fmt(t.security_deposit_amount)}</p></div>
+                                            </div>
+
+                                            {(t.match_keywords || []).length > 0 && (
+                                                <div className="flex flex-wrap gap-1.5 pt-1 border-t border-slate-100 dark:border-zinc-800">
+                                                    {(t.match_keywords || []).map((k: string, i: number) => (
+                                                        <span key={i} className="px-2 py-0.5 bg-slate-100 dark:bg-zinc-800 text-slate-500 text-[10px] rounded-full font-bold">{k}</span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             )}
 
-            {/* Student Fee Status */}
-            <div className="space-y-6">
-                <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">Student Fee Status</h3>
-                <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800 shadow-2xl shadow-slate-200/50 dark:shadow-none overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead>
-                                <tr className="bg-slate-50/50 dark:bg-zinc-800/50 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                                    <th className="px-8 py-5">Student</th>
-                                    <th className="px-8 py-5">Programme</th>
-                                    <th className="px-8 py-5">Fee Status</th>
-                                    <th className="px-8 py-5 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-50 dark:divide-zinc-800">
-                                {students.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={4} className="px-8 py-16 text-center text-slate-300 font-black uppercase tracking-widest text-sm">
-                                            No approved students
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    students.map(student => (
-                                        <tr
-                                            key={student.id}
-                                            onClick={() => { setSelectedStudent(student); fetchStudentFees(student.id); }}
-                                            className="hover:bg-slate-50/80 dark:hover:bg-zinc-800/30 transition-colors cursor-pointer"
-                                        >
-                                            <td className="px-8 py-5">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="size-10 bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-slate-100 dark:border-zinc-700 flex items-center justify-center overflow-hidden">
-                                                        {student.child_photo ? (
-                                                            <img src={student.child_photo} className="w-full h-full object-cover" alt="" />
-                                                        ) : (
-                                                            <span className="material-icons text-xl text-slate-200">face</span>
-                                                        )}
+            {/* ═══════════════ FEE PLANS TAB ═══════════════ */}
+            {tab === 'fees' && (
+                <>
+                    {/* Academic Year Bar */}
+                    <div className="flex items-center gap-3 flex-wrap">
+                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Academic Year:</span>
+                        {academicYears.map(y => (
+                            <button key={y.id} onClick={() => setSelectedYear(y)}
+                                className={`px-4 py-2 rounded-xl text-sm font-bold border-2 transition-all ${selectedYear?.id === y.id ? 'border-primary bg-primary/5 text-primary' : 'border-slate-200 text-slate-500 hover:border-primary/40'}`}>
+                                {y.year_label}
+                                {y.status === 'active' && <span className="ml-2 px-1.5 py-0.5 bg-green-100 text-green-600 text-[9px] rounded-full font-black">ACTIVE</span>}
+                            </button>
+                        ))}
+                        <button onClick={() => setShowNewYear(true)}
+                            className="flex items-center gap-1 px-3 py-2 rounded-xl border-2 border-dashed border-slate-300 text-slate-400 text-sm hover:border-primary hover:text-primary transition-all">
+                            <span className="material-icons text-sm">add</span> New Year
+                        </button>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <StatCard label="Total Billed" value={fmt(totalBilled)} color="bg-blue-50 text-blue-600" icon="receipt_long" />
+                        <StatCard label="Collected" value={fmt(totalCollected)} color="bg-green-50 text-green-600" icon="check_circle" />
+                        <StatCard label="Outstanding" value={fmt(totalDue)} color="bg-red-50 text-red-600" icon="warning" />
+                        <StatCard label="Waivers" value={fmt(totalWaiver)} color="bg-purple-50 text-purple-600" icon="loyalty" />
+                    </div>
+
+                    {/* Fee Plans Table */}
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-100 dark:border-zinc-800 overflow-hidden">
+                        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-zinc-800 gap-4 flex-wrap">
+                            <div className="flex bg-slate-100 dark:bg-zinc-800 rounded-xl p-1 gap-0.5">
+                                {(['all', 'preschool', 'daycare', 'overdue', 'waivers'] as const).map(t => (
+                                    <button key={t} onClick={() => setFeeTab(t)}
+                                        className={`px-4 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${feeTab === t ? 'bg-white dark:bg-zinc-700 text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
+                                        {t === 'overdue' ? '⚠ Overdue' : t}
+                                    </button>
+                                ))}
+                            </div>
+                            <input type="text" placeholder="Search name or ID..." value={search} onChange={e => setSearch(e.target.value)}
+                                className="border border-slate-200 dark:border-zinc-700 rounded-xl px-4 py-2 text-sm bg-slate-50 dark:bg-zinc-800 outline-none w-52" />
+                        </div>
+                        {loading ? (
+                            <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div></div>
+                        ) : filtered.length === 0 ? (
+                            <div className="text-center py-20 text-slate-400">
+                                <span className="material-icons text-5xl block mb-3">account_balance_wallet</span>
+                                <p className="font-bold">No fee plans found</p>
+                                <p className="text-sm mt-1">Click "Add Fee Plan" to get started · Run Setup DB first if needed</p>
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                    <thead className="bg-slate-50 dark:bg-zinc-800/50">
+                                        <tr>{['Student', 'Program', 'Year', 'Total', 'Paid', 'Due', 'Waiver', 'Actions'].map(h => (
+                                            <th key={h} className="text-left px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">{h}</th>
+                                        ))}</tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
+                                        {filtered.map(f => (
+                                            <tr key={f.id} className="hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors">
+                                                <td className="px-5 py-4"><p className="font-bold text-slate-800 dark:text-white">{f.child_name}</p><p className="text-xs text-slate-400 font-mono">{f.unique_id}</p></td>
+                                                <td className="px-5 py-4"><span className={`px-2 py-0.5 rounded-full text-xs font-bold ${f.program_type === 'preschool' ? 'bg-violet-100 text-violet-700' : 'bg-blue-100 text-blue-700'}`}>{f.program_type === 'preschool' ? 'Preschool' : 'Daycare'}</span></td>
+                                                <td className="px-5 py-4 text-sm text-slate-600 font-bold">{f.year_label}</td>
+                                                <td className="px-5 py-4 font-semibold">{fmt(f.total_amount)}</td>
+                                                <td className="px-5 py-4 font-semibold text-green-600">{fmt(f.total_paid)}</td>
+                                                <td className="px-5 py-4">{parseFloat(f.total_due) > 0 ? <span className="font-bold text-red-600">{fmt(f.total_due)}</span> : <span className="text-green-600 font-bold text-xs">Cleared ✓</span>}</td>
+                                                <td className="px-5 py-4 text-purple-600 font-semibold">{parseFloat(f.total_waiver) > 0 ? fmt(f.total_waiver) : '—'}</td>
+                                                <td className="px-5 py-4">
+                                                    <div className="flex gap-2">
+                                                        <Link href={`/admin/fees/${f.id}`} className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-all">
+                                                            <span className="material-icons text-sm">open_in_new</span>Manage
+                                                        </Link>
+                                                        <button onClick={() => { setWaiverFee(f); setWaiverData({ waiver_type: 'Manual', apply_on: 'total', amount: '', percentage: '', reason: '', approved_by: '' }); setShowWaiver(true); }}
+                                                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-50 text-purple-600 text-xs font-bold hover:bg-purple-100 transition-all">
+                                                            <span className="material-icons text-sm">loyalty</span>Waiver
+                                                        </button>
                                                     </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* ══ ADD FEE PLAN MODAL (2-step with template auto-match) ══ */}
+            {showAdd && (
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
+                        <div className="p-6 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+                            <div><h2 className="text-lg font-black text-slate-800 dark:text-white">Add Fee Plan</h2>
+                                <p className="text-xs text-slate-400 mt-0.5">Step {addStep} of 2</p></div>
+                            <button onClick={() => setShowAdd(false)} className="size-9 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800">
+                                <span className="material-icons text-slate-400">close</span>
+                            </button>
+                        </div>
+                        <div className="flex px-6 pt-4 gap-2">
+                            {[1, 2].map(s => <div key={s} className={`flex-1 h-1.5 rounded-full transition-all ${addStep >= s ? 'bg-primary' : 'bg-slate-200'}`} />)}
+                        </div>
+
+                        <div className="p-6 space-y-5">
+                            {/* Step 1: Student + Year + Template auto-match */}
+                            {addStep === 1 && (
+                                <>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-slate-500 uppercase">Select Student</label>
+                                        <select className="w-full border border-slate-200 dark:border-zinc-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-zinc-800 outline-none"
+                                            value={addData.enrollment_id || ''}
+                                            onChange={e => onStudentSelect(e.target.value)}>
+                                            <option value="">Choose student...</option>
+                                            {enrollments.map(e => (
+                                                <option key={e.id} value={e.id}>
+                                                    {e.child_name} ({e.unique_id || 'No ID'}) — {e.program_name || e.program_type}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Template match result */}
+                                    {addData.enrollment_id && (
+                                        <div className={`p-4 rounded-xl border-2 ${matchedTemplate ? 'border-green-200 bg-green-50 dark:bg-green-900/10' : 'border-amber-200 bg-amber-50 dark:bg-amber-900/10'}`}>
+                                            {matchedTemplate ? (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="material-icons text-green-500 text-lg">auto_awesome</span>
                                                     <div>
-                                                        <p className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-tight">{student.child_name}</p>
-                                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{student.unique_id || 'No ID'}</p>
+                                                        <p className="text-sm font-black text-green-700">Template matched: {matchedTemplate.template_name}</p>
+                                                        <p className="text-xs text-green-600">Fee amounts pre-filled. You can adjust in Step 2.</p>
                                                     </div>
                                                 </div>
-                                            </td>
-                                            <td className="px-8 py-5">
-                                                <div className="flex flex-wrap gap-1.5">
-                                                    {student.programs_selected?.map((p: string) => (
-                                                        <span key={p} className="text-[9px] font-black bg-primary/5 text-primary px-2.5 py-1 rounded-lg uppercase tracking-widest border border-primary/10">{p}</span>
-                                                    ))}
+                                            ) : (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="material-icons text-amber-500 text-lg">warning</span>
+                                                    <p className="text-sm font-bold text-amber-700">No template matched. Select one manually or fill amounts in Step 2.</p>
                                                 </div>
-                                            </td>
-                                            <td className="px-8 py-5">
-                                                <span className="text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-widest bg-amber-50 text-amber-600 border border-amber-100">
-                                                    Pending
-                                                </span>
-                                            </td>
-                                            <td className="px-8 py-5 text-right">
-                                                <button className="size-9 rounded-xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all ml-auto">
-                                                    <span className="material-icons text-base">visibility</span>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Manual template override */}
+                                    {addData.enrollment_id && (
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold text-slate-500 uppercase">Override Template (optional)</label>
+                                            <select className="w-full border border-slate-200 dark:border-zinc-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-zinc-800 outline-none"
+                                                value={addData.template_id || ''}
+                                                onChange={e => onTemplateChange(e.target.value)}>
+                                                <option value="">— Use auto-matched —</option>
+                                                {templates.map(t => (
+                                                    <option key={t.id} value={t.id}>{t.template_name} ({t.program_type})</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-slate-500 uppercase">Academic Year</label>
+                                        <select className="w-full border border-slate-200 dark:border-zinc-700 rounded-xl px-4 py-2.5 text-sm bg-slate-50 dark:bg-zinc-800 outline-none"
+                                            value={addData.academic_year_id || ''}
+                                            onChange={e => setAddField('academic_year_id', e.target.value)}>
+                                            {academicYears.map(y => (
+                                                <option key={y.id} value={y.id}>{y.year_label}{y.status === 'active' ? ' (Active)' : ''}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Step 2: Review & adjust fee amounts */}
+                            {addStep === 2 && (
+                                <div className="space-y-5">
+                                    {/* Student + program info banner */}
+                                    <div className="p-4 bg-slate-50 dark:bg-zinc-800/50 rounded-xl flex items-center justify-between">
+                                        <div>
+                                            <p className="font-black text-slate-800 dark:text-white">{selectedStudent?.child_name}</p>
+                                            <p className="text-xs text-slate-500">{selectedStudent?.program_name || selectedStudent?.program_type}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            {(['preschool', 'daycare'] as const).map(pt => (
+                                                <button key={pt} onClick={() => setAddField('program_type', pt)}
+                                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold border-2 capitalize transition-all ${addData.program_type === pt ? 'border-primary bg-primary text-white' : 'border-slate-200 text-slate-500'}`}>
+                                                    {pt}
                                                 </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Preschool fields */}
+                                    {addData.program_type === 'preschool' && (
+                                        <>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 uppercase">School Fees</label>
+                                                    <div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">₹</span>
+                                                        <input type="number" className="w-full pl-7 pr-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none" value={addData.school_fees || ''} onChange={e => setAddField('school_fees', e.target.value)} /></div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 uppercase">No. of Installments</label>
+                                                    <div className="flex gap-1.5">
+                                                        {INST_COUNTS.map(n => (
+                                                            <button key={n} onClick={() => updateInstallments(n)}
+                                                                className={`flex-1 py-2 rounded-lg text-sm font-bold border-2 transition-all ${addData.num_installments === n ? 'border-primary bg-primary text-white' : 'border-slate-200 text-slate-500'}`}>{n}</button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-black text-slate-500 uppercase">Installment Amounts & Due Dates</label>
+                                                {addData.installments?.map((inst: any, i: number) => (
+                                                    <div key={i} className="grid grid-cols-3 gap-2 p-3 bg-slate-50 rounded-xl">
+                                                        <div className="space-y-1">
+                                                            <label className="text-xs text-slate-400 font-bold">Inst {inst.no}</label>
+                                                            <div className="relative"><span className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-xs">₹</span>
+                                                                <input type="number" className="w-full pl-5 pr-2 py-2 border border-slate-200 rounded-lg text-xs bg-white outline-none"
+                                                                    value={inst.amount} onChange={e => { const arr = [...addData.installments]; arr[i].amount = e.target.value; setAddField('installments', arr); }} /></div>
+                                                        </div>
+                                                        <div className="col-span-2 space-y-1">
+                                                            <label className="text-xs text-slate-400 font-bold">Due Date</label>
+                                                            <input type="date" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-white outline-none"
+                                                                value={inst.due_date} onChange={e => { const arr = [...addData.installments]; arr[i].due_date = e.target.value; setAddField('installments', arr); }} />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {/* Daycare fields */}
+                                    {addData.program_type === 'daycare' && (
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-bold text-slate-500 uppercase">Monthly Fee (incl. tax)</label>
+                                                <div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">₹</span>
+                                                    <input type="number" className="w-full pl-7 pr-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none" value={addData.monthly_fee || ''} onChange={e => setAddField('monthly_fee', e.target.value)} /></div>
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="text-xs font-bold text-slate-500 uppercase">Hours Opted</label>
+                                                <input type="text" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none" value={addData.hours_opted || ''} onChange={e => setAddField('hours_opted', e.target.value)} />
+                                            </div>
+                                            {addData.monthly_fee && (
+                                                <div className="col-span-2 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                                                    <p className="text-xs font-bold text-blue-600">Annual total: {fmt(parseFloat(addData.monthly_fee) * 12)} (12 × {fmt(addData.monthly_fee)})</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* One-time fees (both types) */}
+                                    <div className="space-y-3 pt-2 border-t border-slate-100">
+                                        <label className="text-xs font-black text-slate-500 uppercase tracking-wide">One-Time Fees</label>
+                                        {[
+                                            { label: 'Registration', f: 'registration_amount', sf: 'registration_status' },
+                                            { label: 'Security Deposit', f: 'security_deposit_amount', sf: 'security_deposit_status' },
+                                            { label: 'Admission Form Fee', f: 'admission_form_fee', sf: 'admission_form_status' },
+                                        ].map(({ label, f, sf }) => (
+                                            <div key={f} className="flex items-center gap-3">
+                                                <label className="text-xs font-bold text-slate-500 w-36 shrink-0">{label}</label>
+                                                <div className="relative flex-1"><span className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-xs">₹</span>
+                                                    <input type="number" className="w-full pl-5 pr-2 py-2 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none" value={addData[f] || ''} onChange={e => setAddField(f, e.target.value)} /></div>
+                                                <select className="border border-slate-200 rounded-lg px-2 py-2 text-xs bg-slate-50 outline-none" value={addData[sf] || 'Unpaid'} onChange={e => setAddField(sf, e.target.value)}>
+                                                    {STATUS_OPTS.map(s => <option key={s}>{s}</option>)}
+                                                </select>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {addError && <p className="text-red-600 text-sm font-bold bg-red-50 px-4 py-2 rounded-xl">{addError}</p>}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="p-6 border-t border-slate-100 dark:border-zinc-800 flex justify-between">
+                            <button onClick={() => addStep > 1 ? setAddStep(s => s - 1) : setShowAdd(false)}
+                                className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50 transition-all">
+                                {addStep === 1 ? 'Cancel' : '← Back'}
+                            </button>
+                            {addStep < 2 ? (
+                                <button onClick={() => setAddStep(2)} disabled={!addData.enrollment_id}
+                                    className="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-lime-600 disabled:opacity-40 transition-all">
+                                    Next →
+                                </button>
+                            ) : (
+                                <button onClick={submitFeePlan} disabled={adding}
+                                    className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-lime-600 disabled:opacity-50 transition-all">
+                                    <span className="material-icons text-sm">{adding ? 'sync' : 'save'}</span>
+                                    {adding ? 'Saving...' : 'Save Fee Plan'}
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
-            {/* Add/Edit Fee Modal */}
-            {showForm && (
-                <>
-                    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 animate-in fade-in duration-300" onClick={resetForm} />
-                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-lg bg-white dark:bg-zinc-900 rounded-[2rem] shadow-2xl z-50 animate-in zoom-in-95 duration-300 border border-slate-100 dark:border-zinc-800 max-h-[90vh] overflow-y-auto">
-                        <div className="p-8 border-b border-slate-100 dark:border-zinc-800">
-                            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">{editingFee ? 'Edit Fee' : 'Add New Fee'}</h3>
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Set fee for a programme</p>
+            {/* WAIVER MODAL */}
+            {showWaiver && waiverFee && (
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-md">
+                        <div className="p-6 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+                            <div><h2 className="text-lg font-black text-slate-800 dark:text-white">Apply Waiver</h2>
+                                <p className="text-xs text-slate-400 mt-0.5">{waiverFee.child_name} · {waiverFee.year_label}</p></div>
+                            <button onClick={() => setShowWaiver(false)} className="size-9 flex items-center justify-center rounded-xl hover:bg-slate-100"><span className="material-icons text-slate-400">close</span></button>
                         </div>
-                        <div className="p-8 space-y-5">
-                            <div>
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Programme</label>
-                                <select
-                                    value={formData.program_name}
-                                    onChange={(e) => setFormData({ ...formData, program_name: e.target.value })}
-                                    className="w-full px-5 py-4 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-slate-800 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                >
-                                    {PROGRAMS.map(p => <option key={p} value={p}>{p}</option>)}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Fee Type</label>
-                                <select
-                                    value={formData.fee_type}
-                                    onChange={(e) => setFormData({ ...formData, fee_type: e.target.value })}
-                                    className="w-full px-5 py-4 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-slate-800 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                >
-                                    {FEE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Amount (INR)</label>
-                                <input
-                                    type="number"
-                                    value={formData.amount}
-                                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                                    placeholder="Enter amount"
-                                    className="w-full px-5 py-4 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm font-bold text-slate-800 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                />
-                            </div>
-                            <div>
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Frequency</label>
-                                <div className="flex flex-wrap gap-2">
-                                    {FREQUENCIES.map(f => (
-                                        <button
-                                            key={f}
-                                            onClick={() => setFormData({ ...formData, frequency: f })}
-                                            className={`flex-1 min-w-[80px] py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${formData.frequency === f ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-slate-50 dark:bg-zinc-800 text-slate-400 border border-slate-200 dark:border-zinc-700'}`}
-                                        >
-                                            {f}
+                        <div className="p-6 space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase">Waiver Type</label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {WAIVER_TYPES.map(t => (
+                                        <button key={t} onClick={() => setWaiverData((p: any) => ({ ...p, waiver_type: t }))}
+                                            className={`py-2 px-3 rounded-xl text-xs font-bold border-2 transition-all text-left ${waiverData.waiver_type === t ? 'border-purple-500 bg-purple-50 text-purple-700' : 'border-slate-200 text-slate-500'}`}>
+                                            {t}
                                         </button>
                                     ))}
                                 </div>
                             </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase">Apply On</label>
+                                <select className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm bg-slate-50 outline-none capitalize"
+                                    value={waiverData.apply_on} onChange={e => setWaiverData((p: any) => ({ ...p, apply_on: e.target.value }))}>
+                                    {APPLY_ON.map(o => <option key={o} value={o}>{o.replace('_', ' ')}</option>)}
+                                </select>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-slate-500 uppercase">Amount (₹)</label>
+                                    <div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">₹</span>
+                                        <input type="number" placeholder="0" className="w-full pl-7 pr-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none"
+                                            value={waiverData.amount} onChange={e => setWaiverData((p: any) => ({ ...p, amount: e.target.value, percentage: '' }))} /></div>
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-slate-500 uppercase">OR Percentage</label>
+                                    <div className="relative">
+                                        <input type="number" placeholder="0" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none"
+                                            value={waiverData.percentage} onChange={e => setWaiverData((p: any) => ({ ...p, percentage: e.target.value, amount: '' }))} />
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold text-slate-500 uppercase">Reason</label>
+                                <textarea rows={2} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none resize-none"
+                                    placeholder="Reason for waiver..." value={waiverData.reason} onChange={e => setWaiverData((p: any) => ({ ...p, reason: e.target.value }))} />
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold text-slate-500 uppercase">Approved By</label>
+                                <input type="text" className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none"
+                                    placeholder="Admin name..." value={waiverData.approved_by} onChange={e => setWaiverData((p: any) => ({ ...p, approved_by: e.target.value }))} />
+                            </div>
                         </div>
-                        <div className="p-8 border-t border-slate-100 dark:border-zinc-800 flex justify-end gap-4">
-                            <button
-                                onClick={resetForm}
-                                className="px-8 py-4 bg-slate-100 dark:bg-zinc-800 text-slate-500 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all hover:bg-slate-200"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleSubmit}
-                                className="px-8 py-4 bg-primary hover:bg-lime-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary/30 transition-all flex items-center gap-2"
-                            >
-                                <span className="material-icons text-base">{editingFee ? 'save' : 'add'}</span>
-                                {editingFee ? 'Update' : 'Add Fee'}
+                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3">
+                            <button onClick={() => setShowWaiver(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50 transition-all">Cancel</button>
+                            <button onClick={submitWaiver} disabled={savingWaiver || (!waiverData.amount && !waiverData.percentage)}
+                                className="flex items-center gap-2 px-6 py-2.5 bg-purple-600 text-white rounded-xl text-sm font-bold hover:bg-purple-700 disabled:opacity-50 transition-all">
+                                <span className="material-icons text-sm">loyalty</span>{savingWaiver ? 'Applying...' : 'Apply Waiver'}
                             </button>
                         </div>
                     </div>
-                </>
+                </div>
             )}
 
-            {/* Student Fee Detail Slideout */}
-            {selectedStudent && (
-                <>
-                    <div
-                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 animate-in fade-in duration-300"
-                        onClick={() => { setSelectedStudent(null); setStudentFees([]); }}
-                    />
-                    <div className="fixed top-0 right-0 h-full w-full sm:max-w-[550px] bg-white dark:bg-zinc-900 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
-                        {/* Header */}
-                        <div className="p-8 border-b border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/30">
-                            <div className="flex items-center justify-between mb-5">
-                                <button
-                                    onClick={() => { setSelectedStudent(null); setStudentFees([]); }}
-                                    className="size-10 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-all"
-                                >
-                                    <span className="material-icons">close</span>
-                                </button>
+            {/* BULK CREATE MODAL */}
+            {showBulk && (
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                        <div className="p-6 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+                            <div>
+                                <h2 className="text-lg font-black text-slate-800 dark:text-white">Bulk Create Fee Plans</h2>
+                                <p className="text-xs text-slate-400 mt-0.5">{selectedYear?.year_label} · Auto-match templates from enrolled students</p>
                             </div>
-                            <div className="flex items-center gap-5">
-                                <div className="size-16 bg-white dark:bg-zinc-800 rounded-2xl shadow-lg border border-slate-100 dark:border-zinc-800 flex items-center justify-center p-1 overflow-hidden">
-                                    {selectedStudent.child_photo ? (
-                                        <img src={selectedStudent.child_photo} className="w-full h-full object-cover rounded-xl" alt="" />
-                                    ) : (
-                                        <span className="material-icons text-3xl text-slate-200">face</span>
-                                    )}
-                                </div>
-                                <div>
-                                    <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">{selectedStudent.child_name}</h3>
-                                    <div className="flex gap-3 mt-1">
-                                        {selectedStudent.programs_selected?.map((p: string) => (
-                                            <span key={p} className="text-[9px] font-black bg-primary/5 text-primary px-2.5 py-1 rounded-lg uppercase tracking-widest border border-primary/10">{p}</span>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
+                            <button onClick={() => setShowBulk(false)} className="size-9 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800">
+                                <span className="material-icons text-slate-400">close</span>
+                            </button>
                         </div>
 
-                        {/* Fee Items */}
-                        <div className="flex-1 overflow-y-auto p-8 space-y-4">
-                            <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-3">
-                                <span className="w-8 h-0.5 bg-primary"></span>
-                                Fee Breakdown
-                            </h4>
+                        <div className="p-6">
+                            {bulkLoading && (
+                                <div className="flex flex-col items-center py-12 gap-3">
+                                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500"></div>
+                                    <p className="text-sm text-slate-500">Analysing enrolled students...</p>
+                                </div>
+                            )}
 
-                            {loadingStudentFees ? (
-                                <div className="flex items-center justify-center py-16">
-                                    <span className="material-icons animate-spin text-3xl text-primary">sync</span>
-                                </div>
-                            ) : studentFees.length === 0 ? (
-                                <div className="text-center py-16">
-                                    <span className="material-icons text-[60px] text-slate-200 dark:text-zinc-700">receipt_long</span>
-                                    <p className="mt-4 text-slate-400 font-black uppercase tracking-widest text-xs">No fees assigned yet</p>
-                                    <p className="mt-1 text-slate-300 text-[10px] font-bold uppercase tracking-widest">Fees are auto-assigned when programme fees are configured</p>
-                                </div>
-                            ) : (
-                                <>
-                                    {studentFees.map((sf: any) => (
-                                        <div key={sf.id} className={`p-5 rounded-2xl border-2 flex items-center justify-between ${sf.status === 'paid' ? 'bg-emerald-50/50 border-emerald-100 dark:bg-emerald-900/10 dark:border-emerald-900/20' : 'bg-amber-50/50 border-amber-100 dark:bg-amber-900/10 dark:border-amber-900/20'}`}>
-                                            <div className="flex items-center gap-4">
-                                                <div className={`size-10 rounded-xl flex items-center justify-center ${sf.status === 'paid' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}>
-                                                    <span className="material-icons text-lg">{sf.status === 'paid' ? 'check_circle' : 'schedule'}</span>
-                                                </div>
-                                                <div>
-                                                    <p className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-tight">{sf.fee_type}</p>
-                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{sf.program_name} · {sf.frequency}</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-4">
-                                                <p className="text-lg font-black text-slate-900 dark:text-white tracking-tight">{formatCurrency(sf.amount)}</p>
-                                                {sf.status === 'pending' && (
-                                                    <button
-                                                        onClick={() => markAsPaid(sf.id)}
-                                                        className="px-4 py-2 bg-primary hover:bg-lime-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all"
-                                                    >
-                                                        Mark Paid
-                                                    </button>
-                                                )}
-                                                {sf.status === 'paid' && (
-                                                    <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Paid</span>
-                                                )}
-                                            </div>
+                            {/* Result after creation */}
+                            {bulkResult && (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-3 gap-3">
+                                        <div className="p-4 bg-green-50 rounded-xl text-center border border-green-100">
+                                            <p className="text-2xl font-black text-green-600">{bulkResult.created}</p>
+                                            <p className="text-xs font-bold text-green-500 mt-1">Created</p>
                                         </div>
-                                    ))}
+                                        <div className="p-4 bg-slate-50 rounded-xl text-center border border-slate-100">
+                                            <p className="text-2xl font-black text-slate-500">{bulkResult.skipped}</p>
+                                            <p className="text-xs font-bold text-slate-400 mt-1">Skipped</p>
+                                        </div>
+                                        <div className="p-4 bg-red-50 rounded-xl text-center border border-red-100">
+                                            <p className="text-2xl font-black text-red-500">{bulkResult.errors}</p>
+                                            <p className="text-xs font-bold text-red-400 mt-1">Errors</p>
+                                        </div>
+                                    </div>
 
-                                    {/* Total */}
-                                    <div className="mt-6 p-5 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl border border-slate-100 dark:border-zinc-800 flex justify-between items-center">
-                                        <p className="text-sm font-black text-slate-400 uppercase tracking-widest">Total</p>
-                                        <p className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
-                                            {formatCurrency(studentFees.reduce((sum: number, sf: any) => sum + Number(sf.amount), 0))}
-                                        </p>
+                                    {bulkResult.details?.created?.length > 0 && (
+                                        <div className="space-y-1.5">
+                                            <p className="text-xs font-black text-green-600 uppercase">Created</p>
+                                            {bulkResult.details.created.map((c: any, i: number) => (
+                                                <div key={i} className="flex items-center justify-between px-3 py-2 bg-green-50 rounded-lg">
+                                                    <span className="text-sm font-bold text-slate-700">{c.child_name}</span>
+                                                    <span className="text-xs text-green-600 font-bold">{c.template}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    {bulkResult.details?.skipped?.length > 0 && (
+                                        <div className="space-y-1.5">
+                                            <p className="text-xs font-black text-slate-500 uppercase">Skipped</p>
+                                            {bulkResult.details.skipped.map((s: any, i: number) => (
+                                                <div key={i} className="flex items-center justify-between px-3 py-2 bg-slate-50 rounded-lg">
+                                                    <span className="text-sm font-bold text-slate-600">{s.child_name}</span>
+                                                    <span className="text-xs text-slate-400">{s.reason}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    {bulkResult.details?.errors?.length > 0 && (
+                                        <div className="space-y-1.5">
+                                            <p className="text-xs font-black text-red-500 uppercase">Errors</p>
+                                            {bulkResult.details.errors.map((e: any, i: number) => (
+                                                <div key={i} className="flex items-center justify-between px-3 py-2 bg-red-50 rounded-lg">
+                                                    <span className="text-sm font-bold text-red-700">{e.child_name}</span>
+                                                    <span className="text-xs text-red-400">{e.error}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <div className="flex justify-end pt-2">
+                                        <button onClick={() => setShowBulk(false)} className="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-lime-600 transition-all">Done</button>
                                     </div>
-                                    <div className="flex justify-between items-center px-2">
-                                        <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
-                                            Paid: {formatCurrency(studentFees.filter((sf: any) => sf.status === 'paid').reduce((sum: number, sf: any) => sum + Number(sf.amount), 0))}
-                                        </p>
-                                        <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">
-                                            Pending: {formatCurrency(studentFees.filter((sf: any) => sf.status === 'pending').reduce((sum: number, sf: any) => sum + Number(sf.amount), 0))}
-                                        </p>
+                                </div>
+                            )}
+
+                            {/* Preview before creation */}
+                            {!bulkLoading && !bulkResult && bulkPreview && (
+                                <div className="space-y-4">
+                                    {/* Summary */}
+                                    <div className="grid grid-cols-3 gap-3">
+                                        <div className="p-4 bg-green-50 rounded-xl text-center border border-green-100">
+                                            <p className="text-2xl font-black text-green-600">{bulkPreview.matched}</p>
+                                            <p className="text-xs font-bold text-green-500 mt-1">Will create</p>
+                                        </div>
+                                        <div className="p-4 bg-amber-50 rounded-xl text-center border border-amber-100">
+                                            <p className="text-2xl font-black text-amber-500">{bulkPreview.unmatched}</p>
+                                            <p className="text-xs font-bold text-amber-400 mt-1">No template match</p>
+                                        </div>
+                                        <div className="p-4 bg-slate-50 rounded-xl text-center border border-slate-100">
+                                            <p className="text-2xl font-black text-slate-500">{bulkPreview.already_exists}</p>
+                                            <p className="text-xs font-bold text-slate-400 mt-1">Already exist</p>
+                                        </div>
                                     </div>
-                                </>
+
+                                    {/* Student list */}
+                                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                                        {bulkPreview.students?.map((s: any, i: number) => (
+                                            <div key={i} className={`flex items-center justify-between px-4 py-3 rounded-xl border ${
+                                                s.already_exists ? 'bg-slate-50 border-slate-100 opacity-60' :
+                                                s.matched ? 'bg-green-50 border-green-100' :
+                                                'bg-amber-50 border-amber-100'
+                                            }`}>
+                                                <div>
+                                                    <p className="text-sm font-bold text-slate-800">{s.child_name}</p>
+                                                    <p className="text-xs text-slate-400 font-mono">{s.unique_id} · {s.program_str}</p>
+                                                </div>
+                                                <div className="text-right">
+                                                    {s.already_exists ? (
+                                                        <span className="text-xs font-bold text-slate-400">Already exists</span>
+                                                    ) : s.matched ? (
+                                                        <span className="text-xs font-bold text-green-600">→ {s.template_name}</span>
+                                                    ) : (
+                                                        <span className="text-xs font-bold text-amber-500">No match — skip</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {bulkPreview.unmatched > 0 && (
+                                        <p className="text-xs text-amber-600 bg-amber-50 px-4 py-2.5 rounded-xl border border-amber-100">
+                                            <span className="font-black">Note:</span> {bulkPreview.unmatched} student(s) have no matching template and will be skipped. Add keywords to the matching template, then run again.
+                                        </p>
+                                    )}
+
+                                    <div className="flex justify-end gap-3 pt-2">
+                                        <button onClick={() => setShowBulk(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50 transition-all">Cancel</button>
+                                        <button onClick={runBulkCreate} disabled={bulkCreating || bulkPreview.matched === 0}
+                                            className="flex items-center gap-2 px-6 py-2.5 bg-amber-500 text-white rounded-xl text-sm font-bold hover:bg-amber-600 disabled:opacity-40 transition-all">
+                                            <span className="material-icons text-sm">{bulkCreating ? 'sync' : 'auto_awesome'}</span>
+                                            {bulkCreating ? 'Creating...' : `Create ${bulkPreview.matched} Fee Plans`}
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </div>
-                </>
+                </div>
+            )}
+
+            {/* NEW YEAR MODAL */}
+            {showNewYear && (
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-sm">
+                        <div className="p-6 border-b border-slate-100"><h2 className="text-lg font-black text-slate-800 dark:text-white">New Academic Year</h2></div>
+                        <div className="p-6 space-y-4">
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold text-slate-500 uppercase">Year Label</label>
+                                <input type="text" placeholder="e.g. 2027-28" className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none"
+                                    value={newYear.year_label} onChange={e => setNewYear(p => ({ ...p, year_label: e.target.value }))} />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1.5"><label className="text-xs font-bold text-slate-500 uppercase">Start</label>
+                                    <input type="date" className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none" value={newYear.start_date} onChange={e => setNewYear(p => ({ ...p, start_date: e.target.value }))} /></div>
+                                <div className="space-y-1.5"><label className="text-xs font-bold text-slate-500 uppercase">End</label>
+                                    <input type="date" className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 outline-none" value={newYear.end_date} onChange={e => setNewYear(p => ({ ...p, end_date: e.target.value }))} /></div>
+                            </div>
+                        </div>
+                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3">
+                            <button onClick={() => setShowNewYear(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50 transition-all">Cancel</button>
+                            <button onClick={createYear} disabled={!newYear.year_label || !newYear.start_date || !newYear.end_date}
+                                className="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-bold hover:bg-lime-600 disabled:opacity-40 transition-all">Create Year</button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

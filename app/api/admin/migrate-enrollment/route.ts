@@ -1,0 +1,127 @@
+import { NextResponse } from 'next/server';
+import { getDb } from '@/lib/db';
+
+export const dynamic = 'force-dynamic';
+
+export async function GET() {
+    try {
+        const db = await getDb();
+
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS enrollments (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                admission_id INT NULL,
+                unique_id VARCHAR(50) UNIQUE,
+                child_name VARCHAR(255) NOT NULL,
+                program_type ENUM('preschool', 'daycare') NOT NULL,
+                program_name VARCHAR(255),
+                new_or_existing VARCHAR(20) DEFAULT 'New',
+                enrollment_date DATE,
+                gender VARCHAR(20),
+                dob DATE,
+                age VARCHAR(50),
+                mother_email VARCHAR(255),
+                father_email VARCHAR(255),
+                mother_phone VARCHAR(50),
+                father_phone VARCHAR(50),
+                guardian_phone VARCHAR(50),
+                address TEXT,
+                blood_group VARCHAR(20),
+                allergy TEXT,
+                kit_handover VARCHAR(10),
+                photographs VARCHAR(10),
+                enrollment_form_signed VARCHAR(10),
+                slot VARCHAR(50),
+                hours_opted VARCHAR(100),
+                referred_by VARCHAR(255),
+                status VARCHAR(20) DEFAULT 'active',
+                notes TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS preschool_fees (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                enrollment_id INT NOT NULL,
+                unique_id VARCHAR(50),
+                school_fees DECIMAL(10,2) DEFAULT 0,
+                amount_paid DECIMAL(10,2) DEFAULT 0,
+                registration_amount DECIMAL(10,2) DEFAULT 0,
+                registration_status VARCHAR(50) DEFAULT 'Unpaid',
+                security_deposit_amount DECIMAL(10,2) DEFAULT 0,
+                security_deposit_status VARCHAR(50) DEFAULT 'Unpaid',
+                admission_form_fee DECIMAL(10,2) DEFAULT 0,
+                admission_form_status VARCHAR(50) DEFAULT 'Unpaid',
+                total_amount DECIMAL(10,2) DEFAULT 0,
+                fees_due DECIMAL(10,2) DEFAULT 0,
+                num_installments INT DEFAULT 1,
+                inst1_amount DECIMAL(10,2) DEFAULT 0,
+                inst1_status VARCHAR(50) DEFAULT 'Unpaid',
+                inst1_part_payment DECIMAL(10,2) DEFAULT 0,
+                inst1_difference DECIMAL(10,2) DEFAULT 0,
+                inst2_amount DECIMAL(10,2) DEFAULT 0,
+                inst2_status VARCHAR(50) DEFAULT 'Unpaid',
+                inst2_part_payment DECIMAL(10,2) DEFAULT 0,
+                inst2_difference DECIMAL(10,2) DEFAULT 0,
+                inst3_amount DECIMAL(10,2) DEFAULT 0,
+                inst3_status VARCHAR(50) DEFAULT 'Unpaid',
+                inst3_part_payment DECIMAL(10,2) DEFAULT 0,
+                inst3_difference DECIMAL(10,2) DEFAULT 0,
+                inst4_amount DECIMAL(10,2) DEFAULT 0,
+                inst4_status VARCHAR(50) DEFAULT 'Unpaid',
+                inst4_part_payment DECIMAL(10,2) DEFAULT 0,
+                inst4_difference DECIMAL(10,2) DEFAULT 0,
+                wave_off_type VARCHAR(50),
+                wave_off_reason TEXT,
+                FOREIGN KEY (enrollment_id) REFERENCES enrollments(id) ON DELETE CASCADE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS daycare_fees (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                enrollment_id INT NOT NULL,
+                unique_id VARCHAR(50),
+                fees_per_month DECIMAL(10,2) DEFAULT 0,
+                security_deposit_amount DECIMAL(10,2) DEFAULT 0,
+                security_deposit_status VARCHAR(50) DEFAULT 'Unpaid',
+                admission_form_fee DECIMAL(10,2) DEFAULT 0,
+                admission_form_status VARCHAR(50) DEFAULT 'Unpaid',
+                one_time_waiver VARCHAR(255),
+                total_amount_payable DECIMAL(10,2) DEFAULT 0,
+                april_status VARCHAR(50) DEFAULT 'Unpaid', april_extra_amount DECIMAL(10,2) DEFAULT 0,
+                may_status VARCHAR(50) DEFAULT 'Unpaid', may_extra_amount DECIMAL(10,2) DEFAULT 0,
+                june_status VARCHAR(50) DEFAULT 'Unpaid', june_extra_amount DECIMAL(10,2) DEFAULT 0,
+                july_status VARCHAR(50) DEFAULT 'Unpaid', july_extra_amount DECIMAL(10,2) DEFAULT 0,
+                august_status VARCHAR(50) DEFAULT 'Unpaid', august_extra_amount DECIMAL(10,2) DEFAULT 0,
+                september_status VARCHAR(50) DEFAULT 'Unpaid', september_extra_amount DECIMAL(10,2) DEFAULT 0,
+                october_status VARCHAR(50) DEFAULT 'Unpaid', october_extra_amount DECIMAL(10,2) DEFAULT 0,
+                november_status VARCHAR(50) DEFAULT 'Unpaid', november_extra_amount DECIMAL(10,2) DEFAULT 0,
+                december_status VARCHAR(50) DEFAULT 'Unpaid', december_extra_amount DECIMAL(10,2) DEFAULT 0,
+                january_status VARCHAR(50) DEFAULT 'Unpaid', january_extra_amount DECIMAL(10,2) DEFAULT 0,
+                february_status VARCHAR(50) DEFAULT 'Unpaid', february_extra_amount DECIMAL(10,2) DEFAULT 0,
+                march_status VARCHAR(50) DEFAULT 'Unpaid', march_extra_amount DECIMAL(10,2) DEFAULT 0,
+                FOREIGN KEY (enrollment_id) REFERENCES enrollments(id) ON DELETE CASCADE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+
+        // Add admission_id column to existing enrollments table if not already present
+        try {
+            await db.query(`ALTER TABLE enrollments ADD COLUMN admission_id INT NULL AFTER id`);
+        } catch (e: any) {
+            // Column already exists — ignore duplicate column error
+            if (!e.message?.includes('Duplicate column')) throw e;
+        }
+
+        return NextResponse.json({ success: true, message: 'Enrollment tables created successfully' });
+    } catch (error: any) {
+        console.error('Migration error:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}

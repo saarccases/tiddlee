@@ -1,161 +1,110 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { ResultSetHeader } from 'mysql2';
 
-// Ensure tables exist
-async function ensureTables() {
-    const db = getDb();
+export const dynamic = 'force-dynamic';
 
-    // Program fee structure table
-    await db.query(`
-        CREATE TABLE IF NOT EXISTS program_fees (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            program_name VARCHAR(100) NOT NULL,
-            fee_type VARCHAR(50) NOT NULL,
-            amount DECIMAL(10,2) NOT NULL DEFAULT 0,
-            frequency VARCHAR(30) NOT NULL DEFAULT 'one-time',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )
-    `);
+const MONTHS = [
+    { no: 1, name: 'April' }, { no: 2, name: 'May' }, { no: 3, name: 'June' },
+    { no: 4, name: 'July' }, { no: 5, name: 'August' }, { no: 6, name: 'September' },
+    { no: 7, name: 'October' }, { no: 8, name: 'November' }, { no: 9, name: 'December' },
+    { no: 10, name: 'January' }, { no: 11, name: 'February' }, { no: 12, name: 'March' },
+];
 
-    // Student fee records table - tracks what each approved student owes/paid
-    await db.query(`
-        CREATE TABLE IF NOT EXISTS student_fees (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            admission_id INT NOT NULL,
-            program_fee_id INT NOT NULL,
-            amount DECIMAL(10,2) NOT NULL DEFAULT 0,
-            status VARCHAR(20) NOT NULL DEFAULT 'pending',
-            due_date DATE,
-            paid_date DATE,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )
-    `);
-}
-
-// GET - fetch program fees, or student fees if admission_id is provided
 export async function GET(request: Request) {
     try {
-        await ensureTables();
-        const db = getDb();
         const { searchParams } = new URL(request.url);
-        const admissionId = searchParams.get('admission_id');
+        const yearId = searchParams.get('year_id');
+        const type = searchParams.get('type') || 'all';
+        const db = await getDb();
 
-        if (admissionId) {
-            // Get fees for a specific student
-            const [rows] = await db.query(
-                `SELECT sf.*, pf.program_name, pf.fee_type, pf.frequency
-                 FROM student_fees sf
-                 JOIN program_fees pf ON sf.program_fee_id = pf.id
-                 WHERE sf.admission_id = ?
-                 ORDER BY sf.status ASC, sf.due_date ASC`,
-                [admissionId]
-            );
-            return NextResponse.json(rows);
-        }
+        let query = `
+            SELECT sf.*, e.child_name, e.unique_id, e.program_name, e.slot, e.hours_opted,
+                   ay.year_label,
+                   COALESCE((SELECT SUM(w.amount) FROM fee_waivers w WHERE w.student_fee_id = sf.id), 0) AS total_waiver
+            FROM student_fees sf
+            JOIN enrollments e ON e.id = sf.enrollment_id
+            JOIN academic_years ay ON ay.id = sf.academic_year_id
+            WHERE 1=1
+        `;
+        const params: any[] = [];
 
-        // Get all program fees
-        const [rows] = await db.query('SELECT * FROM program_fees ORDER BY program_name, fee_type');
+        if (yearId) { query += ' AND sf.academic_year_id = ?'; params.push(yearId); }
+        if (type !== 'all') { query += ' AND sf.program_type = ?'; params.push(type); }
+        query += ' ORDER BY e.child_name ASC';
+
+        const [rows]: any = await db.query(query, params);
         return NextResponse.json(rows);
-    } catch (error) {
-        console.error('[Fees GET] Error:', error);
-        return NextResponse.json({ message: 'Error fetching fees', error: (error as Error).message }, { status: 500 });
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
 
-// POST - create or update a program fee
 export async function POST(request: Request) {
     try {
-        await ensureTables();
-        const db = getDb();
         const body = await request.json();
-        const { id, program_name, fee_type, amount, frequency } = body;
+        const {
+            enrollment_id, academic_year_id, program_type,
+            registration_amount, registration_status,
+            security_deposit_amount, security_deposit_status,
+            admission_form_fee, admission_form_status,
+            school_fees, num_installments, installments,
+            monthly_fee, hours_opted, total_amount,
+        } = body;
 
-        if (id) {
-            await db.query(
-                'UPDATE program_fees SET program_name = ?, fee_type = ?, amount = ?, frequency = ? WHERE id = ?',
-                [program_name, fee_type, amount, frequency, id]
-            );
-            return NextResponse.json({ message: 'Fee updated', id });
-        }
+        const db = await getDb();
 
-        const [result] = await db.query<ResultSetHeader>(
-            'INSERT INTO program_fees (program_name, fee_type, amount, frequency) VALUES (?, ?, ?, ?)',
-            [program_name, fee_type, amount, frequency]
+        const [existing]: any = await db.query(
+            'SELECT id FROM student_fees WHERE enrollment_id = ? AND academic_year_id = ? AND program_type = ?',
+            [enrollment_id, academic_year_id, program_type]
         );
-        return NextResponse.json({ message: 'Fee created', id: result.insertId });
-    } catch (error) {
-        console.error('[Fees POST] Error:', error);
-        return NextResponse.json({ message: 'Error saving fee', error: (error as Error).message }, { status: 500 });
-    }
-}
+        if (existing.length > 0) {
+            return NextResponse.json({ error: 'Fee plan already exists for this student and year' }, { status: 409 });
+        }
 
-// DELETE - delete a program fee
-export async function DELETE(request: Request) {
-    try {
-        await ensureTables();
-        const db = getDb();
-        const { searchParams } = new URL(request.url);
-        const id = searchParams.get('id');
+        const [result]: any = await db.query(`
+            INSERT INTO student_fees (
+                enrollment_id, academic_year_id, program_type,
+                registration_amount, registration_status,
+                security_deposit_amount, security_deposit_status,
+                admission_form_fee, admission_form_status,
+                school_fees, num_installments,
+                monthly_fee, hours_opted,
+                total_amount, total_paid, total_due
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?)
+        `, [
+            enrollment_id, academic_year_id, program_type,
+            registration_amount || 0, registration_status || 'Unpaid',
+            security_deposit_amount || 0, security_deposit_status || 'Unpaid',
+            admission_form_fee || 0, admission_form_status || 'Unpaid',
+            school_fees || 0, num_installments || 1,
+            monthly_fee || 0, hours_opted || null,
+            total_amount || 0, total_amount || 0,
+        ]);
 
-        if (!id) return NextResponse.json({ message: 'ID required' }, { status: 400 });
+        const feeId = result.insertId;
 
-        await db.query('DELETE FROM program_fees WHERE id = ?', [id]);
-        return NextResponse.json({ message: 'Fee deleted' });
-    } catch (error) {
-        console.error('[Fees DELETE] Error:', error);
-        return NextResponse.json({ message: 'Error deleting fee', error: (error as Error).message }, { status: 500 });
-    }
-}
-
-// PATCH - assign fees to a student or update student fee status
-export async function PATCH(request: Request) {
-    try {
-        await ensureTables();
-        const db = getDb();
-        const body = await request.json();
-
-        // Assign fees to student when approved
-        if (body.action === 'assign') {
-            const { admission_id, programs } = body;
-
-            // Get all fees for the student's programs
-            const [fees]: any = await db.query(
-                'SELECT * FROM program_fees WHERE program_name IN (?)',
-                [programs]
-            );
-
-            for (const fee of fees) {
-                // Check if already assigned
-                const [existing]: any = await db.query(
-                    'SELECT id FROM student_fees WHERE admission_id = ? AND program_fee_id = ?',
-                    [admission_id, fee.id]
+        if (program_type === 'preschool' && Array.isArray(installments)) {
+            for (const inst of installments) {
+                await db.query(
+                    `INSERT INTO fee_installments (student_fee_id, installment_no, amount, due_date, status)
+                     VALUES (?, ?, ?, ?, 'Unpaid')`,
+                    [feeId, inst.no, inst.amount || 0, inst.due_date || null]
                 );
-                if (existing.length === 0) {
-                    await db.query(
-                        'INSERT INTO student_fees (admission_id, program_fee_id, amount, status) VALUES (?, ?, ?, ?)',
-                        [admission_id, fee.id, fee.amount, 'pending']
-                    );
-                }
             }
-            return NextResponse.json({ message: 'Fees assigned to student' });
         }
 
-        // Update student fee status (mark as paid)
-        if (body.action === 'update_status') {
-            const { student_fee_id, status, paid_date } = body;
-            await db.query(
-                'UPDATE student_fees SET status = ?, paid_date = ? WHERE id = ?',
-                [status, paid_date || null, student_fee_id]
-            );
-            return NextResponse.json({ message: 'Fee status updated' });
+        if (program_type === 'daycare') {
+            for (const m of MONTHS) {
+                await db.query(
+                    `INSERT INTO fee_monthly (student_fee_id, month_number, month_name, amount_due, amount_paid)
+                     VALUES (?, ?, ?, ?, 0)`,
+                    [feeId, m.no, m.name, monthly_fee || 0]
+                );
+            }
         }
 
-        return NextResponse.json({ message: 'Invalid action' }, { status: 400 });
-    } catch (error) {
-        console.error('[Fees PATCH] Error:', error);
-        return NextResponse.json({ message: 'Error updating fee', error: (error as Error).message }, { status: 500 });
+        return NextResponse.json({ success: true, id: feeId });
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

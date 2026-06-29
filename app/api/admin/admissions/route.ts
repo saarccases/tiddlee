@@ -9,17 +9,32 @@ export async function GET(request: Request) {
         const status = searchParams.get('status');
         const db = await getDb();
 
-        let query = "SELECT * FROM admissions";
-        const params = [];
-
+        const params: any[] = [];
+        let whereClause = '';
         if (status && status !== 'all') {
-            query += " WHERE status = ?";
+            whereClause = ' WHERE a.status = ?';
             params.push(status);
         }
 
-        query += " ORDER BY created_at DESC";
-
-        const [rows]: any = await db.query(query, params);
+        let rows: any[];
+        try {
+            // Try with enrollment join (requires admission_id column — added by Setup DB)
+            const [result]: any = await db.query(`
+                SELECT a.*, e.id AS enrollment_id
+                FROM admissions a
+                LEFT JOIN enrollments e ON e.admission_id = a.id
+                ${whereClause}
+                ORDER BY a.created_at DESC
+            `, params);
+            rows = result;
+        } catch {
+            // Fallback: admission_id column not yet added — run Setup DB in Enrollment page
+            const [result]: any = await db.query(
+                `SELECT * FROM admissions${whereClause.replace('a.status', 'status')} ORDER BY created_at DESC`,
+                params
+            );
+            rows = result.map((r: any) => ({ ...r, enrollment_id: null }));
+        }
 
         return NextResponse.json(rows.map((row: any) => ({
             ...row,

@@ -20,6 +20,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         { label: 'Students', icon: 'groups', href: '/admin/students' },
         { label: 'Fees', icon: 'account_balance_wallet', href: '/admin/fees' },
         { label: 'Staff', icon: 'badge', href: '/admin/staff' },
+        { label: 'Enrollment', icon: 'school', href: '/admin/enrollment' },
         { label: 'Reports', icon: 'bar_chart', href: '#' },
     ];
 
