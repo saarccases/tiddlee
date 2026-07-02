@@ -66,6 +66,16 @@ export async function POST(request: Request) {
         }
 
         // 2. If NO ID, we perform an INSERT
+        // Reject incomplete submissions missing required fields
+        const childName = body.child_name?.trim();
+        const motherName = body.mother_name?.trim() || body.father_name?.trim();
+        if (!childName || !motherName) {
+            return NextResponse.json(
+                { error: 'Child name and at least one parent name are required' },
+                { status: 400 }
+            );
+        }
+
         const fields: string[] = [];
         const placeholders: string[] = [];
         const values: any[] = [];
