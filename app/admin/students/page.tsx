@@ -519,13 +519,38 @@ export default function StudentDirectory() {
                                 <SectionTitle color="bg-emerald-500" label="Program & Enrollment" />
                                 <div className="bg-slate-50 dark:bg-zinc-800/50 p-6 rounded-[1.5rem] border border-slate-100 dark:border-zinc-800 space-y-4">
                                     {selectedStudent._source === 'admission' ? (
-                                        <div className="flex flex-wrap gap-3">
+                                        <div className="space-y-3">
+                                            <div className="flex flex-wrap gap-3">
                                             {selectedStudent._raw?.programs_selected?.map((prog: string) => (
                                                 <div key={prog} className="px-5 py-3 bg-primary/5 border border-primary/20 rounded-2xl flex items-center gap-2">
                                                     <span className="material-icons text-primary text-lg">verified</span>
                                                     <span className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-tight">{prog}</span>
                                                 </div>
                                             ))}
+                                            </div>
+                                            {/* Daycare hours / timing */}
+                                            {(selectedStudent._raw?.daycare_time_opted || selectedStudent._raw?.daycare_time_from) && (
+                                                <div className="grid grid-cols-3 gap-3">
+                                                    {selectedStudent._raw?.daycare_time_opted && (
+                                                        <div className="bg-blue-50 dark:bg-blue-900/10 rounded-xl p-3 text-center border border-blue-100">
+                                                            <p className="text-[9px] font-black text-blue-400 uppercase tracking-widest">Hours Opted</p>
+                                                            <p className="text-base font-black text-blue-700 mt-1">{selectedStudent._raw.daycare_time_opted}</p>
+                                                        </div>
+                                                    )}
+                                                    {selectedStudent._raw?.daycare_time_from && (
+                                                        <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 text-center border border-slate-100">
+                                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">From</p>
+                                                            <p className="text-base font-black text-slate-700 dark:text-white mt-1">{selectedStudent._raw.daycare_time_from}</p>
+                                                        </div>
+                                                    )}
+                                                    {selectedStudent._raw?.daycare_time_to && (
+                                                        <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 text-center border border-slate-100">
+                                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">To</p>
+                                                            <p className="text-base font-black text-slate-700 dark:text-white mt-1">{selectedStudent._raw.daycare_time_to}</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     ) : (
                                         <div className="grid grid-cols-2 gap-4">
