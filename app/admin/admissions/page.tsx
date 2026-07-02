@@ -22,6 +22,8 @@ function AdmissionsContent() {
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
     const [showDetail, setShowDetail] = useState(false);
+    const [cleaning, setCleaning] = useState(false);
+    const [cleanMsg, setCleanMsg] = useState('');
 
     useEffect(() => {
         fetchAdmissions();
@@ -60,24 +62,32 @@ function AdmissionsContent() {
                 body: JSON.stringify({ id, status: newStatus }),
             });
             if (response.ok) {
-                setAdmissions(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
-
-                if (newStatus === 'approved') {
-                    const student = admissions.find(a => a.id === id);
-                    if (student?.programs_selected?.length) {
-                        await fetch('/api/admin/fees', {
-                            method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                action: 'assign',
-                                admission_id: id,
-                                programs: student.programs_selected,
-                            }),
-                        });
-                    }
-                }
+                const result = await response.json();
+                // Update local state — include unique_id if returned (assigned on approval)
+                setAdmissions(prev => prev.map(a =>
+                    a.id === id
+                        ? { ...a, status: newStatus, unique_id: result.unique_id || a.unique_id }
+                        : a
+                ));
             }
-        } catch (err) {
+        } catch (err) {}
+    };
+
+    const runCleanup = async () => {
+        if (!confirm('This will delete all anonymous/test admissions and assign TID/2026-27/506 to Vehant. Continue?')) return;
+        setCleaning(true);
+        setCleanMsg('');
+        try {
+            const res = await fetch('/api/admin/admissions/setup-unique-id', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                setCleanMsg(`Done — kept ${data.kept} (${data.unique_id}), deleted ${data.deleted} entries`);
+                fetchAdmissions();
+            } else {
+                setCleanMsg(data.error || 'Failed');
+            }
+        } finally {
+            setCleaning(false);
         }
     };
 
@@ -100,10 +110,23 @@ function AdmissionsContent() {
                 <div className="p-5 lg:p-8 border-b border-slate-50 dark:border-zinc-800">
                     <div className="flex items-center justify-between mb-4 lg:mb-6">
                         <h2 className="text-xl lg:text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">Applications</h2>
-                        <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest leading-none">
-                            {admissions.length} Total
-                        </span>
+                        <div className="flex items-center gap-2">
+                            <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest leading-none">
+                                {admissions.length} Total
+                            </span>
+                            <button
+                                onClick={runCleanup}
+                                disabled={cleaning}
+                                title="Remove anonymous entries & assign IDs"
+                                className="size-8 flex items-center justify-center rounded-xl bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 disabled:opacity-50 transition-all"
+                            >
+                                <span className="material-icons text-sm">{cleaning ? 'sync' : 'cleaning_services'}</span>
+                            </button>
+                        </div>
                     </div>
+                    {cleanMsg && (
+                        <p className="mb-3 text-[10px] font-bold text-green-600 bg-green-50 px-3 py-2 rounded-xl">{cleanMsg}</p>
+                    )}
 
                     <div className="flex gap-1.5 lg:gap-2">
                         {['all', 'pending', 'approved', 'rejected'].map((f) => (
@@ -149,6 +172,12 @@ function AdmissionsContent() {
                                 </div>
                                 <h3 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight mb-1">{app.child_name || 'Anonymous'}</h3>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                    {app.unique_id
+                                        ? <span className="text-primary font-black">{app.unique_id}</span>
+                                        : <span className="text-amber-500">ID Pending</span>
+                                    }
+                                </p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
                                     Submitted: {formatDate(app.created_at)}
                                 </p>
                             </div>
