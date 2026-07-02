@@ -74,6 +74,7 @@ export default function StudentDirectory() {
     const [saving, setSaving] = useState(false);
     const [setupProgramType, setSetupProgramType] = useState<'preschool' | 'daycare' | ''>('');
     const [settingUpFees, setSettingUpFees] = useState(false);
+    const [setupError, setSetupError] = useState('');
 
     useEffect(() => { fetchStudents(); }, []);
 
@@ -106,6 +107,17 @@ export default function StudentDirectory() {
         setSelectedStudent(student);
         setEditing(false);
         setEditData({});
+        setSetupError('');
+        // Auto-detect program type from programs_selected for online form students
+        if (student._source === 'admission') {
+            const progs: string[] = Array.isArray(student.programs_selected)
+                ? student.programs_selected
+                : (student._raw?.programs_selected || []);
+            const hasDaycare = progs.some((p: string) => p.toLowerCase().includes('daycare') || p.toLowerCase().includes('dc'));
+            setSetupProgramType(hasDaycare ? 'daycare' : progs.length > 0 ? 'preschool' : '');
+        } else {
+            setSetupProgramType('');
+        }
     };
 
     const startEditing = () => { setEditData({ ...selectedStudent }); setEditing(true); };
@@ -115,23 +127,76 @@ export default function StudentDirectory() {
     const setupFees = async () => {
         if (!setupProgramType || !selectedStudent) return;
         setSettingUpFees(true);
+        setSetupError('');
         try {
-            const res = await fetch('/api/admin/admissions/setup-enrollment', {
+            // Step 1: Convert admission → enrollment
+            const enrollRes = await fetch('/api/admin/admissions/setup-enrollment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ admission_id: selectedStudent.id, program_type: setupProgramType }),
             });
-            const data = await res.json();
-            if (data.success) {
-                // Update local state so button changes to "Manage Fees"
-                setSelectedStudent((p: any) => ({ ...p, enrollment_id: data.enrollment_id }));
-                setStudents(prev => prev.map(s =>
-                    s._source === 'admission' && s.id === selectedStudent.id
-                        ? { ...s, enrollment_id: data.enrollment_id }
-                        : s
-                ));
-                window.location.href = `/admin/enrollment/${data.enrollment_id}`;
+            const enrollData = await enrollRes.json();
+            if (!enrollData.success) { setSetupError(enrollData.error || 'Failed to create enrollment'); return; }
+
+            const enrollmentId = enrollData.enrollment_id;
+
+            // Step 2: Fetch active academic year
+            const yearRes = await fetch('/api/admin/fees/academic-years');
+            const years = yearRes.ok ? await yearRes.json() : [];
+            const activeYear = years.find((y: any) => y.status === 'active') || years[0];
+            if (!activeYear) { setSetupError('No active academic year found. Run Setup DB in Fees page first.'); return; }
+
+            // Step 3: Fetch templates and match
+            const tmplRes = await fetch('/api/admin/fees/templates');
+            const templates = tmplRes.ok ? await tmplRes.json() : [];
+            const progs: string[] = Array.isArray(selectedStudent.programs_selected)
+                ? selectedStudent.programs_selected
+                : (selectedStudent._raw?.programs_selected || []);
+            const hoursOpted = selectedStudent._raw?.daycare_time_opted || '';
+            const searchStr = [...progs, hoursOpted].join(' ');
+            let matched = null;
+            for (const t of templates) {
+                const kws: string[] = Array.isArray(t.match_keywords) ? t.match_keywords : [];
+                if (kws.some((k: string) => searchStr.toLowerCase().includes(k.toLowerCase()))) { matched = t; break; }
             }
+            // Fallback: match by program type
+            if (!matched) matched = templates.find((t: any) => t.program_type === setupProgramType) || null;
+
+            // Step 4: Create fee plan
+            const totalAmount = setupProgramType === 'preschool'
+                ? parseFloat(matched?.school_fees || 0)
+                : parseFloat(matched?.monthly_fee || 0) * 12;
+
+            const feeRes = await fetch('/api/admin/fees', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    enrollment_id: enrollmentId,
+                    academic_year_id: activeYear.id,
+                    program_type: setupProgramType,
+                    school_fees: matched?.school_fees || 0,
+                    num_installments: matched?.num_installments || 1,
+                    installments: Array.from({ length: matched?.num_installments || 1 }, (_, i) => ({
+                        no: i + 1,
+                        amount: matched ? Math.round(parseFloat(matched.school_fees || 0) / (matched.num_installments || 1)) : 0,
+                        due_date: '',
+                    })),
+                    monthly_fee: matched?.monthly_fee || 0,
+                    hours_opted: matched?.hours_opted || hoursOpted || '',
+                    registration_amount: matched?.registration_amount || 0,
+                    registration_status: matched?.registration_status || 'Unpaid',
+                    security_deposit_amount: matched?.security_deposit_amount || 0,
+                    security_deposit_status: matched?.security_deposit_status || 'Unpaid',
+                    admission_form_fee: matched?.admission_form_fee || 0,
+                    admission_form_status: matched?.admission_form_status || 'Unpaid',
+                    total_amount: totalAmount,
+                }),
+            });
+            const feeData = await feeRes.json();
+            if (!feeData.id) { setSetupError('Enrollment created but fee plan failed. Go to Fees page to add manually.'); return; }
+
+            // Done — go to fee detail page
+            window.location.href = `/admin/fees/${feeData.id}`;
         } finally { setSettingUpFees(false); }
     };
 
@@ -521,14 +586,25 @@ export default function StudentDirectory() {
                                     <SectionTitle color="bg-amber-500" label="Fee Management" />
                                     <div className="bg-amber-50/50 dark:bg-amber-900/10 p-6 rounded-[1.5rem] border border-amber-100 dark:border-amber-900/20 space-y-4">
                                         {selectedStudent.enrollment_id ? (
-                                            <Link href={`/admin/enrollment/${selectedStudent.enrollment_id}`}
+                                            <Link href={`/admin/fees`}
                                                 className="flex items-center justify-center gap-2 w-full py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
                                                 <span className="material-icons text-base">account_balance_wallet</span>
                                                 Manage Fees & Installments
                                             </Link>
                                         ) : (
                                             <>
-                                                <p className="text-xs font-bold text-slate-500 text-center">No fees set up yet. Select a program type to begin.</p>
+                                                {/* Auto-detected program badge */}
+                                                {setupProgramType ? (
+                                                    <div className="flex items-center gap-2 p-3 bg-green-50 rounded-xl border border-green-100">
+                                                        <span className="material-icons text-green-500 text-sm">auto_awesome</span>
+                                                        <p className="text-xs font-bold text-green-700">
+                                                            Program detected: <span className="capitalize">{setupProgramType}</span>
+                                                            {(selectedStudent._raw?.programs_selected || []).join(', ') && ` (${(selectedStudent._raw?.programs_selected || []).join(', ')})`}
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-xs font-bold text-slate-500 text-center">Select a program type to begin.</p>
+                                                )}
                                                 <div className="flex gap-3">
                                                     {(['preschool', 'daycare'] as const).map(pt => (
                                                         <button key={pt} onClick={() => setSetupProgramType(pt)}
@@ -539,10 +615,13 @@ export default function StudentDirectory() {
                                                         </button>
                                                     ))}
                                                 </div>
+                                                {setupError && (
+                                                    <p className="text-xs text-red-600 bg-red-50 px-3 py-2 rounded-xl font-bold">{setupError}</p>
+                                                )}
                                                 <button onClick={setupFees} disabled={!setupProgramType || settingUpFees}
                                                     className="flex items-center justify-center gap-2 w-full py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-40">
                                                     <span className="material-icons text-base">{settingUpFees ? 'sync' : 'add_circle'}</span>
-                                                    {settingUpFees ? 'Setting Up...' : 'Set Up Fees'}
+                                                    {settingUpFees ? 'Creating enrollment & fee plan...' : 'Set Up Fees'}
                                                 </button>
                                             </>
                                         )}

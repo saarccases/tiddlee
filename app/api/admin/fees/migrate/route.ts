@@ -187,6 +187,17 @@ export async function GET() {
                     monthly_fee: 14000, hours_opted: '9',
                     match_keywords: JSON.stringify(['9', '9hrs', '9 hours', '9hr', 'Daycare 9', 'DC 9']),
                 },
+                {
+                    template_name: 'Daycare - 3 Hours',
+                    program_type: 'daycare',
+                    school_fees: 0,
+                    registration_amount: 0, registration_status: 'Unpaid',
+                    security_deposit_amount: 5000, security_deposit_status: 'Unpaid',
+                    admission_form_fee: 500, admission_form_status: 'Unpaid',
+                    num_installments: 1,
+                    monthly_fee: 7000, hours_opted: '3',
+                    match_keywords: JSON.stringify(['3', '3hrs', '3 hours', '3hr', 'Daycare 3', 'DC 3']),
+                },
             ];
 
             for (const t of defaultTemplates) {
@@ -206,6 +217,17 @@ export async function GET() {
                     t.num_installments, t.monthly_fee, t.hours_opted, t.match_keywords,
                 ]);
             }
+        }
+
+        // Ensure Daycare 3hr template exists (may have been added after initial seed)
+        const [dc3]: any = await db.query(
+            `SELECT id FROM fee_templates WHERE template_name = 'Daycare - 3 Hours' LIMIT 1`
+        );
+        if (dc3.length === 0) {
+            await db.query(`
+                INSERT INTO fee_templates (template_name, program_type, school_fees, registration_amount, registration_status, security_deposit_amount, security_deposit_status, admission_form_fee, admission_form_status, num_installments, monthly_fee, hours_opted, match_keywords)
+                VALUES ('Daycare - 3 Hours','daycare',0,0,'Unpaid',5000,'Unpaid',500,'Unpaid',1,7000,'3',?)
+            `, [JSON.stringify(['3', '3hrs', '3 hours', '3hr', 'Daycare 3', 'DC 3'])]);
         }
 
         return NextResponse.json({ success: true, message: 'Fee tables created and templates seeded' });

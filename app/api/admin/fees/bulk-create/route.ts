@@ -55,20 +55,45 @@ export async function GET(request: Request) {
         await ensureTablesExist(db);
 
         const [templates]: any = await db.query('SELECT * FROM fee_templates WHERE is_active = 1');
+
+        // Excel-imported enrollments
         const [enrollments]: any = await db.query(`
-            SELECT e.id, e.child_name, e.unique_id, e.program_type,
-                   e.program_name, e.slot, e.hours_opted,
-                   sf.id AS existing_fee_id
+            SELECT e.id AS enrollment_id, e.child_name, e.unique_id, e.program_type,
+                   e.program_name, e.slot, e.hours_opted, NULL AS programs_selected,
+                   sf.id AS existing_fee_id, 'enrollment' AS source
             FROM enrollments e
             LEFT JOIN student_fees sf ON sf.enrollment_id = e.id AND sf.academic_year_id = ?
             ORDER BY e.program_type, e.child_name
         `, [yearId]);
 
-        const preview = enrollments.map((e: any) => {
-            const programStr = e.program_name || e.slot || e.hours_opted || e.program_type || '';
+        // Online admission students (approved, already converted to enrollment via setup-enrollment)
+        let admEnrollments: any[] = [];
+        try {
+            const [rows]: any = await db.query(`
+                SELECT e.id AS enrollment_id, e.child_name, a.unique_id, e.program_type,
+                       e.program_name, e.slot, e.hours_opted, a.programs_selected,
+                       sf.id AS existing_fee_id, 'admission' AS source
+                FROM enrollments e
+                JOIN admissions a ON a.id = e.admission_id
+                LEFT JOIN student_fees sf ON sf.enrollment_id = e.id AND sf.academic_year_id = ?
+                WHERE a.status = 'approved'
+            `, [yearId]);
+            admEnrollments = rows;
+        } catch {}
+
+        // Merge, deduplicate by enrollment_id
+        const seen = new Set<number>();
+        const allStudents: any[] = [];
+        for (const s of [...enrollments, ...admEnrollments]) {
+            if (!seen.has(s.enrollment_id)) { seen.add(s.enrollment_id); allStudents.push(s); }
+        }
+
+        const preview = allStudents.map((e: any) => {
+            const progs = e.programs_selected ? (typeof e.programs_selected === 'string' ? JSON.parse(e.programs_selected) : e.programs_selected) : [];
+            const programStr = e.program_name || e.slot || e.hours_opted || progs.join(' ') || e.program_type || '';
             const template = matchTemplate(templates, programStr);
             return {
-                enrollment_id: e.id,
+                enrollment_id: e.enrollment_id,
                 child_name: e.child_name,
                 unique_id: e.unique_id,
                 program_type: e.program_type,
