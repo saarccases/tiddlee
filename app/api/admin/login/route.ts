@@ -5,7 +5,7 @@ import { SignJWT } from 'jose';
 import { cookies } from 'next/headers';
 
 const JWT_SECRET = new TextEncoder().encode(
-    process.env.JWT_SECRET || 'tiddlee-super-secret-key-change-me'
+    process.env.JWT_SECRET || 'tiddlee-secret-2026-change-in-prod'
 );
 
 export async function POST(request: Request) {
