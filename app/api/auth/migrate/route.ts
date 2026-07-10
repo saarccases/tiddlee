@@ -22,17 +22,23 @@ export async function GET() {
             )
         `);
 
-        // Seed default admin if no users exist
-        const [rows]: any = await db.query('SELECT id FROM users LIMIT 1');
+        const hash = await bcrypt.hash('admin123', 10);
+
+        // Seed default admin if not exists, otherwise ensure password is correct
+        const [rows]: any = await db.query(`SELECT id FROM users WHERE email = 'admin@tiddlee.com' LIMIT 1`);
         if (rows.length === 0) {
-            const hash = await bcrypt.hash('admin123', 10);
             await db.query(
                 `INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')`,
                 ['Admin', 'admin@tiddlee.com', hash]
             );
+        } else {
+            await db.query(
+                `UPDATE users SET password_hash = ? WHERE email = 'admin@tiddlee.com'`,
+                [hash]
+            );
         }
 
-        return NextResponse.json({ success: true, message: 'Users table ready' });
+        return NextResponse.json({ success: true, message: 'Users table ready. Admin password reset to admin123.' });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
