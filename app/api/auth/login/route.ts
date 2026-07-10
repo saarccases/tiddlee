@@ -7,42 +7,47 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
     try {
-        const { email, password } = await request.json();
-        if (!email || !password) {
-            return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
+        const { username, password } = await request.json();
+        if (!username || !password) {
+            return NextResponse.json({ error: 'Username and password required' }, { status: 400 });
         }
 
         const db = await getDb();
+
+        // Use the existing admins table (same as web app)
         const [rows]: any = await db.query(
-            'SELECT * FROM users WHERE email = ? AND is_active = 1 LIMIT 1',
-            [email.toLowerCase().trim()]
+            'SELECT * FROM admins WHERE username = ? LIMIT 1',
+            [username.trim()]
         );
 
         if (!rows.length) {
-            return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
+            return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 });
         }
 
-        const user = rows[0];
-        const valid = await bcrypt.compare(password, user.password_hash);
+        const admin = rows[0];
+        const valid = await bcrypt.compare(password, admin.password);
         if (!valid) {
-            return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
+            return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 });
         }
+
+        // Update last login
+        await db.query('UPDATE admins SET last_login = CURRENT_TIMESTAMP WHERE id = ?', [admin.id]);
 
         const token = await signToken({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
+            id: admin.id,
+            name: admin.full_name || admin.username,
+            email: admin.username,
+            role: admin.role || 'admin',
         });
 
         return NextResponse.json({
             token,
             user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                class_assigned: user.class_assigned,
+                id: admin.id,
+                name: admin.full_name || admin.username,
+                email: admin.username,
+                role: admin.role || 'admin',
+                class_assigned: admin.class_assigned || null,
             },
         });
     } catch (error: any) {
