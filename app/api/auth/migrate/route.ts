@@ -25,7 +25,7 @@ export async function GET() {
         // Seed default admin if no users exist
         const [rows]: any = await db.query('SELECT id FROM users LIMIT 1');
         if (rows.length === 0) {
-            const hash = await bcrypt.hash('admin@123', 10);
+            const hash = await bcrypt.hash('admin123', 10);
             await db.query(
                 `INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')`,
                 ['Admin', 'admin@tiddlee.com', hash]
